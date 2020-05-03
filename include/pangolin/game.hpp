@@ -18,4 +18,5 @@ class Game {
     void init(float dt);
     void update(float dt);
     void render();
+    void process_input(float ft);
 };

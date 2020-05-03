@@ -21,3 +21,7 @@ void Game::update(float dt) {
 void Game::render() {
 
 }
+
+void Game::process_input(float ft) {
+
+}
