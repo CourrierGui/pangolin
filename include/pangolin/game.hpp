@@ -15,7 +15,7 @@ class Game {
     Game(unsigned int width, unsigned int height);
     ~Game();
 
-    void init(float dt);
+    void init();
     void update(float dt);
     void render();
     void process_input(float ft);

@@ -10,7 +10,7 @@ Game::~Game() {
 
 }
 
-void Game::init(float dt) {
+void Game::init() {
 
 }
 
