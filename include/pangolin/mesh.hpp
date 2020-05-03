@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 
-#include <game/shader.hpp>
+#include <pangolin/shader.hpp>
 #include <iostream>
 
 struct Vertex {

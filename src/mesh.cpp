@@ -1,4 +1,4 @@
-#include <game/mesh.hpp>
+#include <pangolin/mesh.hpp>
 
 Mesh::Mesh(
   const std::vector<Vertex>&       vertices,

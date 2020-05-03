@@ -1,4 +1,4 @@
-#include <game/model.hpp>
+#include <pangolin/model.hpp>
 
 Model::Model(const std::string& path) {
   loadModel(path);

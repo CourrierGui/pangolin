@@ -5,8 +5,8 @@
 #include <iostream>
 #include <algorithm>
 
-#include <game/mesh.hpp>
-#include <game/shader.hpp>
+#include <pangolin/mesh.hpp>
+#include <pangolin/shader.hpp>
 
 #include <glm/glm.hpp>
 #include <stb_image.h>

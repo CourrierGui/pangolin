@@ -1,4 +1,4 @@
-#include <game/shader.hpp>
+#include <pangolin/shader.hpp>
 
 Shader::Shader(
   const std::string& vertex_path,
