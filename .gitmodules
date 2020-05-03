@@ -1,0 +1,12 @@
+[submodule "extern/assimp"]
+	path = extern/assimp
+	url = ../../assimp/assimp
+[submodule "extern/googletest"]
+	path = extern/googletest
+	url = ../../google/googletest.git
+[submodule "extern/glfw"]
+	path = extern/glfw
+	url = ../../glfw/glfw.git
+[submodule "extern/glm"]
+	path = extern/glm
+	url = ../../g-truc/glm
