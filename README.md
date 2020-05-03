@@ -1,5 +1,5 @@
 # pangolin
-Probably one of the worst game engine.
+Probably one of the worst game engines.
 
 ## Dependencies
 This project depends on:

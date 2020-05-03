@@ -6,8 +6,8 @@ else()
     cmake_policy(VERSION 3.15)
 endif()
 
-project(beat-the-boredom VERSION 1.0
-  DESCRIPTION "javidx9 game jam."
+project(pangolin VERSION 0.1
+  DESCRIPTION "Probably one of the worst game engines."
   LANGUAGES CXX)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
