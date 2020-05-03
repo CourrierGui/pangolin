@@ -1,28 +1,48 @@
+/*******************************************************************
+ ** This code is part of Breakout.
+ **
+ ** Breakout is free software: you can redistribute it and/or modify
+ ** it under the terms of the CC BY 4.0 license as published by
+ ** Creative Commons, either version 4 of the License, or (at your
+ ** option) any later version.
+ ******************************************************************/
+
 #pragma once
 
-#include <fstream>
 #include <string>
-#include <iostream>
-#include <sstream>
 
+#include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <glad/glad.h>
 
-class Shader {
-  private:
-    void checkCompileErrors(unsigned int shader, const std::string& type);
-
+// General purpsoe shader object. Compiles from file, generates
+// compile/link-time error messages and hosts several utility 
+// functions for easy management.
+class Shader
+{
   public:
-    int ID;
-    Shader(const std::string& vertex_path, const std::string& fragment_path);
-    void use();
-    void setInt(const std::string& name, int value);
-    void setBool(const std::string& name, bool value);
-    void setFloat(const std::string& name, float value);
-    void setVec2f(const std::string& name, float v1, float v2);
-    void setMat4(const std::string& name, const glm::mat4& value);
-    void setVec3(const std::string& name, const glm::vec3& value);
-    void setVec3(const std::string& name, float x, float y, float z);
+    // state
+    unsigned int ID; 
+    // constructor
+    Shader() { }
+    // sets the current shader as active
+    Shader& use();
+
+    // compiles the shader from given source code
+    void compile(const char *vertexSource, const char *fragmentSource, const char *geometrySource = nullptr); // note: geometry source code is optional 
+
+    // utility functions
+    void    setFloat    (const char *name, float value);
+    void    setInteger  (const char *name, int   value);
+    void    setVector2f (const char *name, float x, float y);
+    void    setVector2f (const char *name, const glm::vec2 &value);
+    void    setVector3f (const char *name, float x, float y, float z);
+    void    setVector3f (const char *name, const glm::vec3 &value);
+    void    setVector4f (const char *name, float x, float y, float z, float w);
+    void    setVector4f (const char *name, const glm::vec4 &value);
+    void    setMatrix4  (const char *name, const glm::mat4 &matrix);
+  private:
+    // checks if compilation or linking failed and if so, print the error logs
+    void    checkCompileErrors(unsigned int object, std::string type); 
 };
