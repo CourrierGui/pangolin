@@ -29,7 +29,7 @@ Shader ResourceManager::load_shader(
   return shaders[name];
 }
 
-Shader ResourceManager::get_shader(std::string name) {
+Shader& ResourceManager::get_shader(std::string name) {
   return shaders[name];
 }
 
@@ -38,7 +38,7 @@ Texture2D ResourceManager::load_texture(const char *file, bool alpha, std::strin
   return textures[name];
 }
 
-Texture2D ResourceManager::get_texture(std::string name) {
+Texture2D& ResourceManager::get_texture(std::string name) {
   return textures[name];
 }
 
