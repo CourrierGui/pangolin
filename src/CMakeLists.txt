@@ -11,7 +11,6 @@ set(
   model.cpp
   texture.cpp
   resource-manager.cpp
-  game.cpp
 )
 
 add_library(pangolin STATIC ${pangolin_src})
