@@ -14,7 +14,7 @@ ParticleGenerator::ParticleGenerator(
 void ParticleGenerator::update(
   float dt, GameObject &object,
   unsigned int new_particles,
-  glm::vec2& offset)
+  const glm::vec2& offset)
 {
   // add new particles
   for (unsigned int i = 0; i < new_particles; ++i) {
@@ -127,7 +127,7 @@ unsigned int ParticleGenerator::first_unused_particle() {
 void ParticleGenerator::respawn_particle(
   Particle&   particle,
   GameObject& object,
-  glm::vec2&  offset)
+  const glm::vec2&  offset)
 {
   float random = ((rand() % 100) - 50) / 10.0f;
   float color = 0.5f + ((rand() % 100) / 100.0f);

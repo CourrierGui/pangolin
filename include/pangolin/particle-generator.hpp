@@ -35,7 +35,7 @@ class ParticleGenerator {
     void update(
       float dt, GameObject& object,
       unsigned int new_particles,
-      glm::vec2& offset
+      const glm::vec2& offset
     );
     void update(
       float dt, GameObject& object,
@@ -77,7 +77,7 @@ class ParticleGenerator {
      */
     void respawn_particle(
       Particle& particle, GameObject& object,
-      glm::vec2& offset
+      const glm::vec2& offset
     );
     void respawn_particle(
       Particle& particle, GameObject& object
