@@ -3,3 +3,4 @@ tags*
 .*.sw[po]
 compile_commands.json
 .clangd
+extern
