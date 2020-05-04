@@ -1,7 +1,7 @@
 #include <pangolin/model.hpp>
 
 Model::Model(const std::string& path) {
-  loadModel(path);
+  load_model(path);
 }
 
 void Model::draw(Shader& shader) {
@@ -10,31 +10,34 @@ void Model::draw(Shader& shader) {
   }
 }
 
-void Model::loadModel(const std::string& path) {
+void Model::load_model(const std::string& path) {
   Assimp::Importer importer;
-  const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+  const aiScene* scene = importer.ReadFile(
+    path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
-  if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
+  if (!scene
+      || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE
+      || !scene->mRootNode) {
     std::cerr << "ERROR::ASSIMP::" << importer.GetErrorString() << '\n';
     return;
   }
 
   directory = path.substr(0, path.find_last_of('/'));
-  processNode(scene->mRootNode, scene);
+  process_node(scene->mRootNode, scene);
 }
 
-void Model::processNode(aiNode* node, const aiScene* scene) {
+void Model::process_node(aiNode* node, const aiScene* scene) {
   for (unsigned int i=0; i<node->mNumMeshes; ++i) {
     aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-    meshes.push_back(processMesh(mesh, scene));
+    meshes.push_back(process_mesh(mesh, scene));
   }
 
   for (unsigned int i=0; i<node->mNumChildren; ++i) {
-    processNode(node->mChildren[i], scene);
+    process_node(node->mChildren[i], scene);
   }
 }
 
-Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
+Mesh Model::process_mesh(aiMesh* mesh, const aiScene* scene) {
   std::vector<Vertex>       vertices;
   std::vector<unsigned int> indices;
   std::vector<Texture>      textures;
@@ -68,18 +71,18 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
     aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
     //TODO: y'a des copies...
-    std::vector<Texture> diffuseMaps = loadMaterialTextures(
+    std::vector<Texture> diffuseMaps = load_material_textures(
       material, aiTextureType_DIFFUSE, "texture_diffuse");
     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
-    std::vector<Texture> specularMaps = loadMaterialTextures(
+    std::vector<Texture> specularMaps = load_material_textures(
       material, aiTextureType_SPECULAR, "texture_specular");
     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
   }
   return Mesh(vertices, indices, textures);
 }
 
-auto Model::loadMaterialTextures(
+auto Model::load_material_textures(
   aiMaterial* material,
   aiTextureType type,
   const std::string& name)
@@ -120,11 +123,12 @@ unsigned int TextureFromFile(
 {
   std::string filename = directory + '/' + path;
 
-  unsigned int textureID;
-  glGenTextures(1, &textureID);
+  unsigned int texture_id;
+  glGenTextures(1, &texture_id);
 
   int width, height, nrComponents;
-  unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+  unsigned char *data = stbi_load(
+    filename.c_str(), &width, &height, &nrComponents, 0);
   if (data) {
     GLenum format;
     if (nrComponents == 1)
@@ -134,8 +138,11 @@ unsigned int TextureFromFile(
     else if (nrComponents == 4)
       format = GL_RGBA;
 
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+    glBindTexture(GL_TEXTURE_2D, texture_id);
+    glTexImage2D(
+      GL_TEXTURE_2D, 0, format, width, height,
+      0, format, GL_UNSIGNED_BYTE, data
+    );
     glGenerateMipmap(GL_TEXTURE_2D);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -146,9 +153,9 @@ unsigned int TextureFromFile(
     stbi_image_free(data);
   }
   else {
-    std::cout << "Texture failed to load at path: " << path << std::endl;
+    std::cerr << "Texture failed to load at path: " << path << '\n';
     stbi_image_free(data);
   }
 
-  return textureID;
+  return texture_id;
 }

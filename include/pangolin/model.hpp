@@ -24,12 +24,15 @@ class Model {
 
   private:
     std::vector<Texture> loaded_textures;
-    std::vector<Mesh> meshes;
-    std::string directory;
+    std::vector<Mesh>    meshes;
+    std::string          directory;
 
-    void loadModel(const std::string& path);
-    void processNode(aiNode* node, const aiScene* scene);
-    Mesh processMesh(aiMesh* mesh, const aiScene* scene);
-    auto loadMaterialTextures(aiMaterial* material, aiTextureType type, const std::string& name)
-      -> std::vector<Texture>;
+    void load_model(const std::string& path);
+    void process_node(aiNode* node, const aiScene* scene);
+    Mesh process_mesh(aiMesh* mesh, const aiScene* scene);
+    auto load_material_textures(
+      aiMaterial* material,
+      aiTextureType type,
+      const std::string& name)
+    -> std::vector<Texture>;
 };

@@ -16,19 +16,22 @@
 class GameObject {
   public:
     // object state
-    glm::vec2   m_position, m_size, m_velocity;
-    glm::vec3   m_color;
-    float       m_rotation;
-    bool        m_isSolid;
-    bool        m_destroyed;
+    glm::vec2 position, size, velocity;
+    glm::vec3 color;
+    float     rotation;
+    bool      is_solid;
+    bool      destroyed;
 
     // render state
-    Texture2D   m_sprite;	
+    Texture2D   sprite;
 
     // constructor(s)
     GameObject();
-    GameObject(glm::vec2 pos, glm::vec2 size, Texture2D sprite,
-               glm::vec3 color=glm::vec3(1.0f), glm::vec2 velocity=glm::vec2(0.0f, 0.0f));
+    GameObject(
+      const glm::vec2& pos, const glm::vec2& size, Texture2D& sprite,
+      const glm::vec3& color=glm::vec3(1.0f), const glm::vec2& velocity=glm::vec2(0.0f, 0.0f)
+    );
+
     // draw sprite
-    virtual void draw(SpriteRenderer &renderer);
+    virtual void draw(SpriteRenderer& renderer);
 };
