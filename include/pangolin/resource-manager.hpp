@@ -8,6 +8,11 @@
 #include <pangolin/texture.hpp>
 #include <pangolin/shader.hpp>
 
+namespace pgl {
+  namespace resources {
+
+void set_root(const std::string& path);
+const std::string& root();
 
 /**
  * A static singleton ResourceManager class that hosts several
@@ -21,6 +26,7 @@ class ResourceManager {
     // resource storage
     static std::map<std::string, Shader>    shaders;
     static std::map<std::string, Texture2D> textures;
+    static std::string                      root;
 
     /**
      * loads (and generates) a shader program from file loading vertex,
@@ -28,26 +34,26 @@ class ResourceManager {
      * nullptr, it also loads a geometry shader
      */
     static Shader& load_shader(
-      const char *v_shader_file,
-      const char *f_shader_file,
-      const char *g_shader_file,
+      const std::string& v_shader_file,
+      const std::string& f_shader_file,
+      const std::string& g_shader_file,
       const std::string& name
     );
 
     /**
      * retrieves a stored sader
      */
-    static Shader& get_shader(std::string name);
+    static Shader& get_shader(const std::string& name);
 
     // loads (and generates) a texture from file
     static Texture2D& load_texture(
-      const char *file,
+      const std::string& file,
       bool alpha,
       const std::string& name
     );
 
     // retrieves a stored texture
-    static Texture2D& get_texture(std::string name);
+    static Texture2D& get_texture(const std::string& name);
 
     // properly de-allocates all loaded resources
     static void clear();
@@ -61,12 +67,15 @@ class ResourceManager {
     ResourceManager();
 
     // loads and generates a shader from file
-    static Shader    load_shader_from_file(
-      const char *vShaderFile,
-      const char *fShaderFile,
-      const char *gShaderFile = nullptr
+    static Shader load_shader_from_file(
+      const std::string& vShaderFile,
+      const std::string& fShaderFile,
+      const std::string& gShaderFile = nullptr
     );
 
     // loads a single texture from file
-    static Texture2D load_texture_from_file(const char *file, bool alpha);
+    static Texture2D load_texture_from_file(const std::string& file, bool alpha);
 };
+
+  } /* end of namespace path */
+} /* end of namespace pgl */

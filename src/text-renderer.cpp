@@ -5,6 +5,7 @@
 #include <pangolin/text-renderer.hpp>
 #include <pangolin/resource-manager.hpp>
 
+using namespace pgl::resources;
 
 TextRenderer::TextRenderer(
   unsigned int width,

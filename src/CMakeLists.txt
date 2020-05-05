@@ -1,5 +1,6 @@
 add_library(glad STATIC glad.cpp)
 target_include_directories(glad PUBLIC ${pangolin_SOURCE_DIR}/include)
+target_link_libraries(glad dl)
 
 add_library(stb_image STATIC stb_image.cpp)
 target_include_directories(stb_image PUBLIC ${pangolin_SOURCE_DIR}/include)
@@ -16,6 +17,7 @@ set(
   sprite-renderer.cpp
   text-renderer.cpp
   texture.cpp
+  profile.cpp
 )
 
 add_library(freetype SHARED IMPORTED)

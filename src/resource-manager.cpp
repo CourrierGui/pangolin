@@ -6,28 +6,43 @@
 
 #include <stb_image.h>
 
+namespace pgl {
+  namespace resources {
 // Instantiate static variables
 std::map<std::string, Texture2D> ResourceManager::textures;
 std::map<std::string, Shader>    ResourceManager::shaders;
+std::string                      ResourceManager::root;
+
+void set_root(const std::string& path) {
+  unsigned int size = path.size();
+  if (path.back() == '/')
+    size = path.length()-1;
+
+  ResourceManager::root = path.substr(0, size);
+}
+
+const std::string& root() {
+  return ResourceManager::root;
+}
 
 ResourceManager::ResourceManager() {}
 
 Shader& ResourceManager::load_shader(
-  const char *v_shader_file,
-  const char *f_shader_file,
-  const char *g_shader_file,
+  const std::string& v_shader_file,
+  const std::string& f_shader_file,
+  const std::string& g_shader_file,
   const std::string& name)
 {
   shaders[name] = load_shader_from_file(v_shader_file, f_shader_file, g_shader_file);
   return shaders[name];
 }
 
-Shader& ResourceManager::get_shader(std::string name) {
+Shader& ResourceManager::get_shader(const std::string& name) {
   return shaders[name];
 }
 
 Texture2D& ResourceManager::load_texture(
-  const char *file,
+  const std::string& file,
   bool alpha,
   const std::string& name)
 {
@@ -35,7 +50,7 @@ Texture2D& ResourceManager::load_texture(
   return textures[name];
 }
 
-Texture2D& ResourceManager::get_texture(std::string name) {
+Texture2D& ResourceManager::get_texture(const std::string& name) {
   return textures[name];
 }
 
@@ -49,9 +64,9 @@ void ResourceManager::clear() {
 }
 
 Shader ResourceManager::load_shader_from_file(
-  const char *v_shader_file,
-  const char *f_shader_file,
-  const char *g_shader_file)
+  const std::string& v_shader_file,
+  const std::string& f_shader_file,
+  const std::string& g_shader_file)
 {
   // 1. retrieve the vertex/fragment source code from filePath
   std::string vertex_code;
@@ -77,7 +92,7 @@ Shader ResourceManager::load_shader_from_file(
     fragment_code = f_shader_stream.str();
 
     // if geometry shader path is present, also load a geometry shader
-    if (g_shader_file != nullptr) {
+    if (g_shader_file.empty()) {
       std::ifstream geometry_shader_file(g_shader_file);
       std::stringstream g_shader_stream;
       g_shader_stream << geometry_shader_file.rdbuf();
@@ -95,13 +110,13 @@ Shader ResourceManager::load_shader_from_file(
   Shader shader;
   shader.compile(
     v_shader_code, f_shader_code,
-    g_shader_file != nullptr ? g_shader_code : nullptr
+    g_shader_file.empty() ? g_shader_code : nullptr
   );
   return shader;
 }
 
 Texture2D ResourceManager::load_texture_from_file(
-  const char *file,
+  const std::string& file,
   bool alpha)
 {
   // create texture object
@@ -113,7 +128,7 @@ Texture2D ResourceManager::load_texture_from_file(
 
   // load image
   int width, height, nb_channels;
-  unsigned char* data = stbi_load(file, &width, &height, &nb_channels, 0);
+  unsigned char* data = stbi_load(file.c_str(), &width, &height, &nb_channels, 0);
 
   // now generate texture
   texture.generate(width, height, data);
@@ -122,3 +137,5 @@ Texture2D ResourceManager::load_texture_from_file(
   stbi_image_free(data);
   return texture;
 }
+  } /* end of namespace resources */
+} /* end of namespace pgl */

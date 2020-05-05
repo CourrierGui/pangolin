@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.1)
 
+set(PROFILING ON CACHE BOOL "Enabel profiling functions")
+if (${PROFILING})
+  add_definitions(-DPROFILING)
+endif()
+
 if(${CMAKE_VERSION} VERSION_LESS 3.15)
     cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 else()
