@@ -45,6 +45,7 @@ PostProcessor::PostProcessor(
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   // initialize render data and uniforms
   init_render_data();
+  post_processing_shader.use();
   post_processing_shader.setInteger("scene", 0);
   float offset = 1.0f / 300.0f;
   float offsets[9][2] = {
