@@ -6,12 +6,15 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+namespace pgl {
+  namespace resources {
 
-// General purpsoe shader object. Compiles from file, generates
-// compile/link-time error messages and hosts several utility
-// functions for easy management.
-class Shader
-{
+/*
+ * General purpsoe shader object. Compiles from file, generates
+ * compile/link-time error messages and hosts several utility functions for
+ * easy management.
+ */
+class Shader {
   public:
     // state
     unsigned int id;
@@ -47,3 +50,6 @@ class Shader
      */
     void check_compile_errors(unsigned int object, const std::string& type);
 };
+
+  } /* end of namespace resources */
+} /* end of namespace pgl */

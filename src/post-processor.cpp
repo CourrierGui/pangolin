@@ -1,7 +1,9 @@
 #include <pangolin/post-processor.hpp>
 
+namespace pgl {
+
 PostProcessor::PostProcessor(
-  Shader& shader, unsigned int width,
+  resources::Shader& shader, unsigned int width,
   unsigned int height) 
   : 
     post_processing_shader(shader),
@@ -141,3 +143,5 @@ void PostProcessor::init_render_data() {
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
 }
+
+} /* end of namespace pgl */

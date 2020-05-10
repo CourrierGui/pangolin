@@ -1,5 +1,7 @@
 #include <pangolin/mesh.hpp>
 
+namespace pgl {
+
 Mesh::Mesh(
   const std::vector<Vertex>&       vertices,
   const std::vector<unsigned int>& indices,
@@ -37,7 +39,7 @@ void Mesh::setup_mesh() {
   glBindVertexArray(0);
 }
 
-void Mesh::draw(Shader& shader) {
+void Mesh::draw(resources::Shader& shader) {
   unsigned int diffuse_index;
   unsigned int specular_index;
 
@@ -60,3 +62,5 @@ void Mesh::draw(Shader& shader) {
   glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
 }
+
+} /* end of namespace pgl */

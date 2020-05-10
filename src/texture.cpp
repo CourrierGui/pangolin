@@ -2,6 +2,8 @@
 
 #include <pangolin/texture.hpp>
 
+namespace pgl {
+  namespace resources {
 
 Texture2D::Texture2D()
   : width(0), height(0),
@@ -37,4 +39,5 @@ void Texture2D::bind() const {
   glBindTexture(GL_TEXTURE_2D, id);
 }
 
-
+  } /* end of namespace resources */
+} /* end of namespace pgl */

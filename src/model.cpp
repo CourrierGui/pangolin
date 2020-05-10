@@ -1,10 +1,12 @@
 #include <pangolin/model.hpp>
 
+namespace pgl {
+
 Model::Model(const std::string& path) {
   load_model(path);
 }
 
-void Model::draw(Shader& shader) {
+void Model::draw(resources::Shader& shader) {
   for (auto& mesh: meshes) {
     mesh.draw(shader);
   }
@@ -159,3 +161,5 @@ unsigned int TextureFromFile(
 
   return texture_id;
 }
+
+} /* end of namespace pgl */

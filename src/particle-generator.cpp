@@ -1,8 +1,10 @@
 #include <pangolin/particle-generator.hpp>
 
+namespace pgl {
+
 ParticleGenerator::ParticleGenerator(
-  Shader&      shader,
-  Texture2D&   texture,
+  resources::Shader&      shader,
+  resources::Texture2D&   texture,
   unsigned int amount) :
   shader(shader),
   texture(texture),
@@ -149,3 +151,5 @@ void ParticleGenerator::respawn_particle(
   particle.life = 1.0f;
   particle.velocity = object.velocity * 0.1f;
 }
+
+} /* end of namespace pgl */

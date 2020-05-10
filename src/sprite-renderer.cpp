@@ -1,6 +1,9 @@
 #include <pangolin/sprite-renderer.hpp>
 
-SpriteRenderer::SpriteRenderer(Shader& shader) : shader(shader){
+namespace pgl {
+  namespace render2D {
+
+SpriteRenderer::SpriteRenderer(resources::Shader& shader) : shader(shader){
   init_render_data();
 }
 
@@ -36,7 +39,7 @@ void SpriteRenderer::init_render_data() {
 }
 
 void SpriteRenderer::draw(
-  Texture2D& texture,
+  resources::Texture2D& texture,
   const glm::vec2& position,
   const glm::vec2& size,
   float      rotate,
@@ -65,7 +68,7 @@ void SpriteRenderer::draw(
 }
 
 void SpriteRenderer::draw(
-  Texture2D& texture,
+  resources::Texture2D& texture,
   const glm::vec2& position,
   const glm::vec2& size,
   float      rotate)
@@ -74,7 +77,7 @@ void SpriteRenderer::draw(
 }
 
 void SpriteRenderer::draw(
-  Texture2D& texture,
+  resources::Texture2D& texture,
   const glm::vec2& position,
   const glm::vec2& size)
 {
@@ -82,8 +85,11 @@ void SpriteRenderer::draw(
 }
 
 void SpriteRenderer::draw(
-  Texture2D& texture,
+  resources::Texture2D& texture,
   const glm::vec2& position)
 {
   draw(texture, position, glm::vec2(10.0f, 10.0f), 0.0f, glm::vec3(1.0f));
 }
+
+  } /* end of namespace render2D */
+} /* end of namespace pgl */

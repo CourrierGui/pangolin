@@ -1,6 +1,9 @@
 #include <pangolin/shader.hpp>
 #include <iostream>
 
+namespace pgl {
+  namespace resources {
+
 Shader::Shader() = default;
 
 Shader& Shader::use() {
@@ -115,3 +118,6 @@ void Shader::check_compile_errors(
     }
   }
 }
+
+  } /* end of namespace resources */
+} /* end of namespace pgl */

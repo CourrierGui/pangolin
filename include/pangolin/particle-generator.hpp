@@ -10,6 +10,8 @@
 #include <pangolin/texture.hpp>
 #include <pangolin/game-object.hpp>
 
+namespace pgl {
+
 /**
  * Represents a single particle and its state
  * */
@@ -29,7 +31,7 @@ struct Particle {
 class ParticleGenerator {
   public:
     /* constructor */
-    ParticleGenerator(Shader& shader, Texture2D& texture, unsigned int amount);
+    ParticleGenerator(resources::Shader& shader, resources::Texture2D& texture, unsigned int amount);
 
     /* update all particles */
     void update(
@@ -51,8 +53,8 @@ class ParticleGenerator {
     unsigned int          amount;
 
     /* render state */
-    Shader       shader;
-    Texture2D    texture;
+    resources::Shader       shader;
+    resources::Texture2D    texture;
     unsigned int vao;
 
     /**
@@ -83,3 +85,5 @@ class ParticleGenerator {
       Particle& particle, GameObject& object
     );
 };
+
+} /* end of namespace pgl */

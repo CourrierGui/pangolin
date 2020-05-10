@@ -11,7 +11,13 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-/// Holds all state information relevant to a character as loaded using FreeType
+namespace pgl {
+  namespace text {
+
+/**
+ * Holds all state information relevant to a character as loaded using
+ * FreeType
+ */
 struct Character {
   unsigned int texture_id; // ID handle of the glyph texture
   glm::ivec2   size;       // size of glyph
@@ -19,10 +25,11 @@ struct Character {
   FT_Pos       advance;    // horizontal offset to advance to next glyph
 };
 
-
-// A renderer class for rendering text displayed by a font loaded using the 
-// FreeType library. A single font is loaded, processed into a list of Character
-// items for later rendering.
+/**
+ * A renderer class for rendering text displayed by a font loaded using the
+ * FreeType library. A single font is loaded, processed into a list of
+ * Character items for later rendering.
+ */
 class TextRenderer {
   public:
     // holds a list of pre-compiled Characters
@@ -48,3 +55,6 @@ class TextRenderer {
     // render state
     unsigned int VAO, VBO;
 };
+
+  } /* end of namespace text */
+} /* end of namespace pgl */

@@ -9,6 +9,8 @@
 #include <pangolin/shader.hpp>
 #include <iostream>
 
+namespace pgl {
+
 struct Vertex {
   glm::vec3 position;
   glm::vec3 normal;
@@ -31,10 +33,13 @@ class Mesh {
 
     Mesh(const std::vector<Vertex>&       vertices,
          const std::vector<unsigned int>& indices,
-         const std::vector<Texture>&      textures);
-    void draw(Shader& shader);
+         const std::vector<Texture>&      textures
+    );
+    void draw(resources::Shader& shader);
 
   private:
     unsigned int VBO, VAO, EBO;
     void setup_mesh();
 };
+
+} /* end of namespace pgl */

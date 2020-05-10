@@ -5,7 +5,10 @@
 #include <pangolin/text-renderer.hpp>
 #include <pangolin/resource-manager.hpp>
 
-using namespace pgl::resources;
+namespace pgl {
+  namespace text {
+
+using namespace resources;
 
 TextRenderer::TextRenderer(
   unsigned int width,
@@ -156,3 +159,6 @@ void TextRenderer::render_text(
   glBindVertexArray(0);
   glBindTexture(GL_TEXTURE_2D, 0);
 }
+
+  } /* end of namespace text */
+} /* end of namespace pgl */

@@ -15,12 +15,17 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-unsigned int TextureFromFile(const std::string& path, const std::string &directory, bool gamma=false);
+namespace pgl {
+
+unsigned int TextureFromFile(
+  const std::string& path,
+  const std::string &directory, bool gamma=false
+);
 
 class Model {
   public:
     Model(const std::string& path);
-    void draw(Shader& shader);
+    void draw(resources::Shader& shader);
 
   private:
     std::vector<Texture> loaded_textures;
@@ -36,3 +41,5 @@ class Model {
       const std::string& name)
     -> std::vector<Texture>;
 };
+
+} /* end of namespace pgl */

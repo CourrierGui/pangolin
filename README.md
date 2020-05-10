@@ -9,3 +9,4 @@ This project depends on:
 * [stb_image](https://github.com/nothings/stb): it only uses stb_image.h available [here](https://github.com/nothings/stb/blob/master/stb_image.h);
 * [glad](https://glad.dav1d.de/): the exact version depends on the distribution;
 * [googletest](https://github.com/google/googletest) (v1.10.0).
+* [freetype](https://git.savannah.gnu.org/cgit/freetype/freetype2.git/): clone into extern
