@@ -16,14 +16,14 @@ set(
   resource-manager.cpp
   shader.cpp
   sprite-renderer.cpp
-  # text-renderer.cpp
+  text-renderer.cpp
   texture.cpp
   profile.cpp
 )
 
-# add_library(freetype SHARED IMPORTED)
-# set_target_properties(freetype PROPERTIES
-#   IMPORTED_LOCATION "${pangolin_SOURCE_DIR}/extern/freetype2/objs/.libs/libfreetype.so")
+add_library(freetype SHARED IMPORTED)
+set_target_properties(freetype PROPERTIES
+  IMPORTED_LOCATION "${pangolin_SOURCE_DIR}/extern/freetype2/objs/.libs/libfreetype.so")
 
 add_library(pangolin STATIC ${pangolin_src})
 target_include_directories(pangolin PUBLIC "${pangolin_SOURCE_DIR}/include"                 )
@@ -31,4 +31,4 @@ target_include_directories(pangolin PUBLIC "${pangolin_SOURCE_DIR}/extern/glm"  
 target_include_directories(pangolin PUBLIC "${pangolin_SOURCE_DIR}/extern/glfw/include"     )
 target_include_directories(pangolin PUBLIC "${pangolin_SOURCE_DIR}/extern/assimp/include"   )
 target_include_directories(pangolin PUBLIC "${pangolin_SOURCE_DIR}/extern/freetype2/include")
-target_link_libraries(pangolin glad glm) # freetype)
+target_link_libraries(pangolin glad glm freetype)

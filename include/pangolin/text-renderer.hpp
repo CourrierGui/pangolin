@@ -36,7 +36,7 @@ class TextRenderer {
     std::map<char, Character> characters; 
 
     // shader used for text rendering
-    Shader text_shader;
+    resources::Shader text_shader;
 
     // constructor
     TextRenderer(unsigned int width, unsigned int height);
