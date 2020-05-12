@@ -10,6 +10,7 @@
 #include <iostream>
 
 namespace pgl {
+  namespace render3D {
 
 struct Vertex {
   glm::vec3 position;
@@ -42,4 +43,5 @@ class Mesh {
     void setup_mesh();
 };
 
+  } /* end of namespace render3D */
 } /* end of namespace pgl */

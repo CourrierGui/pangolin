@@ -9,7 +9,7 @@
 #include <pangolin/shader.hpp>
 
 namespace pgl {
-  namespace text {
+  namespace ui {
 
 /**
  * Holds all state information relevant to a character as loaded using
@@ -56,5 +56,5 @@ class TextRenderer {
     unsigned int VAO, VBO;
 };
 
-  } /* end of namespace text */
+  } /* end of namespace ui */
 } /* end of namespace pgl */

@@ -1,6 +1,7 @@
 #include <pangolin/model.hpp>
 
 namespace pgl {
+  namespace render3D {
 
 Model::Model(const std::string& path) {
   load_model(path);
@@ -69,18 +70,19 @@ Mesh Model::process_mesh(aiMesh* mesh, const aiScene* scene) {
       indices.push_back(face.mIndices[j]);
   }
 
-  if(mesh->mMaterialIndex >= 0) {
-    aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+  // unsigned int always >= 0
+  /* if(mesh->mMaterialIndex >= 0) { */
+  aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
-    //TODO: y'a des copies...
-    std::vector<Texture> diffuseMaps = load_material_textures(
-      material, aiTextureType_DIFFUSE, "texture_diffuse");
-    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+  //TODO: y'a des copies...
+  std::vector<Texture> diffuseMaps = load_material_textures(
+    material, aiTextureType_DIFFUSE, "texture_diffuse");
+  textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
-    std::vector<Texture> specularMaps = load_material_textures(
-      material, aiTextureType_SPECULAR, "texture_specular");
-    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-  }
+  std::vector<Texture> specularMaps = load_material_textures(
+    material, aiTextureType_SPECULAR, "texture_specular");
+  textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+  /* } */
   return Mesh(vertices, indices, textures);
 }
 
@@ -121,7 +123,7 @@ auto Model::load_material_textures(
 unsigned int TextureFromFile(
   const std::string& path,
   const std::string& directory,
-  bool gamma)
+  [[maybe_unused]]bool gamma)
 {
   std::string filename = directory + '/' + path;
 
@@ -162,4 +164,5 @@ unsigned int TextureFromFile(
   return texture_id;
 }
 
+  } /* end of namespace render3D */
 } /* end of namespace pgl */

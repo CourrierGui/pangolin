@@ -10,7 +10,7 @@
 
 
 namespace pgl {
-  namespace text {
+  namespace ui {
 
 using namespace resources;
 
@@ -162,5 +162,5 @@ void TextRenderer::render_text(
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-  } /* end of namespace text */
+  } /* end of namespace ui */
 } /* end of namespace pgl */

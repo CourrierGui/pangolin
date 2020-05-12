@@ -1,6 +1,7 @@
 #include <pangolin/mesh.hpp>
 
 namespace pgl {
+  namespace render3D {
 
 Mesh::Mesh(
   const std::vector<Vertex>&       vertices,
@@ -63,4 +64,5 @@ void Mesh::draw(resources::Shader& shader) {
   glBindVertexArray(0);
 }
 
+  } /* end of namespace render3d */
 } /* end of namespace pgl */

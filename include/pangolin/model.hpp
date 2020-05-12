@@ -16,6 +16,7 @@
 #include <assimp/postprocess.h>
 
 namespace pgl {
+  namespace render3D {
 
 unsigned int TextureFromFile(
   const std::string& path,
@@ -42,4 +43,5 @@ class Model {
     -> std::vector<Texture>;
 };
 
+  } /* end of namespace render3D */
 } /* end of namespace pgl */
