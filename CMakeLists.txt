@@ -61,7 +61,7 @@ target_link_libraries(pangolin
 )
 
 add_executable(pangolin-demo apps/demo.cpp)
-# because pangolin is a static lib, there's no need to lic other libs
+# because pangolin is a static lib, there's no need to link other libs
 # what if pangolin is shared ? -> need to fix that
 target_link_libraries(pangolin-demo pangolin)
 
@@ -85,11 +85,11 @@ install(DIRECTORY include/glad/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/glad)
 
 install(EXPORT pangolin-targets
   FILE
-  pangolinTargets.cmake
+    pangolinTargets.cmake
   NAMESPACE
-  pangolin::
+    pangolin::
   DESTINATION
-  ${CMAKE_INSTALL_LIBDIR}/cmake/pangolin
+    ${CMAKE_INSTALL_LIBDIR}/cmake/pangolin
 )
 
 #Create a ConfigVersion.cmake file
