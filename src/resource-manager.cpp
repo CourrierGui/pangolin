@@ -110,7 +110,7 @@ Shader ResourceManager::load_shader_from_file(
   Shader shader;
   shader.compile(
     v_shader_code, f_shader_code,
-    g_shader_file.empty() ? g_shader_code : nullptr
+    !g_shader_file.empty() ? g_shader_code : nullptr
   );
   return shader;
 }
