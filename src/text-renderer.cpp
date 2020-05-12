@@ -5,6 +5,10 @@
 #include <pangolin/text-renderer.hpp>
 #include <pangolin/resource-manager.hpp>
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
+
 namespace pgl {
   namespace text {
 

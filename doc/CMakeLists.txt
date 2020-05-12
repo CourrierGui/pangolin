@@ -4,7 +4,7 @@ if(NOT DOXYGEN_FOUND)
 else()
 	configure_file(Doxyfile.in Doxyfile)
 
-	set(DOXYGEN_INPUT ${CMAKE_BINARY_DIR}/docs/Doxyfile)
+	set(DOXYGEN_INPUT ${CMAKE_BINARY_DIR}/doc/Doxyfile)
 	set(DOXYGEN_OUTPUT ${APIDOC_DIR}/html/index.html)
 
 	add_custom_target(doc ALL

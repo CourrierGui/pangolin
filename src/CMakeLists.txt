@@ -26,9 +26,21 @@ set_target_properties(freetype PROPERTIES
   IMPORTED_LOCATION "${pangolin_SOURCE_DIR}/extern/freetype2/objs/.libs/libfreetype.so")
 
 add_library(pangolin STATIC ${pangolin_src})
-target_include_directories(pangolin PUBLIC "${pangolin_SOURCE_DIR}/include"                 )
-target_include_directories(pangolin PUBLIC "${pangolin_SOURCE_DIR}/extern/glm"              )
-target_include_directories(pangolin PUBLIC "${pangolin_SOURCE_DIR}/extern/glfw/include"     )
-target_include_directories(pangolin PUBLIC "${pangolin_SOURCE_DIR}/extern/assimp/include"   )
-target_include_directories(pangolin PUBLIC "${pangolin_SOURCE_DIR}/extern/freetype2/include")
+target_include_directories(pangolin
+  PUBLIC
+    $<INSTALL_INTERFACE:${pangolin_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  PRIVATE
+    "${pangolin_SOURCE_DIR}/extern/glm"
+    "${pangolin_SOURCE_DIR}/extern/glfw/include"
+    "${pangolin_SOURCE_DIR}/extern/assimp/include"
+    "${pangolin_SOURCE_DIR}/extern/freetype2/include"
+)
+target_compile_options(JSONUtils PRIVATE -Wall -Wextra)
+target_compile_features(JSONUtils PRIVATE cxx_std_20)
 target_link_libraries(pangolin glad glm freetype)
+
+install(
+  TARGETS pangolin
+  LIBRARY DESTINATION lib
+)

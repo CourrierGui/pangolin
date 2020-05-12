@@ -8,9 +8,6 @@
 #include <pangolin/texture.hpp>
 #include <pangolin/shader.hpp>
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
 namespace pgl {
   namespace text {
 
@@ -22,7 +19,7 @@ struct Character {
   unsigned int texture_id; // ID handle of the glyph texture
   glm::ivec2   size;       // size of glyph
   glm::ivec2   bearing;    // offset from baseline to left/top of glyph
-  FT_Pos       advance;    // horizontal offset to advance to next glyph
+  signed long  advance;    // horizontal offset to advance to next glyph
 };
 
 /**

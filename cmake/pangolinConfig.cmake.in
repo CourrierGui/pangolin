@@ -1,0 +1,16 @@
+get_filename_component(pangolin_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+list(APPEND CMAKE_MODULE_PATH ${JSONUTILS_CMAKE_DIR})
+
+# NOTE: to find FindRapidJSON.cmake
+# find_dependency(RapidJSON @MIN_RapidJSON_VERSION@)
+# list(REMOVE_AT CMAKE_MODULE_PATH -1)
+
+# find_dependency(boost_regex @MIN_BOOST_VERSION@)
+
+if(NOT TARGET pangolin::pangolin)
+  include("${pangolin_CMAKE_DIR}/pangolinTargets.cmake")
+endif()
+
+set(pangolin_LIBRARIES pangolin::pangolin)

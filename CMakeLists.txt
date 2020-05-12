@@ -12,23 +12,110 @@ else()
     cmake_policy(VERSION 3.15)
 endif()
 
-project(pangolin VERSION 0.1
+project(pangolin
+  VERSION 0.1
   DESCRIPTION "Probably one of the worst game engines."
-  LANGUAGES CXX)
+  LANGUAGES CXX
+)
 
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
-set (CMAKE_CXX_STANDARD 17)
+find_package(glm    REQUIRED)
+find_package(glfw3  REQUIRED)
+find_package(assimp REQUIRED)
 
-add_subdirectory(extern/glfw)
-add_subdirectory(extern/glm)
-add_subdirectory(extern/assimp)
-add_subdirectory(src)
-add_subdirectory(apps)
-add_subdirectory(docs)
+#################
+##### BUILD #####
+#################
 
-option(BUILD_TESTING "Build the tests" ON)
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
-  enable_testing()
-  include(GoogleTest)
-  add_subdirectory(tests)
-endif()
+add_library(stb_image STATIC src/stb_image.cpp)
+target_include_directories(stb_image PRIVATE include)
+
+add_library(glad STATIC src/glad.cpp)
+target_include_directories(glad PRIVATE include)
+target_link_libraries(glad dl)
+
+add_library(pangolin STATIC
+  src/game-object.cpp
+  src/mesh.cpp
+  src/model.cpp
+  src/particle-generator.cpp
+  src/post-processor.cpp
+  src/profile.cpp
+  src/resource-manager.cpp
+  src/shader.cpp
+  src/sprite-renderer.cpp
+  src/text-renderer.cpp
+  src/texture.cpp
+)
+target_include_directories(pangolin
+  PUBLIC
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  PRIVATE
+    extern/freetype2/include
+)
+target_compile_options(pangolin PRIVATE -Wall -Wextra)
+target_compile_features(pangolin PRIVATE cxx_std_20)
+target_link_libraries(pangolin 
+  PUBLIC
+    assimp glfw glad freetype stb_image
+)
+
+add_executable(pangolin-demo apps/demo.cpp)
+# because pangolin is a static lib, there's no need to lic other libs
+# what if pangolin is shared ? -> need to fix that
+target_link_libraries(pangolin-demo pangolin)
+
+add_subdirectory(doc)
+
+#################
+#### INSTALL ####
+#################
+
+include(GNUInstallDirs)
+set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/pangolin)
+
+install(TARGETS pangolin glad stb_image
+  EXPORT pangolin-targets
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+install(DIRECTORY include/pangolin/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pangolin)
+install(DIRECTORY include/glad/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/glad)
+
+install(EXPORT pangolin-targets
+  FILE
+  pangolinTargets.cmake
+  NAMESPACE
+  pangolin::
+  DESTINATION
+  ${CMAKE_INSTALL_LIBDIR}/cmake/pangolin
+)
+
+#Create a ConfigVersion.cmake file
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/pangolinConfigVersion.cmake
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY AnyNewerVersion
+)
+
+configure_package_config_file(
+  ${CMAKE_CURRENT_LIST_DIR}/cmake/pangolinConfig.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/pangolinConfig.cmake
+  INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
+)
+
+#Install the config, configversion and custom find modules
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/pangolinConfig.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/pangolinConfigVersion.cmake
+  DESTINATION ${INSTALL_CONFIGDIR}
+)
+
+# option(BUILD_TESTING "Build the tests" ON)
+# if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+#   enable_testing()
+#   include(GoogleTest)
+#   add_subdirectory(tests)
+# endif()
