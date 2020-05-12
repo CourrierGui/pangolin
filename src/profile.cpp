@@ -61,8 +61,8 @@ Instrumentor& Instrumentor::get() {
 }
 
 InstrumentationTimer::InstrumentationTimer(const char* name)
-  : start_point(std::chrono::high_resolution_clock::now()),
-  stoped(false), name(name) { }
+  : name(name), start_point(std::chrono::high_resolution_clock::now()),
+  stoped(false) { }
 
 void InstrumentationTimer::stop() {
   auto end_point = std::chrono::high_resolution_clock::now();
@@ -85,14 +85,14 @@ InstrumentationTimer::~InstrumentationTimer() {
   } /* end of namespace profile */
 } /* end of namespace pgl */
 
-void* operator new(std::size_t size) {
-  return malloc(size);
-}
+/* void* operator new(std::size_t size) { */
+/*   return malloc(size); */
+/* } */
 
-void operator delete(void* memory, std::size_t size) {
-  free(memory);
-}
+/* void operator delete(void* memory, std::size_t size) { */
+/*   free(memory); */
+/* } */
 
-void operator delete(void* memory) {
-  free(memory);
-}
+/* void operator delete(void* memory) { */
+/*   free(memory); */
+/* } */

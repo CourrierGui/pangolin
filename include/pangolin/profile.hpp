@@ -13,9 +13,9 @@
 #define PROFILE_FUNCTION()
 #endif
 
-void* operator new(std::size_t size);
-void  operator delete(void* memory, std::size_t size);
-void  operator delete(void* memory);
+/* void* operator new(std::size_t size); */
+/* void  operator delete(void* memory, std::size_t size); */
+/* void  operator delete(void* memory); */
 
 namespace pgl {
   namespace profile {

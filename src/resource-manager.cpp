@@ -100,7 +100,7 @@ Shader ResourceManager::load_shader_from_file(
       geometry_code = g_shader_stream.str();
     }
   }
-  catch (std::exception e) {
+  catch (const std::exception& e) {
     std::cerr << "ERROR::SHADER: Failed to read shader files\n";
   }
   const char *v_shader_code = vertex_code.c_str();
