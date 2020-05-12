@@ -16,20 +16,18 @@ using namespace resources;
 
 TextRenderer::TextRenderer(
   unsigned int width,
-  unsigned int height)
+  unsigned int height,
+  pgl::resources::Shader& shader)
+  : text_shader(shader)
 {
-  // load and configure shader
-  text_shader = ResourceManager::load_shader(
-    "../../resources/shaders/text.vs",
-    "../../resources/shaders/text.fs",
-    nullptr, "text"
-  );
 
   text_shader.use();
   text_shader.setMatrix4("projection",
-    glm::ortho(0.0f, static_cast<float>(width),
-               static_cast<float>(height),
-               0.0f)
+    glm::ortho(
+      0.0f, static_cast<float>(width),
+      static_cast<float>(height),
+      0.0f
+    )
   );
   text_shader.setInteger("text", 0);
 

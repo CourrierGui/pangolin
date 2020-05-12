@@ -36,7 +36,10 @@ class TextRenderer {
     resources::Shader text_shader;
 
     // constructor
-    TextRenderer(unsigned int width, unsigned int height);
+    TextRenderer(
+      unsigned int width, unsigned int height,
+      pgl::resources::Shader& shader
+    );
 
     // pre-compiles a list of characters from the given font
     void load(const std::string& font, unsigned int fontSize);
