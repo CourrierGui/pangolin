@@ -21,13 +21,13 @@ namespace pgl {
 class PostProcessor {
   public:
     // state
-    resources::Shader post_processing_shader;
-    resources::Texture2D texture;
+    loader::Shader post_processing_shader;
+    loader::Texture2D texture;
     unsigned int width, height;
     // options
     bool confuse, chaos, shake;
     // constructor
-    PostProcessor(resources::Shader& shader, unsigned int width, unsigned int height);
+    PostProcessor(loader::Shader& shader, unsigned int width, unsigned int height);
     // prepares the postprocessor's framebuffer operations before rendering the game
     void begin_render();
     // should be called after rendering the game, so it stores all the rendered data into a texture object

@@ -7,7 +7,7 @@ Model::Model(const std::string& path) {
   load_model(path);
 }
 
-void Model::draw(resources::Shader& shader) {
+void Model::draw(loader::Shader& shader) {
   for (auto& mesh: meshes) {
     mesh.draw(shader);
   }

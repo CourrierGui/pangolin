@@ -26,7 +26,7 @@ unsigned int TextureFromFile(
 class Model {
   public:
     Model(const std::string& path);
-    void draw(resources::Shader& shader);
+    void draw(loader::Shader& shader);
 
   private:
     std::vector<Texture> loaded_textures;

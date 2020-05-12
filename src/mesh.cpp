@@ -40,7 +40,7 @@ void Mesh::setup_mesh() {
   glBindVertexArray(0);
 }
 
-void Mesh::draw(resources::Shader& shader) {
+void Mesh::draw(loader::Shader& shader) {
   unsigned int diffuse_index;
   unsigned int specular_index;
 

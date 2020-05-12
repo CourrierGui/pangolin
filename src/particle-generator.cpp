@@ -3,12 +3,12 @@
 namespace pgl {
 
 ParticleGenerator::ParticleGenerator(
-  resources::Shader&      shader,
-  resources::Texture2D&   texture,
+  loader::Shader&      shader,
+  loader::Texture2D&   texture,
   unsigned int amount) :
+  amount(amount),
   shader(shader),
-  texture(texture),
-  amount(amount)
+  texture(texture)
 {
   init();
 }

@@ -12,12 +12,10 @@
 namespace pgl {
   namespace ui {
 
-using namespace resources;
-
 TextRenderer::TextRenderer(
   unsigned int width,
   unsigned int height,
-  pgl::resources::Shader& shader)
+  pgl::loader::Shader& shader)
   : text_shader(shader)
 {
 

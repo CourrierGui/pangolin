@@ -23,12 +23,12 @@ class GameObject {
     bool      destroyed;
 
     // render state
-    resources::Texture2D   sprite;
+    loader::Texture2D   sprite;
 
     // constructor(s)
     GameObject();
     GameObject(
-      const glm::vec2& pos, const glm::vec2& size, resources::Texture2D& sprite,
+      const glm::vec2& pos, const glm::vec2& size, loader::Texture2D& sprite,
       const glm::vec3& color=glm::vec3(1.0f), const glm::vec2& velocity=glm::vec2(0.0f, 0.0f)
     );
 

@@ -3,7 +3,7 @@
 namespace pgl {
 
 PostProcessor::PostProcessor(
-  resources::Shader& shader, unsigned int width,
+  loader::Shader& shader, unsigned int width,
   unsigned int height) 
   : 
     post_processing_shader(shader),

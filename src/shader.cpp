@@ -2,7 +2,7 @@
 #include <iostream>
 
 namespace pgl {
-  namespace resources {
+  namespace loader {
 
 Shader::Shader() = default;
 
@@ -106,7 +106,7 @@ void Shader::check_compile_errors(
     if (!success) {
       glGetShaderInfoLog(object, 1024, nullptr, info_log);
       std::cerr << "| ERROR::SHADER: Compile-time error: Type: " << type << "\n"
-        << info_log << "\n -- --------------------------------------------------- -- \n";
+        << info_log << "\n -- --------------------------------------------------- --\n";
     }
   }
   else {
@@ -114,10 +114,10 @@ void Shader::check_compile_errors(
     if (!success) {
       glGetProgramInfoLog(object, 1024, nullptr, info_log);
       std::cerr << "| ERROR::Shader: Link-time error: Type: " << type << "\n"
-        << info_log << "\n -- --------------------------------------------------- -- ";;
+        << info_log << "\n -- --------------------------------------------------- --\n";;
     }
   }
 }
 
-  } /* end of namespace resources */
+  } /* end of namespace loader */
 } /* end of namespace pgl */

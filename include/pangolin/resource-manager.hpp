@@ -9,7 +9,7 @@
 #include <pangolin/shader.hpp>
 
 namespace pgl {
-  namespace resources {
+  namespace loader {
 
 void set_root(const std::string& path);
 const std::string& root();
@@ -77,5 +77,5 @@ class ResourceManager {
     static Texture2D load_texture_from_file(const std::string& file, bool alpha);
 };
 
-  } /* end of namespace path */
+  } /* end of namespace loader */
 } /* end of namespace pgl */

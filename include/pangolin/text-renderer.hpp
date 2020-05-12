@@ -33,12 +33,12 @@ class TextRenderer {
     std::map<char, Character> characters; 
 
     // shader used for text rendering
-    resources::Shader text_shader;
+    loader::Shader text_shader;
 
     // constructor
     TextRenderer(
       unsigned int width, unsigned int height,
-      pgl::resources::Shader& shader
+      loader::Shader& shader
     );
 
     // pre-compiles a list of characters from the given font

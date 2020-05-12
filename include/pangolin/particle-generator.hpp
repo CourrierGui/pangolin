@@ -31,7 +31,7 @@ struct Particle {
 class ParticleGenerator {
   public:
     /* constructor */
-    ParticleGenerator(resources::Shader& shader, resources::Texture2D& texture, unsigned int amount);
+    ParticleGenerator(loader::Shader& shader, loader::Texture2D& texture, unsigned int amount);
 
     /* update all particles */
     void update(
@@ -53,9 +53,9 @@ class ParticleGenerator {
     unsigned int          amount;
 
     /* render state */
-    resources::Shader       shader;
-    resources::Texture2D    texture;
-    unsigned int vao;
+    loader::Shader    shader;
+    loader::Texture2D texture;
+    unsigned int      vao;
 
     /**
      * stores the index of the last particle used (for quick access to next

@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 
 namespace pgl {
-  namespace resources {
+  namespace loader {
 
 /* Texture2D is able to store and configure a texture in OpenGL.
  * It also hosts utility functions for easy management.
@@ -35,5 +35,5 @@ class Texture2D {
     void bind() const;
 };
 
-  } /* end of namespace resources */
+  } /* end of namespace loader */
 } /* end of namespace pgl */

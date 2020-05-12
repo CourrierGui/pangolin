@@ -7,7 +7,7 @@
 #include <stb_image.h>
 
 namespace pgl {
-  namespace resources {
+  namespace loader {
 // Instantiate static variables
 std::map<std::string, Texture2D> ResourceManager::textures;
 std::map<std::string, Shader>    ResourceManager::shaders;
@@ -137,5 +137,5 @@ Texture2D ResourceManager::load_texture_from_file(
   stbi_image_free(data);
   return texture;
 }
-  } /* end of namespace resources */
+  } /* end of namespace loader */
 } /* end of namespace pgl */

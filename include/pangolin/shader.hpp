@@ -7,7 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 namespace pgl {
-  namespace resources {
+  namespace loader {
 
 /*
  * General purpsoe shader object. Compiles from file, generates
@@ -51,5 +51,5 @@ class Shader {
     void check_compile_errors(unsigned int object, const std::string& type);
 };
 
-  } /* end of namespace resources */
+  } /* end of namespace loader */
 } /* end of namespace pgl */

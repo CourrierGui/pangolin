@@ -3,7 +3,7 @@
 #include <pangolin/texture.hpp>
 
 namespace pgl {
-  namespace resources {
+  namespace loader {
 
 Texture2D::Texture2D()
   : width(0), height(0),
@@ -16,8 +16,8 @@ Texture2D::Texture2D()
 }
 
 void Texture2D::generate(unsigned int width, unsigned int height, unsigned char* data) {
-  width = width;
-  height = height;
+  this->width = width;
+  this->height = height;
 
   // create Texture
   glBindTexture(GL_TEXTURE_2D, id);
@@ -39,5 +39,5 @@ void Texture2D::bind() const {
   glBindTexture(GL_TEXTURE_2D, id);
 }
 
-  } /* end of namespace resources */
+  } /* end of namespace loader */
 } /* end of namespace pgl */

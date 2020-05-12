@@ -4,7 +4,7 @@
 
 int main() {
   pgl::GameObject go;
-  pgl::resources::Shader shader
-    = pgl::resources::ResourceManager::load_shader("", "", "", "");
+  pgl::loader::Shader shader
+    = pgl::loader::ResourceManager::load_shader("", "", "", "");
   return 0;
 }
