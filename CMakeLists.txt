@@ -45,6 +45,7 @@ add_library(pangolin STATIC
   src/sprite-renderer.cpp
   src/text-renderer.cpp
   src/texture.cpp
+  src/image-loader.cpp
 )
 target_include_directories(pangolin
   PUBLIC
@@ -112,6 +113,9 @@ install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/pangolinConfigVersion.cmake
   DESTINATION ${INSTALL_CONFIGDIR}
 )
+
+add_executable(testimage tests/testimage.cpp)
+target_link_libraries(testimage pangolin)
 
 # option(BUILD_TESTING "Build the tests" ON)
 # if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
