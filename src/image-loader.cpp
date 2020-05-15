@@ -15,7 +15,6 @@ Image load_png(const std::string& filename) {
   std::ifstream fstream(filename, std::ios::binary);
 
   if (!fstream.is_open()) {
-    std::clog << "Cannot open file...\n";
     throw std::runtime_error("File not found: " + filename);
 
   }

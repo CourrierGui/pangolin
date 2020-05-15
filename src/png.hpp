@@ -22,8 +22,12 @@ struct Chunk {
   }
 };
 
+unsigned short get_sint(Buffer::const_iterator& it) {
+  return (*(it++) << 1*8) + *it;
+}
+
 unsigned int get_uint(Buffer::const_iterator& it) {
-  return (*(it++) << 3*8) +(*(it++) << 2*8) +(*(it++) << 1*8) + *it;
+  return (*(it++) << 3*8) + (*(it++) << 2*8) + (*(it++) << 1*8) + *it;
 }
 
 void get_string(Buffer::const_iterator& it, std::string& str) {
@@ -272,10 +276,269 @@ std::ostream& operator<<(std::ostream& os, const cHRM& chrm) {
   return os;
 }
 
+struct PLTE {
+  char red, green, blue;
+  unsigned int size;
+
+  inline PLTE(const Chunk& chunk) {
+    size = chunk.data.size();
+    auto it = chunk.data.cbegin();
+    red = *(it++);
+    green = *(it++);
+    blue = *(it++);
+  }
+};
+
+std::ostream& operator<<(std::ostream& os, const PLTE& plte) {
+  os << "Type: PLTE\n"
+    << "Size: " << plte.size << '\n'
+    << "Red: " << plte.red << '\n'
+    << "Green: " << plte.green << '\n'
+    << "Blue: " << plte.blue << '\n';
+  return os;
+}
+
+struct sBIT {
+  unsigned int size;
+  char greyscale;
+  char red, green, blue;
+  char alpha;
+
+  inline sBIT(const Chunk& chunk, char color_type) {
+    size = chunk.data.size();
+    auto it = chunk.data.cbegin();
+    if ((int) color_type == 1) {
+      greyscale = *(it);
+    } else if ((int)color_type == 2 || (int)color_type == 3) {
+      red = *(it++);
+      green = *(it++);
+      blue = *it;
+    } else if ((int)color_type == 4) {
+      greyscale = *(it++);
+      alpha = *it;
+    } else if ((int)color_type == 6) {
+      red = *(it++);
+      green = *(it++);
+      blue = *(it++);
+      alpha = *it;
+    }
+  }
+};
+
+std::ostream& operator<<(std::ostream& os, const sBIT& sbit) {
+  os << "Type: sBIT\n"
+    << "Size: " << sbit.size << '\n'
+    << "Gray scale: " << sbit.greyscale << '\n'
+    << "Red: " << sbit.red << '\n'
+    << "Green: " << sbit.green << '\n'
+    << "Blue: " << sbit.blue << '\n'
+    << "Alpha: " << sbit.alpha << '\n';
+  return os;
+}
+
+struct gAMA {
+  unsigned int size;
+  unsigned int gamma;
+
+  inline gAMA(const Chunk& chunk) {
+    size = chunk.data.size();
+    auto it = chunk.data.cbegin();
+    gamma = get_uint(it);
+  }
+};
+
+std::ostream& operator<<(std::ostream& os, const gAMA& gama) {
+  os << "Type: gAMA\n"
+    << "Size: " << gama.size << '\n'
+    << "Gamma: " << gama.gamma << '\n';
+  return os;
+}
+
+struct zTXt {
+  unsigned int size;
+  char compression_method;
+  std::string keyword;
+  std::string text;
+
+  inline zTXt(const Chunk& chunk) {
+    size = chunk.data.size();
+    auto it = chunk.data.cbegin();
+    auto end = chunk.data.cend();
+
+    get_string(it, keyword);
+    ++it;
+    compression_method = *(it++);
+    get_string(it, end, text);
+  }
+};
+
+std::ostream& operator<<(std::ostream& os, const zTXt& ztxt) {
+  os << "Type: zTXT\n"
+    << "Size: " << ztxt.size << '\n'
+    << "Keyword: " << ztxt.keyword << '\n'
+    << "Compression method: " << (int)ztxt.compression_method << '\n'
+    << "Text size: " << ztxt.text.size() << '\n';
+  return os;
+}
+
+struct bKDG {
+  unsigned int size;
+  unsigned short grayscale;
+  unsigned short red, green, blue;
+  char palette_index;
+
+  inline bKDG(const Chunk& chunk, char color_type) {
+    size = chunk.data.size();
+    auto it = chunk.data.cbegin();
+    if ((int)color_type == 0 || (int)color_type == 4) {
+      grayscale = get_sint(it);
+    } else if ((int)color_type == 2 || (int)color_type == 6) {
+      red = get_sint(it); ++it;
+      green = get_sint(it); ++it;
+      blue = get_sint(it);
+    } else if ((int)color_type == 3) {
+      palette_index = *it;
+    }
+  }
+};
+
+std::ostream& operator<<(std::ostream& os, const bKDG& bkdg) {
+  os << "Type: bKDG\n"
+    << "Size: " << bkdg.size << '\n';
+  return os;
+}
+
+struct hIST {
+  unsigned int size;
+  std::vector<unsigned short> frequencies;
+
+  inline hIST(const Chunk& chunk) {
+    auto it = chunk.data.cbegin();
+    frequencies.reserve(size/2);
+    for (unsigned int i=0; i<size/2; ++i) {
+      frequencies.push_back(get_sint(it));
+      ++it;
+    }
+  }
+};
+
+std::ostream& operator<<(std::ostream& os, const hIST& hist) {
+  os << "Type: hIST\n"
+    << "Size: " << hist.size << '\n'
+    << "Frequencies: ";
+  for (auto f: hist.frequencies) {
+    os << f << ", ";
+  }
+  os << '\n';
+  return os;
+}
+
+struct tRNS {
+  unsigned int size;
+  unsigned short grey_sample;
+  unsigned short red_sample, blue_sample, green_sample;
+  std::vector<char> alpha_palette;
+
+  inline tRNS(const Chunk& chunk, char color_type) {
+    size = chunk.data.size();
+
+    auto it = chunk.data.cbegin();
+    if ((int)color_type == 0) {
+      grey_sample = get_sint(it);
+    } else if ((int)color_type == 2) {
+      red_sample = get_sint(it); ++it;
+      blue_sample = get_sint(it); ++it;
+      green_sample = get_sint(it);
+    } else if ((int)color_type == 3) {
+      for (unsigned int i=0; i<size; ++i) {
+        alpha_palette.push_back(*(it++));
+      }
+    }
+  }
+};
+
+std::ostream& operator<<(std::ostream& os, const tRNS& trns) {
+  os << "Type: tRNS\n"
+    << "Size: " << trns.size << '\n'
+    << "Grey sample: " << trns.grey_sample << '\n'
+    << "Red sample: " << trns.red_sample << '\n'
+    << "Blue sample: " << trns.blue_sample << '\n'
+    << "Green sample: " << trns.green_sample << '\n'
+    << "Alpha palette: ";
+  for (auto a: trns.alpha_palette) {
+    std::clog << (int)a << ' ';
+  }
+  std::clog << '\n';
+  return os;
+}
+
+struct PaletEntry {
+  unsigned short red, green, blue;
+  unsigned short alpha, frequency;
+};
+
+struct sPLT {
+  unsigned int size;
+  std::string palette_name;
+  char sample_depth;
+  std::vector<PaletEntry> palet_entries;
+
+  inline sPLT(const Chunk& chunk) {
+    size = chunk.data.size();
+    auto it = chunk.data.cbegin();
+    get_string(it, palette_name);
+    sample_depth = *(it++);
+
+    unsigned int left = size - 1 - palette_name.size();
+    PaletEntry pe;
+    if (sample_depth == 8 && left % 6 == 0) {
+      left /= 6;
+      for (unsigned int i=0; i<left; ++i) {
+        pe.red       = *(it++);
+        pe.green     = *(it++);
+        pe.blue      = *(it++);
+        pe.alpha     = *(it++);
+        pe.frequency = get_sint(it); ++it;
+        palet_entries.push_back(pe);
+      }
+    } else if (sample_depth == 16 && left % 10 == 0) {
+      left /= 10;
+      for (unsigned int i=0; i<left; ++i) {
+        pe.red       = get_sint(it); ++it;
+        pe.green     = get_sint(it); ++it;
+        pe.blue      = get_sint(it); ++it;
+        pe.alpha     = get_sint(it); ++it;
+        pe.frequency = get_sint(it); ++it;
+        palet_entries.push_back(pe);
+      }
+    }
+  }
+};
+
+std::ostream& operator<<(std::ostream& os, const sPLT& splt) {
+  os << "Type: sPLT\n"
+    << "Size: " << splt.size << '\n'
+    << "Palette name: " << splt.palette_name << '\n'
+    << "Sample depth: " << (int)splt.sample_depth << '\n'
+    << "Palette entries: ";
+  for (auto pe: splt.palet_entries) {
+    std::clog
+      << '['
+      << pe.red << ','
+      << pe.green << ','
+      << pe.blue << ','
+      << pe.alpha << ','
+      << pe.frequency << "], ";
+  }
+  std::clog << '\n';
+  return os;
+}
+
 class PNG {
   private:
     std::vector<Chunk> chunks;
     CRC32 crc32;
+    char color_type;
 
     Chunk read_chunk(std::ifstream& fstream) {
       unsigned int size = read_uint(fstream);
@@ -324,6 +587,7 @@ class PNG {
 
         if (chunk.type == "IHDR") {
           IHDR ihdr(chunk);
+          color_type = ihdr.color_type;
           std::clog << ihdr << '\n';
 
         } else if (chunk.type == "IDAT") {
@@ -331,6 +595,8 @@ class PNG {
           std::clog << idat << '\n';
 
         } else if (chunk.type == "PLTE") {
+          PLTE plte(chunk);
+          std::clog << plte << '\n';
 
         } else if (chunk.type == "IEND") {
           std::clog << "Type: IEND\n";
@@ -366,12 +632,33 @@ class PNG {
           std::clog << iccp << '\n';
 
         } else if (chunk.type == "sBIT") {
+          sBIT sbit(chunk, color_type);
+          std::clog << sbit << '\n';
+
         } else if (chunk.type == "gAMA") {
+          gAMA gama(chunk);
+          std::clog << gama << '\n';
+
         } else if (chunk.type == "zTXt") {
+          zTXt ztxt(chunk);
+          std::clog << ztxt << '\n';
+
         } else if (chunk.type == "bKDG") {
+          bKDG bkdg(chunk, color_type);
+          std::clog << bkdg << '\n';
+
         } else if (chunk.type == "hIST") {
+          hIST hist(chunk);
+          std::clog << hist << '\n';
+
         } else if (chunk.type == "tRNS") {
+          tRNS trns(chunk, color_type);
+          std::clog << trns << '\n';
+
         } else if (chunk.type == "sPLT") {
+          sPLT splt(chunk);
+          std::clog << splt << '\n';
+
         } else {
           std::clog << chunk.type << '\n';
         }
