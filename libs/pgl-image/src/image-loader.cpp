@@ -1,4 +1,4 @@
-#include <pangolin/image-loader.hpp>
+#include <pgl-image/image-loader.hpp>
 
 #include <fstream>
 #include <iostream>
