@@ -23,10 +23,20 @@ find_package(glfw3    REQUIRED)
 find_package(assimp   REQUIRED)
 find_package(Freetype REQUIRED)
 
+###########################
+#### Compilation flags ####
+###########################
+
+add_library(target-flags INTERFACE)
+target_compile_options(target-flags
+  INTERFACE
+  -Wall -Wextra -Wpedantic
+)
+target_compile_features(target-flags INTERFACE cxx_std_20)
+
 #################
 ##### BUILD #####
 #################
-
 
 add_subdirectory(libs)
 # add_subdirectory(doc)
@@ -44,12 +54,10 @@ add_subdirectory(libs)
 #add_executable(testimage tests/testimage.cpp)
 #target_link_libraries(testimage pangolin)
 
-# option(BUILD_TESTING "Build the tests" ON)
-# if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
-#   enable_testing()
-#   include(GoogleTest)
-#   add_subdirectory(tests)
-# endif()
+option(BUILD_TESTING "Build the tests" ON)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+  enable_testing()
+endif()
 
 #############################
 #### Configuration files ####

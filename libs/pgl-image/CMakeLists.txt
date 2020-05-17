@@ -8,6 +8,10 @@ target_include_directories(pgl-image
   PRIVATE
     src
 )
+target_link_libraries(pgl-image
+  PRIVATE
+    $<BUILD_INTERFACE:target-flags>
+)
 
 add_subdirectory(tests)
 

@@ -1,5 +1,9 @@
 add_library(glad STATIC glad/glad.c)
-# target_include_directories(glad PUBLIC glad/glad.h)
+# target_include_directories(glad
+#   PUBLIC
+#     $<INSTALL_INTERFACE:glad>
+#     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/glad>
+# )
 target_link_libraries(glad dl)
 
 add_library(pangolin STATIC
@@ -21,11 +25,10 @@ target_include_directories(pangolin
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
-target_compile_options(pangolin PRIVATE -Wall -Wextra)
-target_compile_features(pangolin PRIVATE cxx_std_20)
 target_link_libraries(pangolin 
   PRIVATE
     assimp glfw glad Freetype::Freetype
+    $<BUILD_INTERFACE:target-flags>
 )
 
 install(
