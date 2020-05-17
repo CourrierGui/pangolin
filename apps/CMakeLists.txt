@@ -1,6 +1,2 @@
-add_executable(game game.cpp)
-target_include_directories(game PUBLIC ${pangolin_SOURCE_DIR}/extern/glfw/include)
-target_include_directories(game PUBLIC ${pangolin_SOURCE_DIR}/extern/glm)
-target_include_directories(game PUBLIC ${pangolin_SOURCE_DIR}/extern/assimp)
-target_include_directories(game PUBLIC ${pangolin_SOURCE_DIR}/include)
-target_link_libraries(game PUBLIC glfw glad pangolin stb_image assimp)
+add_executable(demo demo.cpp)
+target_link_libraries(demo PRIVATE pangolin)

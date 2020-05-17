@@ -34,30 +34,27 @@ target_compile_options(target-flags
 )
 target_compile_features(target-flags INTERFACE cxx_std_20)
 
+#####################
+####    Tests    ####
+#####################
+
+option(BUILD_TESTING "Build the tests" ON)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+  enable_testing()
+endif()
+
 #################
 ##### BUILD #####
 #################
 
 add_subdirectory(libs)
+add_subdirectory(apps)
 # add_subdirectory(doc)
 
 # add_executable(pangolin-demo apps/demo.cpp)
 # because pangolin is a static lib, there's no need to link other libs
 # what if pangolin is shared ? -> need to fix that
 # target_link_libraries(pangolin-demo pangolin)
-
-
-#####################
-####    Tests    ####
-#####################
-
-#add_executable(testimage tests/testimage.cpp)
-#target_link_libraries(testimage pangolin)
-
-option(BUILD_TESTING "Build the tests" ON)
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
-  enable_testing()
-endif()
 
 #############################
 #### Configuration files ####
