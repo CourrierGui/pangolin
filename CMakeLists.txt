@@ -27,59 +27,19 @@ find_package(Freetype REQUIRED)
 ##### BUILD #####
 #################
 
+
+add_subdirectory(libs)
+# add_subdirectory(doc)
+
 # add_executable(pangolin-demo apps/demo.cpp)
 # because pangolin is a static lib, there's no need to link other libs
 # what if pangolin is shared ? -> need to fix that
 # target_link_libraries(pangolin-demo pangolin)
 
-add_subdirectory(libs)
-# add_subdirectory(doc)
 
-#################
-#### INSTALL ####
-#################
-
-#include(GNUInstallDirs)
-#set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/pangolin)
-
-#install(TARGETS pangolin glad stb_image
-#  EXPORT pangolin-targets
-#  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#)
-
-#install(DIRECTORY include/pangolin/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pangolin)
-#install(DIRECTORY include/glad/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/glad)
-
-#install(EXPORT pangolin-targets
-#  FILE
-#    pangolinTargets.cmake
-#  NAMESPACE
-#    pangolin::
-#  DESTINATION
-#    ${CMAKE_INSTALL_LIBDIR}/cmake/pangolin
-#)
-
-##Create a ConfigVersion.cmake file
-#include(CMakePackageConfigHelpers)
-#write_basic_package_version_file(
-#  ${CMAKE_CURRENT_BINARY_DIR}/pangolinConfigVersion.cmake
-#  VERSION ${PROJECT_VERSION}
-#  COMPATIBILITY AnyNewerVersion
-#)
-
-#configure_package_config_file(
-#  ${CMAKE_CURRENT_LIST_DIR}/cmake/pangolinConfig.cmake.in
-#  ${CMAKE_CURRENT_BINARY_DIR}/pangolinConfig.cmake
-#  INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
-#)
-
-##Install the config, configversion and custom find modules
-#install(FILES
-#  ${CMAKE_CURRENT_BINARY_DIR}/pangolinConfig.cmake
-#  ${CMAKE_CURRENT_BINARY_DIR}/pangolinConfigVersion.cmake
-#  DESTINATION ${INSTALL_CONFIGDIR}
-#)
+#####################
+####    Tests    ####
+#####################
 
 #add_executable(testimage tests/testimage.cpp)
 #target_link_libraries(testimage pangolin)
@@ -90,3 +50,44 @@ add_subdirectory(libs)
 #   include(GoogleTest)
 #   add_subdirectory(tests)
 # endif()
+
+#############################
+#### Configuration files ####
+#############################
+
+include(GNUInstallDirs)
+set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/pangolin)
+
+#Create a ConfigVersion.cmake file
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/pangolinConfigVersion.cmake
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY AnyNewerVersion
+)
+
+configure_package_config_file(
+  ${CMAKE_CURRENT_LIST_DIR}/cmake/pangolinConfig.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/pangolinConfig.cmake
+  INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
+)
+
+#####################
+####   INSTALL   ####
+#####################
+
+#Install the config, configversion and custom find modules
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/pangolinConfig.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/pangolinConfigVersion.cmake
+  DESTINATION ${INSTALL_CONFIGDIR}
+)
+
+install(EXPORT pangolin-targets
+  FILE
+    pangolinTargets.cmake
+  NAMESPACE
+    pangolin::
+  DESTINATION
+    ${CMAKE_INSTALL_LIBDIR}/cmake/pangolin
+)

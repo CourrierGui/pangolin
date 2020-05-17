@@ -3,10 +3,22 @@ add_library(pgl-image SHARED
 )
 target_include_directories(pgl-image
   PUBLIC
-    include
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   PRIVATE
     src
 )
 
 add_subdirectory(tests)
-# TODO: install targets
+
+install(
+  TARGETS pgl-image
+  EXPORT pangolin-targets
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/pangolin
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/pangolin
+  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+install(
+  DIRECTORY include/pgl-image
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)

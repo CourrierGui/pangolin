@@ -1,4 +1,5 @@
 add_library(glad STATIC glad/glad.c)
+# target_include_directories(glad PUBLIC glad/glad.h)
 target_link_libraries(glad dl)
 
 add_library(pangolin STATIC
@@ -14,6 +15,7 @@ add_library(pangolin STATIC
   # src/model.cpp
   # src/resource-manager.cpp
 )
+
 target_include_directories(pangolin
   PUBLIC
     $<INSTALL_INTERFACE:include>
@@ -26,3 +28,14 @@ target_link_libraries(pangolin
     assimp glfw glad Freetype::Freetype
 )
 
+install(
+  TARGETS pangolin glad
+  EXPORT pangolin-targets
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/pangolin
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/pangolin
+  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+install(
+  DIRECTORY include/pangolin
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
