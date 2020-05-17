@@ -41,6 +41,7 @@ target_compile_features(target-flags INTERFACE cxx_std_20)
 option(BUILD_TESTING "Build the tests" ON)
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
   enable_testing()
+  include(GoogleTest)
 endif()
 
 #################
