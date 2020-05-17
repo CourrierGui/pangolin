@@ -85,7 +85,7 @@ struct iTXt {
   char compression_flag, compression_method;
   std::string language_tag;
   std::string translated_keyword;
-  std::string text;
+  std::string text; // use wstring ?
 
   inline iTXt(const Chunk& chunk) {
     size = chunk.data.size();
