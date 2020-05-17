@@ -50,12 +50,7 @@ endif()
 
 add_subdirectory(libs)
 add_subdirectory(apps)
-# add_subdirectory(doc)
-
-# add_executable(pangolin-demo apps/demo.cpp)
-# because pangolin is a static lib, there's no need to link other libs
-# what if pangolin is shared ? -> need to fix that
-# target_link_libraries(pangolin-demo pangolin)
+add_subdirectory(doc)
 
 #############################
 #### Configuration files ####
