@@ -99,3 +99,28 @@ TEST(PglImagePng, NextChunk) {
   ASSERT_EQ(5, size);
   ASSERT_EQ("sRGB", type);
 }
+
+TEST(PglImagePng, SkipChunk) {
+  std::stringstream ss;
+  ss << (unsigned char)0
+    << (unsigned char)0
+    << (unsigned char)0
+    << (unsigned char)16
+    << "IHDR"
+    << (char)0xfa
+    << (char)0xfa
+    << (uint32_t)0xabcdef10
+    << (unsigned char)0
+    << (unsigned char)0
+    << (unsigned char)0
+    << (unsigned char)5
+    << "sRGB";
+
+  uint32_t size = pgl::image::utils::get_uint32(ss);
+  std::string type = pgl::image::utils::get_type(ss);
+  ASSERT_EQ(10, size);
+  ASSERT_EQ("IHDR", type);
+  pgl::image::utils::get_uint32(ss); //extract control
+  ASSERT_EQ(5, size);
+  ASSERT_EQ("sRGB", type);
+}
