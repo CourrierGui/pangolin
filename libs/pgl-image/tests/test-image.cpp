@@ -34,6 +34,10 @@ TEST_F(PglImageUtils, PngData) {
     ASSERT_EQ(width,        image.width);
     ASSERT_EQ(height,       image.height);
     ASSERT_EQ(nb_channels,  image.depth);
-    //TODO: assert equal data
+    ASSERT_EQ(width*height, image.data.size());
+
+    for (int i=0; i<width*height; ++i) {
+      ASSERT_EQ((int)data[i], (int)image.data[i]) << "i=" << i;
+    }
   }
 }

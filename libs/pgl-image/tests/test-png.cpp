@@ -70,3 +70,32 @@ TEST(PglImagePng, ValidType) {
   }
   ASSERT_FALSE(pgl::image::png::valid_type("toto")) << "type=toto";
 }
+
+TEST(PglImagePng, NextChunk) {
+  std::stringstream ss;
+  ss << (unsigned char)0
+    << (unsigned char)0
+    << (unsigned char)0
+    << (unsigned char)10
+    << "IHDR"
+    << (char)0xfa
+    << (char)0xfa
+    << (char)0xfa
+    << (char)0xfa
+    << (char)0xfa
+    << (char)0xfa
+    << (uint32_t)0xabcdef10
+    << (unsigned char)0
+    << (unsigned char)0
+    << (unsigned char)0
+    << (unsigned char)5
+    << "sRGB";
+
+  uint32_t size = pgl::image::utils::get_uint32(ss);
+  std::string type = pgl::image::utils::get_type(ss);
+  ASSERT_EQ(10, size);
+  ASSERT_EQ("IHDR", type);
+  pgl::image::png::next_chunk(ss, size, type);
+  ASSERT_EQ(5, size);
+  ASSERT_EQ("sRGB", type);
+}
