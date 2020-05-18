@@ -1,5 +1,4 @@
 #include "stream-utils.hpp"
-#include <iostream>
 
 namespace pgl {
   namespace image {
@@ -34,6 +33,16 @@ namespace pgl {
         fstream.get(c); res += ((unsigned char)c <<  8);
         fstream.get(c); res +=  (unsigned char)c;
 
+        return res;
+      }
+
+      std::string get_type(std::istream& fstream) {
+        std::string res;
+        char c;
+        for (int i=0; i<4; ++i) {
+          fstream.get(c);
+          res.push_back(c);
+        }
         return res;
       }
 

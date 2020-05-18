@@ -69,3 +69,9 @@ TEST(PglImageStream, GetUint32) {
     ++i;
   }
 }
+
+TEST(PglImageStream, GetType) {
+  std::stringstream ss("IHDRfjamfiah");
+  std::string type = pgl::image::utils::get_type(ss);
+  ASSERT_EQ("IHDR", type);
+}
