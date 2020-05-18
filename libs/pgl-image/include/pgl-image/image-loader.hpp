@@ -1,18 +1,19 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace pgl {
-  namespace loader {
 
-struct Image;
+  struct Image {
+    uint32_t width, height;
+    uint8_t depth;
+    std::vector<char> data;
+  };
 
-Image load_png(const std::string& filename);
+  namespace image {
 
-struct Image {
-  unsigned int width, height, depth;
-  const char* data;
-};
+    Image load_image(const std::string& filename);
 
-  } /* end of namespace loader */
+  } /* end of namespace image */
 } /* end of namespace pgl */

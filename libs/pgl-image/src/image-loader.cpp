@@ -5,23 +5,26 @@
 #include <string>
 #include <tuple>
 
-#include "crc.hpp"
-#include "png.hpp"
+#include "image-utils.hpp"
 
 namespace pgl {
-  namespace loader {
+  namespace image {
 
-Image load_png(const std::string& filename) {
-  std::ifstream fstream(filename, std::ios::binary);
+    Image extract_image(std::ifstream& fstream) {
+      if      (is_png(fstream) ) return extract_png (fstream);
+      else if (is_jpeg(fstream)) return extract_jpeg(fstream);
+      else if (is_gif(fstream) ) return extract_gif (fstream);
+      else throw std::runtime_error("Unsupported file type.");
+    }
 
-  if (!fstream.is_open()) {
-    throw std::runtime_error("File not found: " + filename);
+    Image load_image(const std::string& filename) {
+      std::ifstream fstream(filename, std::ios::binary);
 
-  }
+      if (!fstream.is_open())
+        throw std::runtime_error("File not found: " + filename);
 
-  PNG png(fstream);
-  return Image();
-}
+      return extract_image(fstream);
+    }
 
-  } /* end of namespace loader */
+  } /* end of namespace image */
 } /* end of namespace pgl */

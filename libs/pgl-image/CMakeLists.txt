@@ -1,6 +1,9 @@
 add_library(pgl-image SHARED
   src/image-loader.cpp
+  src/image-utils.cpp
+  src/stream-utils.cpp
 )
+add_library(pangolin::pgl-image ALIAS pgl-image)
 target_include_directories(pgl-image
   PUBLIC
     $<INSTALL_INTERFACE:include>
