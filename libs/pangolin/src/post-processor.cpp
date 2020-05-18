@@ -33,7 +33,8 @@ PostProcessor::PostProcessor(
   // also initialize the FBO/texture to blit multisampled color-buffer to; used
   // for shader operations (for postprocessing effects)
   glBindFramebuffer(GL_FRAMEBUFFER, this->FBO);
-  texture.generate(width, height, nullptr);
+  //TODO: correct this with Image class
+  /* texture.generate(width, height, nullptr); */
 
   // attach texture to framebuffer as its color attachment
   glFramebufferTexture2D(

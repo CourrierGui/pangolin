@@ -1,6 +1,6 @@
-#include <iostream>
-
 #include <pangolin/texture.hpp>
+
+#include <iostream>
 
 namespace pgl {
   namespace loader {
@@ -15,15 +15,15 @@ Texture2D::Texture2D()
   glGenTextures(1, &id);
 }
 
-void Texture2D::generate(unsigned int width, unsigned int height, unsigned char* data) {
-  this->width = width;
-  this->height = height;
+void Texture2D::generate(const Image& image) {
+  this->width = image.width;
+  this->height = image.height;
 
   // create Texture
   glBindTexture(GL_TEXTURE_2D, id);
   glTexImage2D(GL_TEXTURE_2D, 0, internal_format,
                width, height, 0, image_format,
-               GL_UNSIGNED_BYTE, data);
+               GL_UNSIGNED_BYTE, &image.data[0]);
 
   // set Texture wrap and filter modes
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_S);

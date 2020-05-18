@@ -27,6 +27,8 @@ find_package(Freetype REQUIRED)
 #### Compilation flags ####
 ###########################
 
+# set(CMAKE_CXX_CLANG_TIDY "clang-tidy")
+
 add_library(target-flags INTERFACE)
 target_compile_options(target-flags
   INTERFACE

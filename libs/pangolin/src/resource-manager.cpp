@@ -1,10 +1,9 @@
 #include <pangolin/resource-manager.hpp>
+#include <pgl-image/image-loader.hpp>
 
 #include <iostream>
 #include <sstream>
 #include <fstream>
-
-#include <stb_image.h>
 
 namespace pgl {
   namespace loader {
@@ -127,14 +126,11 @@ Texture2D ResourceManager::load_texture_from_file(
   }
 
   // load image
-  int width, height, nb_channels;
-  unsigned char* data = stbi_load(file.c_str(), &width, &height, &nb_channels, 0);
+  pgl::Image image = image::load_image(file);
+  /* unsigned char* data = stbi_load(file.c_str(), &width, &height, &nb_channels, 0); */
 
   // now generate texture
-  texture.generate(width, height, data);
-
-  // and finally free image data
-  stbi_image_free(data);
+  texture.generate(image);
   return texture;
 }
   } /* end of namespace loader */

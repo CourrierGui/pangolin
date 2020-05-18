@@ -15,10 +15,11 @@ add_library(pangolin STATIC
   src/sprite-renderer.cpp
   src/text-renderer.cpp
   src/texture.cpp
+  src/resource-manager.cpp
 
   # src/model.cpp
-  # src/resource-manager.cpp
 )
+add_library(pangolin::pangolin ALIAS pangolin)
 
 target_include_directories(pangolin
   PUBLIC
@@ -26,6 +27,8 @@ target_include_directories(pangolin
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 target_link_libraries(pangolin 
+  PUBLIC
+    pangolin::pgl-image
   PRIVATE
     assimp glfw glad Freetype::Freetype
     $<BUILD_INTERFACE:target-flags>
