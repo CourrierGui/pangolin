@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 
-TEST(PglImagePng, ReadPixel) {
+TEST(PglImagePng, ExtractPixels) {
   std::vector<unsigned char> pixels;
   auto it = std::back_inserter(pixels);
 

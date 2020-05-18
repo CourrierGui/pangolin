@@ -8,7 +8,7 @@ namespace pgl {
   struct Image {
     uint32_t width, height;
     uint8_t depth;
-    std::vector<char> data;
+    std::vector<unsigned char> data;
   };
 
   namespace image {

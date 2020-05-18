@@ -36,6 +36,7 @@ namespace pgl {
         return res;
       }
 
+      //TODO: move to png.hpp
       std::string get_type(std::istream& fstream) {
         std::string res;
         char c;

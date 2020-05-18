@@ -29,9 +29,11 @@ TEST_F(PglImageUtils, PngSignature) {
 }
 
 TEST_F(PglImageUtils, PngData) {
-  pgl::Image image = pgl::image::extract_png(fstream);
-  ASSERT_EQ(width,        image.width);
-  ASSERT_EQ(height,       image.height);
-  ASSERT_EQ(nb_channels,  image.depth);
-  //TODO: assert equal data
+  if (pgl::image::is_png(fstream)) {
+    pgl::Image image = pgl::image::extract_png(fstream);
+    ASSERT_EQ(width,        image.width);
+    ASSERT_EQ(height,       image.height);
+    ASSERT_EQ(nb_channels,  image.depth);
+    //TODO: assert equal data
+  }
 }

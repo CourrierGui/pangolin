@@ -1,11 +1,139 @@
 #pragma once
 
-#include <vector>
 #include <iostream>
+#include <algorithm>
 #include <fstream>
+#include <array>
 #include <string>
 
-#include "stream_utils.hpp"
+#include "stream-utils.hpp"
+
+namespace pgl {
+  namespace image {
+    namespace png {
+
+      constexpr uint8_t SIGNATURE[8] = {
+        0x89, 0x50, 0x4E, 0x47,
+        0x0D, 0x0A, 0x1A, 0x0A
+      };
+
+      const std::array<std::string, 18> TYPES = {
+        "IDAT", "PLTE", "cHRM", "gAMA", "iCCP",
+        "sBIT", "sRGB", "bKGD", "hIST", "tRNS",
+        "pHYs", "sPLT", "tIME", "iTXt", "tEXt",
+        "zTXt", "IEND", "IHDR"
+      };
+
+      struct IHDR {
+        uint32_t width, height;
+        uint8_t bit_depth, color_type;
+        uint8_t compression_method;
+        uint8_t filter_method, interlace_method;
+      };
+
+      IHDR extract_ihdr(std::istream& fstream) {
+        IHDR ihdr;
+        utils::get_uint32(fstream);
+
+        if (utils::get_type(fstream) != "IHDR")
+          throw std::runtime_error("Invalid chunk");
+
+        ihdr.width = utils::get_uint32(fstream);
+        ihdr.height = utils::get_uint32(fstream);
+        ihdr.bit_depth = utils::get_uint8(fstream);
+        ihdr.color_type = utils::get_uint8(fstream);
+        ihdr.compression_method = utils::get_uint8(fstream);
+        ihdr.filter_method = utils::get_uint8(fstream);
+        ihdr.interlace_method = utils::get_uint8(fstream);
+        utils::get_uint32(fstream); //read control
+        return ihdr;
+      }
+
+      using pixel_it = std::back_insert_iterator<std::vector<unsigned char>>;
+
+      void extract_pixels(std::istream& fstream, const IHDR& ihdr, pixel_it& it) {
+        char c;
+        fstream.get(c);
+        switch (ihdr.bit_depth) {
+          case 1:
+            for (int i=7; i>=0; --i) {
+              *it = ((unsigned char)c >> i) & 1;
+            }
+            break;
+          case 2:
+            for (int i=3; i>=0; --i) {
+              *it = ((unsigned char)c >> 2*i) & 3;
+            }
+            break;
+          case 4:
+            for (int i=1; i>=0; --i) {
+              *it = ((unsigned char)c >> 4*i) & 15;
+            }
+            break;
+          case 8:
+            *it = (unsigned char)c;
+            break;
+          case 16: //TODO: is this the correct way ?
+            *it = (unsigned char)c;
+            break;
+        }
+      }
+
+      void read_idat(
+        std::istream& fstream, const uint32_t size,
+        const IHDR& ihdr, pixel_it& it)
+      {
+        uint32_t nb_iter = size;
+        switch (ihdr.bit_depth) {
+          case  1: nb_iter /= 8; break;
+          case  2: nb_iter /= 4; break;
+          case  4: nb_iter /= 2; break;
+          case  8: break;
+          case 16: nb_iter *= 2; break;
+        }
+
+        for (uint32_t i=0; i<nb_iter; ++i) {
+          extract_pixels(fstream, ihdr, it);
+        }
+      }
+
+      bool valid_type(const std::string& type) {
+        return (std::find(TYPES.begin(), TYPES.end(), type) != TYPES.end());
+      }
+
+      //TODO: improve perfomance ?
+      void next_chunk(
+        std::istream& fstream, uint32_t& size,
+        std::string& type)
+      {
+        std::string current_type = utils::get_type(fstream);
+        while (!valid_type(current_type)) {
+          char c; fstream.get(c);
+          size = ((size & 0x00ff0000) << 8)
+               | ((size & 0x0000ff00) << 8)
+               | ((size & 0x000000ff) << 8)
+               | ((unsigned char)current_type[0]);
+          current_type.erase(0, 1);
+          current_type.push_back(c);
+        }
+        type = current_type;
+      }
+
+      void skip_chunk(std::istream& fstream, const uint32_t size) {
+        std::clog << "size: " << size << '\n';
+        fstream.ignore(size+4); //ignore size of chunk + size of control
+      }
+
+      bool check_control(std::istream& fstream) {
+        uint32_t control = utils::get_uint32(fstream);
+        return true;
+      }
+
+    } /* end of namespace png */
+  } /* end of namespace png */
+} /* end of namespace png */
+
+#if 0
 #include "crc.hpp"
 
 struct Chunk {
@@ -580,7 +708,7 @@ class PNG {
       }
       int i = 0;
       while (true) {
-      /* for (int i=0; i<7; ++i) { */
+        /* for (int i=0; i<7; ++i) { */
         Chunk chunk = read_chunk(fstream);
         ++i;
         std::clog << "Chunk number " << i << '\n';
@@ -686,5 +814,6 @@ class PNG {
       /*   } */
       /* } */
       /* std::clog << j << '\n'; */
-    }
-};
+      }
+    };
+#endif
