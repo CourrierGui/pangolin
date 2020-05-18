@@ -102,25 +102,40 @@ TEST(PglImagePng, NextChunk) {
 
 TEST(PglImagePng, SkipChunk) {
   std::stringstream ss;
-  ss << (unsigned char)0
+  ss
+    //size
+    << (unsigned char)0
     << (unsigned char)0
     << (unsigned char)0
     << (unsigned char)16
+    //type
     << "IHDR"
+    //data
     << (char)0xfa
     << (char)0xfa
-    << (uint32_t)0xabcdef10
+    //control
+    << (unsigned char)0xab
+    << (unsigned char)0xcd
+    << (unsigned char)0xef
+    << (unsigned char)0x10
+    //size
     << (unsigned char)0
     << (unsigned char)0
     << (unsigned char)0
     << (unsigned char)5
+    //type
     << "sRGB";
 
   uint32_t size = pgl::image::utils::get_uint32(ss);
   std::string type = pgl::image::utils::get_type(ss);
-  ASSERT_EQ(10, size);
+  ASSERT_EQ(16, size);
   ASSERT_EQ("IHDR", type);
-  pgl::image::utils::get_uint32(ss); //extract control
+
+  pgl::image::png::skip_chunk(ss, size);
+
+  size = pgl::image::utils::get_uint32(ss);
+  type = pgl::image::utils::get_type(ss);
+
   ASSERT_EQ(5, size);
   ASSERT_EQ("sRGB", type);
 }

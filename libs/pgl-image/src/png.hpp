@@ -120,8 +120,7 @@ namespace pgl {
       }
 
       void skip_chunk(std::istream& fstream, const uint32_t size) {
-        std::clog << "size: " << size << '\n';
-        fstream.ignore(size+4); //ignore size of chunk + size of control
+        fstream.ignore(size/8+4); //ignore size of chunk + size of control
       }
 
       bool check_control(std::istream& fstream) {
