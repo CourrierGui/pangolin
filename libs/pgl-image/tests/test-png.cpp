@@ -139,3 +139,68 @@ TEST(PglImagePng, SkipChunk) {
   ASSERT_EQ(5, size);
   ASSERT_EQ("sRGB", type);
 }
+
+TEST(PglImagePng, ExtractIhrd) {
+  pgl::image::png::IHDR ihdr;
+  std::stringstream ss;
+
+  ss
+    << (unsigned char)0
+    << (unsigned char)0
+    << (unsigned char)0
+    << (unsigned char)13
+    << "IHDR"
+    //width 512
+    << (unsigned char)0
+    << (unsigned char)0
+    << (unsigned char)2
+    << (unsigned char)0
+    //Height 256
+    << (unsigned char)0
+    << (unsigned char)0
+    << (unsigned char)1
+    << (unsigned char)0
+    //Bit depth
+    << (unsigned char)8
+    //Color type
+    << (unsigned char)4
+    //Compression method
+    << (unsigned char)0
+    //Filter method
+    << (unsigned char)1
+    //Interlace method
+    << (unsigned char)1
+    //Control
+    << (unsigned char)0
+    << (unsigned char)0
+    << (unsigned char)0
+    << (unsigned char)17;
+
+  ASSERT_NO_THROW({
+    ihdr = pgl::image::png::extract_ihdr(ss);
+  });
+
+  ASSERT_EQ(512, ihdr.width             );
+  ASSERT_EQ(256, ihdr.height            );
+  ASSERT_EQ(8,   ihdr.bit_depth         );
+  ASSERT_EQ(4,   ihdr.color_type        );
+  ASSERT_EQ(0,   ihdr.compression_method);
+  ASSERT_EQ(1,   ihdr.filter_method     );
+  ASSERT_EQ(1,   ihdr.interlace_method  );
+
+  ss.clear();
+  ss
+    << (unsigned char)0
+    << (unsigned char)0
+    << (unsigned char)0
+    << (unsigned char)13
+    << "IDAT";
+  ASSERT_THROW(
+    ihdr = pgl::image::png::extract_ihdr(ss),
+    std::runtime_error
+  );
+}
+
+TEST(PglImagePng, ReadIdat) {
+
+}
