@@ -35,6 +35,9 @@ namespace pgl {
       png::IHDR ihdr = png::extract_ihdr(fstream);
       image.width  = ihdr.width;
       image.height = ihdr.height;
+      std::clog << "Compression: " << (int)ihdr.compression_method
+        << " Filter: " << (int)ihdr.filter_method
+        << " Interlace: " << (int)ihdr.interlace_method << '\n';
 
       uint8_t pixel_size = 0;
       switch (ihdr.color_type) {
@@ -47,7 +50,8 @@ namespace pgl {
           pixel_size = 3; //RGB
           break;
         case 3:
-          pixel_size = 0; //see PLTE chunk
+          //see PLTE chunk
+          throw std::runtime_error("PTLE chunk not supported yet. :'(");
           break;
         case 4:
           image.depth = 2;
@@ -71,7 +75,7 @@ namespace pgl {
         type = utils::get_type(fstream);
         std::clog << "type: " << type << '\n';
         if (!png::valid_type(type)) {
-          break;
+          std::clog << "size: " << size << ", type: " << type << '\n';
           png::next_chunk(fstream, size, type);
         }
 

@@ -6,6 +6,7 @@
 #include <tuple>
 
 #include "image-utils.hpp"
+#include "../tests/stb_image/stb_image.h"
 
 namespace pgl {
   namespace image {
@@ -23,7 +24,16 @@ namespace pgl {
       if (!fstream.is_open())
         throw std::runtime_error("File not found: " + filename);
 
-      return extract_image(fstream);
+      /* return extract_image(fstream); */
+      Image res;
+      int width, height, nb_channels;
+      unsigned char* data
+        = stbi_load(filename.c_str(), &width, &height, &nb_channels, 0);
+      res.width  = width;
+      res.height = height;
+      res.depth  = nb_channels;
+      res.data   = std::vector<unsigned char>(data, data+width*height*nb_channels);
+      return res;
     }
 
   } /* end of namespace image */
