@@ -1,4 +1,5 @@
 #include "../src/png.hpp"
+#include "../src/stream-utils.hpp"
 
 #include <string>
 #include <sstream>
@@ -107,7 +108,7 @@ TEST(PglImagePng, SkipChunk) {
     << (unsigned char)0
     << (unsigned char)0
     << (unsigned char)0
-    << (unsigned char)16
+    << (unsigned char)2
     //type
     << "IHDR"
     //data
@@ -128,7 +129,7 @@ TEST(PglImagePng, SkipChunk) {
 
   uint32_t size = pgl::image::utils::get_uint32(ss);
   std::string type = pgl::image::utils::get_type(ss);
-  ASSERT_EQ(16, size);
+  ASSERT_EQ(2, size);
   ASSERT_EQ("IHDR", type);
 
   pgl::image::png::skip_chunk(ss, size);
@@ -202,5 +203,9 @@ TEST(PglImagePng, ExtractIhrd) {
 }
 
 TEST(PglImagePng, ReadIdat) {
+
+}
+
+TEST(PglImagePng, CheckControl) {
 
 }
