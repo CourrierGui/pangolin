@@ -1,4 +1,4 @@
-add_library(glad STATIC glad/glad.c)
+add_library(glad SHARED glad/glad.c)
 # target_include_directories(glad
 #   PUBLIC
 #     $<INSTALL_INTERFACE:glad>
@@ -6,7 +6,7 @@ add_library(glad STATIC glad/glad.c)
 # )
 target_link_libraries(glad dl)
 
-add_library(pangolin STATIC
+add_library(pangolin SHARED
   src/game-object.cpp
   src/mesh.cpp
   src/particle-generator.cpp
@@ -39,9 +39,8 @@ install(
   EXPORT pangolin-targets
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/pangolin
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/pangolin
-  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 install(
   DIRECTORY include/pangolin
-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pangolin
 )
