@@ -34,18 +34,23 @@ namespace pgl {
 			return sstr.str();
 		}
 
-
 		template<typename printable>
 			std::string print_as_color(printable const& value, color_code color){
 				std::stringstream sstr;
-				sstr<<"\033[1;"<<static_cast<int>(color)<<"m"<<value<<"\033[0m";
+				sstr
+					<< "\033[1;"
+					<< static_cast<int>(color)
+					<< "m" << value << "\033[0m";
 				return sstr.str();
 			}
 
 		template<color_code color, typename printable>
 			std::string print_as_color(printable const& value){
 				std::stringstream sstr;
-				sstr<<"\033[1;"<<static_cast<int>(color)<<"m"<<value<<"\033[0m";
+				sstr
+					<< "\033[1;"
+					<< static_cast<int>(color)
+					<<"m" << value << "\033[0m";
 				return sstr.str();
 			}
 
