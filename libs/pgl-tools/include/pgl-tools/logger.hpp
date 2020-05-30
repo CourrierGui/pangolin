@@ -10,7 +10,7 @@
 #include <pgl-tools/ansi.hpp>
 
 namespace pgl {
-  namespace tools {
+	namespace tools {
 
 		struct LogContext {
 			std::string file;
@@ -18,7 +18,7 @@ namespace pgl {
 			std::string function;
 		};
 
-    class BaseLogger {
+		class BaseLogger {
 			public:
 				virtual ~BaseLogger();
 				void context(
@@ -28,7 +28,7 @@ namespace pgl {
 					const std::string& msg,
 					const LogContext& context
 				) = 0;
-    };
+		};
 
 		constexpr std::array<ansi::color_code, 3> colors = {
 			ansi::color_code::bright_white,
@@ -104,7 +104,7 @@ namespace pgl {
 				}
 		};
 
-  } /* end of namespace tools */
+	} /* end of namespace tools */
 } /* end of namespace pgl */
 
 #define CONCATENATE(x, y) x##y
