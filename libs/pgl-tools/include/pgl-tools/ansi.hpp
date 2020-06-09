@@ -30,13 +30,13 @@ namespace pgl {
 			constexpr const char clear[7] = "\033[0m";
 			constexpr const char escape[5] = "\033[";
 
-			std::string color(color_code color) {
+			inline std::string color(color_code color) {
 				std::stringstream sstr;
 				sstr << "\033[1;" << static_cast<int>(color) << "m";
 				return sstr.str();
 			}
 
-			std::string fg_color(int n) {
+			inline std::string fg_color(int n) {
 				std::stringstream sstr;
 				sstr
 					<< escape
@@ -46,7 +46,7 @@ namespace pgl {
 				return sstr.str();
 			}
 
-			std::string bg_color(int n) {
+			inline std::string bg_color(int n) {
 				std::stringstream sstr;
 				sstr
 					<< escape
@@ -56,7 +56,7 @@ namespace pgl {
 				return sstr.str();
 			}
 
-			std::string fg_color(int r, int g, int b) {
+			inline std::string fg_color(int r, int g, int b) {
 				std::stringstream sstr;
 				sstr
 					<< escape
@@ -67,7 +67,7 @@ namespace pgl {
 				return sstr.str();
 			}
 
-			std::string bg_color(int r, int g, int b) {
+			inline std::string bg_color(int r, int g, int b) {
 				std::stringstream sstr;
 				sstr
 					<< escape
@@ -78,7 +78,7 @@ namespace pgl {
 				return sstr.str();
 			}
 
-			std::string cursor_up(int n) {
+			inline std::string cursor_up(int n) {
 				std::stringstream sstr;
 				sstr
 					<< escape
@@ -88,7 +88,7 @@ namespace pgl {
 			}
 
 			template<typename printable>
-				std::string print_as_color(printable const& value, color_code color) {
+				inline std::string print_as_color(printable const& value, color_code color) {
 					std::stringstream sstr;
 					sstr
 						<< "\033[1;"
@@ -98,7 +98,7 @@ namespace pgl {
 				}
 
 			template<color_code color, typename printable>
-				std::string print_as_color(printable const& value) {
+				inline std::string print_as_color(printable const& value) {
 					std::stringstream sstr;
 					sstr
 						<< "\033[1;"

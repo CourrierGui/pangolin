@@ -45,7 +45,7 @@ namespace pgl {
 		template<Level level>
 			class Logger : public BaseLogger {
 				public:
-					virtual void write(
+					inline virtual void write(
 						const std::string& msg,
 						const LogContext& context
 						) override
@@ -63,7 +63,7 @@ namespace pgl {
 				private:
 					bool logged = false;
 				public:
-					virtual void write(
+					inline virtual void write(
 						const std::string& msg,
 						const LogContext& context)
 					{
@@ -78,11 +78,11 @@ namespace pgl {
 			private:
 				using BaseLoggerRef = std::unique_ptr<BaseLogger>;
 				std::map<int, BaseLoggerRef> loggers;
-				LoggerList() {}
+				LoggerList();
 
 			public:
 				template<Level level>
-					void log(
+					inline void log(
 						const std::stringstream& ss,
 						const LogContext& context,
 						bool log_once=false)
@@ -98,10 +98,7 @@ namespace pgl {
 						}
 					}
 
-				static LoggerList& get() {
-					static LoggerList logger_list;
-					return logger_list;
-				}
+				static LoggerList& get();
 		};
 
 	} /* end of namespace tools */
