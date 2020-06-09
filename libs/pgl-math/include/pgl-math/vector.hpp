@@ -1,5 +1,8 @@
 #pragma once
 
+#include <limits>
+#include <cmath>
+
 namespace pgl {
 
 	template<typename type, int size>
@@ -40,6 +43,11 @@ namespace pgl {
 				for (auto& elem: elements)
 					elem = e;
 			}
+			Vector(const type& t0, const type& t1, const type& t2) {
+				elements[0] = t0;
+				elements[1] = t1;
+				elements[2] = t2;
+			}
 		};
 
 	template<typename type>
@@ -55,6 +63,12 @@ namespace pgl {
 			explicit Vector(const type& e) {
 				for (auto& elem: elements)
 					elem = e;
+			}
+			Vector(const type& t0, const type& t1, const type& t2, const type& t3) {
+				elements[0] = t0;
+				elements[1] = t1;
+				elements[2] = t2;
+				elements[3] = t3;
 			}
 		};
 
@@ -194,6 +208,64 @@ namespace pgl {
 			float s = sum(arg);
 			return arg/s;
 		}
+
+	template<typename type, int size>
+		inline auto max(const Vector<type,size>& vec) noexcept -> type {
+			type max = std::numeric_limits<type>::min();
+			for (auto elem: vec.elements) {
+				if (elem > max)
+					max = elem;
+			}
+			return max;
+		}
+
+	template<typename type, int size>
+		inline auto min(const Vector<type,size>& vec) noexcept -> type {
+			type min = std::numeric_limits<type>::max();
+			for (auto elem: vec.elements) {
+				if (elem < min)
+					min = elem;
+			}
+			return min;
+		}
+
+	template<typename type, int size>
+		inline auto abs(const Vector<type,size>& vec) noexcept -> Vector<type,size> {
+			Vector<type,size> res;
+			auto vec_it = vec.elements;
+			for (auto& elem: res.elements)
+				elem = std::abs(*(vec_it++));
+			return res;
+		}
+
+	/*
+	 *
+	 * ========================
+	 * ======= TODO !!! =======
+	 * ========================
+	 *
+	 * constructor from C array of type
+	 * vec4 from vec3 + w, etc...
+	 * std::initializer_list<T>
+	 * constexpr constructor
+	 * compound assignement operator ?
+	 * comparison operator -> Vector<bool,size>
+	 * clamp, staturate, lerp(mix), minComponent, maxComponent
+	 * all() (AND), any() (OR)
+	 * select() -> component wise ?:
+	 *
+	 * component wise constructor for matrices
+	 * build matrices out of vectors (component wise and column wise) -> free functions not constructors
+	 * zero and identity matrix
+	 * cross, transpose, inverse
+	 *
+	 * SIMD
+	 * benchmark
+	 * tests
+	 *
+	 * more utility funcitons !!!
+	 *
+	 */
 
 	using int2 = Vector<int,2>;
 	using int3 = Vector<int,3>;

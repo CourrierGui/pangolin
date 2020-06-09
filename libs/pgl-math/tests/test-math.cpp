@@ -82,3 +82,18 @@ TEST_F(VectorTest, Operators) {
 	f = f3 * ff3;
 	assert_same_values(f, 2.0f);
 }
+
+TEST_F(VectorTest, UtilityFunctions) {
+	pgl::int3 i(5, 3, 7);
+	int max = pgl::max(i);
+	ASSERT_EQ(max, 7);
+	int min = pgl::min(i);
+	ASSERT_EQ(min, 3);
+
+	pgl::float4 f(-1.0f, 2.0f, -0.4f, 0.1f);
+	f = pgl::abs(f);
+	ASSERT_FLOAT_EQ(f.x, 1.0f);
+	ASSERT_FLOAT_EQ(f.y, 2.0f);
+	ASSERT_FLOAT_EQ(f.z, 0.4f);
+	ASSERT_FLOAT_EQ(f.w, 0.1f);
+}
