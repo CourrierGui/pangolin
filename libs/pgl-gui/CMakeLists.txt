@@ -11,6 +11,8 @@ target_include_directories(pgl-gui
 		src
 )
 target_link_libraries(pgl-gui
+	PUBLIC
+		pangolin::glad
 	PRIVATE
 		$<BUILD_INTERFACE:target-flags>
 )
