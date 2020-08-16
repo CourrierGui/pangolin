@@ -5,4 +5,6 @@ add_subdirectory(pgl-tools)
 add_subdirectory(pgl-gui)
 add_subdirectory(pgl-math)
 
+add_subdirectory(glad)
+
 add_subdirectory(pangolin)

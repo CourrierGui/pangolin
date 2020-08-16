@@ -1,6 +1,6 @@
-add_library(glad STATIC glad.cpp)
-target_include_directories(glad PUBLIC ${pangolin_SOURCE_DIR}/include)
-target_link_libraries(glad dl)
+# add_library(glad STATIC glad.cpp)
+# target_include_directories(glad PUBLIC ${pangolin_SOURCE_DIR}/include)
+# target_link_libraries(glad dl)
 
 add_library(stb_image STATIC stb_image.cpp)
 target_include_directories(stb_image PUBLIC ${pangolin_SOURCE_DIR}/include)
@@ -38,7 +38,7 @@ target_include_directories(pangolin
 )
 target_compile_options(JSONUtils PRIVATE -Wall -Wextra)
 target_compile_features(JSONUtils PRIVATE cxx_std_20)
-target_link_libraries(pangolin glad glm freetype)
+target_link_libraries(pangolin pangolin::glad glm freetype)
 
 install(
   TARGETS pangolin

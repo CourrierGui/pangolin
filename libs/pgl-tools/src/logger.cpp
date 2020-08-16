@@ -6,6 +6,7 @@ namespace pgl {
 	namespace tools {
 
 		BaseLogger::~BaseLogger() {}
+
 		void BaseLogger::context(
 			const LogContext& context)
 		{

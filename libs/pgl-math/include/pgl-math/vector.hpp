@@ -253,6 +253,9 @@ namespace pgl {
 	 * clamp, staturate, lerp(mix), minComponent, maxComponent
 	 * all() (AND), any() (OR)
 	 * select() -> component wise ?:
+	 * vector<N>::right(), vector<N>::left(), top()
+	 * frame ?
+	 * quaternions ?
 	 *
 	 * component wise constructor for matrices
 	 * build matrices out of vectors (component wise and column wise) -> free functions not constructors

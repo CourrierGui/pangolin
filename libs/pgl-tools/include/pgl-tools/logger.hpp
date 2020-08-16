@@ -87,6 +87,7 @@ namespace pgl {
 						const LogContext& context,
 						bool log_once=false)
 					{
+						// do not use line in map -> what if 2 loggers are in the same line in 2 different files, stupid!
 						if (!loggers.count(context.line)) {
 							if (!log_once)
 								loggers[context.line] = std::make_unique<Logger<level>>();

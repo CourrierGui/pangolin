@@ -19,6 +19,7 @@ target_link_libraries(pgl-image
 )
 
 add_subdirectory(tests)
+message("TOTO: ${CMAKE_INSTALL_LIBDIR}")
 
 install(
   TARGETS pgl-image

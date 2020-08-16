@@ -1,11 +1,3 @@
-add_library(glad SHARED glad/glad.c)
-# target_include_directories(glad
-#   PUBLIC
-#     $<INSTALL_INTERFACE:glad>
-#     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/glad>
-# )
-target_link_libraries(glad dl)
-
 add_library(pangolin SHARED
   src/game-object.cpp
   src/mesh.cpp
@@ -26,16 +18,16 @@ target_include_directories(pangolin
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
-target_link_libraries(pangolin 
+target_link_libraries(pangolin
   PUBLIC
     pangolin::pgl-image
   PRIVATE
-    assimp glfw glad Freetype::Freetype
+    assimp glfw pangolin::glad Freetype::Freetype
     $<BUILD_INTERFACE:target-flags>
 )
 
 install(
-  TARGETS pangolin glad
+  TARGETS pangolin
   EXPORT pangolin-targets
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/pangolin
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/pangolin
