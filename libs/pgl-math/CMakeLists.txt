@@ -2,7 +2,7 @@ add_library(pgl-math INTERFACE)
 add_library(pangolin::pgl-math ALIAS pgl-math)
 target_include_directories(pgl-math
 	INTERFACE
-    $<INSTALL_INTERFACE:include>
+    $<INSTALL_INTERFACE:include/pangolin>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 target_link_libraries(pgl-image

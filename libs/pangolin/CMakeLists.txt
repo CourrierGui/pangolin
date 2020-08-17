@@ -8,14 +8,13 @@ add_library(pangolin SHARED
   src/text-renderer.cpp
   src/texture.cpp
   src/resource-manager.cpp
-
   # src/model.cpp
 )
 add_library(pangolin::pangolin ALIAS pangolin)
 
 target_include_directories(pangolin
   PUBLIC
-    $<INSTALL_INTERFACE:include>
+    $<INSTALL_INTERFACE:include/pangolin>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 target_link_libraries(pangolin

@@ -4,7 +4,7 @@ add_library(pgl-tools SHARED
 add_library(pangolin::pgl-tools ALIAS pgl-tools)
 target_include_directories(pgl-tools
 	PUBLIC
-		$<INSTALL_INTERFACE:include>
+		$<INSTALL_INTERFACE:include/pangolin>
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 	PRIVATE
 		src

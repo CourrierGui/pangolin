@@ -7,7 +7,7 @@ add_library(pgl-image SHARED
 add_library(pangolin::pgl-image ALIAS pgl-image)
 target_include_directories(pgl-image
   PUBLIC
-    $<INSTALL_INTERFACE:include>
+    $<INSTALL_INTERFACE:include/pangolin>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   PRIVATE
     tests/stb_image
