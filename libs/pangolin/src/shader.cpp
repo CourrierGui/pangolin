@@ -2,7 +2,6 @@
 #include <iostream>
 
 namespace pgl {
-  namespace loader {
 
 Shader::Shader() = default;
 
@@ -119,5 +118,4 @@ void Shader::check_compile_errors(
   }
 }
 
-  } /* end of namespace loader */
 } /* end of namespace pgl */

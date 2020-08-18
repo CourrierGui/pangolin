@@ -11,26 +11,26 @@ namespace pgl {
 
 class SpriteRenderer {
   public:
-    SpriteRenderer(loader::Shader& shader);
+    SpriteRenderer(Shader& shader);
     ~SpriteRenderer();
 
     void draw(
-      loader::Texture2D& texture, const glm::vec2& position,
+      Texture2D& texture, const glm::vec2& position,
       const glm::vec2& size, float rotate, const glm::vec3& color
     );
     void draw(
-      loader::Texture2D& texture, const glm::vec2& position,
+      Texture2D& texture, const glm::vec2& position,
       const glm::vec2& size, float rotate
     );
     void draw(
-      loader::Texture2D& texture, const glm::vec2& position, const glm::vec2& size
+      Texture2D& texture, const glm::vec2& position, const glm::vec2& size
     );
     void draw(
-      loader::Texture2D& texture, const glm::vec2& position
+      Texture2D& texture, const glm::vec2& position
     );
 
   private:
-    loader::Shader       shader;
+    Shader       shader;
     unsigned int quad_vao;
 
     void init_render_data();

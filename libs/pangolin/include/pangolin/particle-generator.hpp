@@ -31,7 +31,7 @@ struct Particle {
 class ParticleGenerator {
   public:
     /* constructor */
-    ParticleGenerator(loader::Shader& shader, loader::Texture2D& texture, unsigned int amount);
+    ParticleGenerator(Shader& shader, Texture2D& texture, unsigned int amount);
 
     /* update all particles */
     void update(
@@ -53,8 +53,8 @@ class ParticleGenerator {
     unsigned int          amount;
 
     /* render state */
-    loader::Shader    shader;
-    loader::Texture2D texture;
+    Shader    shader;
+    Texture2D texture;
     unsigned int      vao;
 
     /**

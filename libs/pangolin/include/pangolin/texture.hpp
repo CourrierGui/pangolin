@@ -4,7 +4,6 @@
 #include <pgl-image/image-loader.hpp>
 
 namespace pgl {
-  namespace loader {
 
 
     /* Texture2D is able to store and configure a texture in OpenGL.
@@ -37,5 +36,4 @@ namespace pgl {
         void bind() const;
     };
 
-  } /* end of namespace loader */
 } /* end of namespace pgl */

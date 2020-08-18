@@ -3,7 +3,7 @@
 namespace pgl {
   namespace render2D {
 
-SpriteRenderer::SpriteRenderer(loader::Shader& shader) : shader(shader){
+SpriteRenderer::SpriteRenderer(Shader& shader) : shader(shader){
   init_render_data();
 }
 
@@ -39,7 +39,7 @@ void SpriteRenderer::init_render_data() {
 }
 
 void SpriteRenderer::draw(
-  loader::Texture2D& texture,
+  Texture2D& texture,
   const glm::vec2& position,
   const glm::vec2& size,
   float      rotate,
@@ -68,7 +68,7 @@ void SpriteRenderer::draw(
 }
 
 void SpriteRenderer::draw(
-  loader::Texture2D& texture,
+  Texture2D& texture,
   const glm::vec2& position,
   const glm::vec2& size,
   float      rotate)
@@ -77,7 +77,7 @@ void SpriteRenderer::draw(
 }
 
 void SpriteRenderer::draw(
-  loader::Texture2D& texture,
+  Texture2D& texture,
   const glm::vec2& position,
   const glm::vec2& size)
 {
@@ -85,7 +85,7 @@ void SpriteRenderer::draw(
 }
 
 void SpriteRenderer::draw(
-  loader::Texture2D& texture,
+  Texture2D& texture,
   const glm::vec2& position)
 {
   draw(texture, position, glm::vec2(10.0f, 10.0f), 0.0f, glm::vec3(1.0f));
