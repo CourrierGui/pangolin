@@ -1,8 +1,11 @@
 #include "../src/image-utils.hpp"
 #include <pgl-image/image-loader.hpp>
 #include <stb_image.h>
+#include <filesystem>
 
 #include <gtest/gtest.h>
+
+namespace fs = std::filesystem;
 
 struct PglImageUtils : testing::Test {
 
@@ -12,7 +15,14 @@ struct PglImageUtils : testing::Test {
   std::string filepath;
 
   void SetUp() override {
-    filepath =  "../resources/awesomeface.png";
+		fs::path current_dir = fs::current_path();
+
+		while (!fs::exists(current_dir/"resources")) {
+			current_dir = current_dir.parent_path();
+		}
+
+    filepath = (current_dir/"resources/awesomeface.png").string();
+		std::clog << filepath << '\n';
     fstream.open(filepath);
     data = stbi_load(filepath.c_str(), &width, &height, &nb_channels, 0);
   }

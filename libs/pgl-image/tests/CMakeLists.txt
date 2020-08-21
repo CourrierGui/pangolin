@@ -7,6 +7,7 @@ target_link_libraries(Pgl.test-stream
   PRIVATE
     gtest gtest_main
     pgl-image
+		target-flags
 )
 
 add_executable(Pgl.test-png test-png.cpp)
@@ -14,6 +15,7 @@ target_link_libraries(Pgl.test-png
   PRIVATE
     gtest gtest_main
     pgl-image
+		target-flags
 )
 
 add_executable(Pgl.test-image test-image.cpp)
@@ -21,6 +23,7 @@ target_link_libraries(Pgl.test-image
   PRIVATE
     gtest gtest_main
     stb_image pgl-image
+		target-flags stdc++fs
 )
 
 gtest_add_tests(Pgl.test-stream "" AUTO)
