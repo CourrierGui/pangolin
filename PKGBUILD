@@ -16,7 +16,7 @@ provides=()
 conflicts=()
 replaces=()
 backup=()
-options=()
+options=('!buildflags')
 install=
 changelog=
 source=()
@@ -25,13 +25,13 @@ md5sums=()
 validpgpkeys=()
 
 prepare() {
-	git clone https://github.com/CourrierGui/pangolin "$pkgname-$pkgver"
+	git clone $url "$pkgname-$pkgver"
 	mkdir -p "$pkgname-$pkgver"/build
 }
 
 build() {
 	cd "$pkgname-$pkgver"
-	cmake -B build
+	cmake -B build -DCMAKE_BUILD_TYPE=Release
 	cmake --build build
 }
 
