@@ -17,6 +17,7 @@ namespace pgl {
 	 * multiplication
 	 * inversion
 	 * conversion between euler, matrix and quaternions
+	 * radian and degree struct + operator""_r, operator""_d
 	 *
 	 */
 
