@@ -3,15 +3,17 @@
 #include <pgl-math/vector.hpp>
 
 template<int size>
-void assert_same_values(const pgl::Vector<int,size>& vec, int val) noexcept {
-	for (auto elem: vec.elements)
+void assert_same_values(const pgl::vector<int,size>& vec, int val) noexcept {
+	for (auto elem: vec.elements) {
 		ASSERT_EQ(elem, val);
+	}
 }
 
 template<int size>
-void assert_same_values(const pgl::Vector<float,size>& vec, float val) noexcept {
-	for (auto elem: vec.elements)
+void assert_same_values(const pgl::vector<float,size>& vec, float val) noexcept {
+	for (auto elem: vec.elements) {
 		ASSERT_FLOAT_EQ(elem, val);
+	}
 }
 
 class VectorTest : public testing::Test {
@@ -96,4 +98,14 @@ TEST_F(VectorTest, UtilityFunctions) {
 	ASSERT_FLOAT_EQ(f.y, 2.0f);
 	ASSERT_FLOAT_EQ(f.z, 0.4f);
 	ASSERT_FLOAT_EQ(f.w, 0.1f);
+}
+
+TEST_F(VectorTest, CStyleConstructor) {
+	//TODO test other dimensions
+	int values[3] = {1, 2, 3};
+	pgl::int3 vector_values(values);
+
+	ASSERT_EQ(values[0], vector_values.x);
+	ASSERT_EQ(values[1], vector_values.y);
+	ASSERT_EQ(values[2], vector_values.z);
 }
