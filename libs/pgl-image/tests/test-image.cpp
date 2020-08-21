@@ -22,7 +22,6 @@ struct PglImageUtils : testing::Test {
 		}
 
     filepath = (current_dir/"resources/awesomeface.png").string();
-		std::clog << filepath << '\n';
     fstream.open(filepath);
     data = stbi_load(filepath.c_str(), &width, &height, &nb_channels, 0);
   }
