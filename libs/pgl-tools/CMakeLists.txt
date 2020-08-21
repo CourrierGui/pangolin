@@ -17,13 +17,12 @@ target_link_libraries(pgl-tools
 install(
 	TARGETS pgl-tools
 	EXPORT pangolin-targets
-	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/pangolin
-	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/pangolin
-	INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pangolin
+	LIBRARY DESTINATION lib/pangolin
+	ARCHIVE DESTINATION lib/pangolin
 )
 install(
 	DIRECTORY include/pgl-tools
-	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pangolin
+	DESTINATION include/pangolin
 )
 
 add_executable(logger apps/logger.cpp)

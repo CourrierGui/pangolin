@@ -28,10 +28,10 @@ target_link_libraries(pangolin
 install(
   TARGETS pangolin
   EXPORT pangolin-targets
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/pangolin
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/pangolin
+  LIBRARY DESTINATION lib/pangolin
+  ARCHIVE DESTINATION lib/pangolin
 )
 install(
   DIRECTORY include/pangolin
-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pangolin
+  DESTINATION include/pangolin
 )

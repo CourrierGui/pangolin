@@ -15,10 +15,10 @@ add_subdirectory(tests)
 install(
   TARGETS pgl-math
   EXPORT pangolin-targets
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/pangolin
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/pangolin
+  LIBRARY DESTINATION lib/pangolin
+  ARCHIVE DESTINATION lib/pangolin
 )
 install(
   DIRECTORY include/pgl-math
-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pangolin
+  DESTINATION include/pangolin
 )

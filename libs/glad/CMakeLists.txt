@@ -10,10 +10,10 @@ target_link_libraries(glad dl)
 install(
   TARGETS glad
   EXPORT pangolin-targets
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/pangolin
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/pangolin
+  LIBRARY DESTINATION lib/pangolin
+  ARCHIVE DESTINATION lib/pangolin
 )
 install(
   DIRECTORY include/glad
-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pangolin
+  DESTINATION include/pangolin
 )
