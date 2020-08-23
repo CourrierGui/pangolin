@@ -4,10 +4,16 @@
 #include <cmath>
 #include <initializer_list>
 #include <iostream>
+#include <utility>
+
+#include <type_traits>
 
 namespace pgl {
 
-	template<typename type, int size>
+	template<typename T>
+		concept number = std::is_arithmetic_v<T>;
+
+	template<number type, int size>
 		struct vector {
 			type elements[size];
 
@@ -16,13 +22,13 @@ namespace pgl {
 				for (auto& elem: elements) { elem = e; }
 			}
 
-			constexpr vector(const type values[size]) noexcept {
-				const type* it = values;
-				for (auto& elem: elements) { elem = *(it++); }
-			}
+			constexpr vector(const type values[size]) noexcept : elements{values} { }
+
+			template<typename... Ts>
+				constexpr vector(Ts&&... ts) : elements{ std::forward<Ts>(ts)... } {  }
 		};
 
-	template<typename type>
+	template<number type>
 		struct vector<type,2> {
 			union {
 				type elements[2];
@@ -40,7 +46,7 @@ namespace pgl {
 			static vector<type,2> down()  { return { 0, -1}; }
 		};
 
-	template<typename type>
+	template<number type>
 		struct vector<type,3> {
 			union {
 				type elements[3];
@@ -62,7 +68,7 @@ namespace pgl {
 			static vector<type,3> back()  noexcept { return { 0,  0, -1}; }
 		};
 
-	template<typename type>
+	template<number type>
 		struct vector<type,4> {
 			union {
 				type elements[4];
@@ -86,7 +92,7 @@ namespace pgl {
 			static vector<type,4> back()  noexcept { return { 0,  0, -1, 0}; }
 		};
 
-	template<typename type, int size>
+	template<number type, int size>
 	inline auto operator*(const vector<type,size>& lhs, const vector<type,size>& rhs) noexcept
 		-> vector<type,size>
 		{
@@ -97,7 +103,7 @@ namespace pgl {
 			return res;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 	inline auto operator*(const vector<type,size>& lhs, const type& rhs) noexcept
 		-> vector<type,size>
 		{
@@ -107,7 +113,7 @@ namespace pgl {
 			return res;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 	inline auto operator*(const type& lhs, const vector<type,size>& rhs) noexcept
 		-> vector<type,size>
 		{
@@ -135,7 +141,7 @@ namespace pgl {
 			return res;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 	inline auto operator-(const vector<type,size>& lhs, const vector<type,size>& rhs) noexcept
 		-> vector<type,size>
 		{
@@ -146,7 +152,7 @@ namespace pgl {
 			return res;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 	inline auto operator-(const vector<type,size>& lhs, const type& rhs) noexcept
 		-> vector<type,size>
 		{
@@ -156,7 +162,7 @@ namespace pgl {
 			return res;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 	inline auto operator-(const type& lhs, const vector<type,size>& rhs) noexcept
 		-> vector<type,size>
 		{
@@ -166,7 +172,7 @@ namespace pgl {
 			return res;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 	inline auto operator+(const vector<type,size>& lhs, const vector<type,size>& rhs) noexcept
 		-> vector<type,size>
 		{
@@ -177,7 +183,7 @@ namespace pgl {
 			return res;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 	inline auto operator+(const vector<type,size>& lhs, const type& rhs) noexcept
 		-> vector<type,size>
 		{
@@ -187,14 +193,14 @@ namespace pgl {
 			return res;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 	inline auto operator+(const type& lhs, const vector<type,size>& rhs) noexcept
 		-> vector<type,size>
 		{
 			return rhs + lhs;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 		inline auto dot(const vector<type,size>& lhs, const vector<type,size>& rhs) noexcept -> type {
 			type res(0);
 			auto lhs_it = lhs.elements;
@@ -204,12 +210,12 @@ namespace pgl {
 			return res;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 		inline auto dot(const vector<type,size>& arg) noexcept -> type {
 			return dot(arg,arg);
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 		inline auto sum(const vector<type,size>& arg) noexcept -> type {
 			type res(0);
 			for (auto elem: arg.elements)
@@ -223,7 +229,7 @@ namespace pgl {
 			return arg/s;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 		inline auto max(const vector<type,size>& vec) noexcept -> type {
 			type max = std::numeric_limits<type>::min();
 			for (auto elem: vec.elements) {
@@ -233,7 +239,7 @@ namespace pgl {
 			return max;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 		inline auto min(const vector<type,size>& vec) noexcept -> type {
 			type min = std::numeric_limits<type>::max();
 			for (auto elem: vec.elements) {
@@ -243,7 +249,7 @@ namespace pgl {
 			return min;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 		inline auto abs(const vector<type,size>& vec) noexcept -> vector<type,size> {
 			vector<type,size> res;
 			auto vec_it = vec.elements;
@@ -252,7 +258,7 @@ namespace pgl {
 			return res;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 		inline auto operator<(const vector<type,size>& lhs, const vector<type,size>& rhs)
 		-> vector<bool,size>
 		{
@@ -264,7 +270,7 @@ namespace pgl {
 			return res;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 		inline auto operator>(const vector<type,size>& lhs, const vector<type,size>& rhs)
 		-> vector<bool,size>
 		{
@@ -276,7 +282,7 @@ namespace pgl {
 			return res;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 		inline auto operator<=(const vector<type,size>& lhs, const vector<type,size>& rhs)
 		-> vector<bool,size>
 		{
@@ -288,7 +294,7 @@ namespace pgl {
 			return res;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 		inline auto operator>=(const vector<type,size>& lhs, const vector<type,size>& rhs)
 		-> vector<bool,size>
 		{
@@ -300,7 +306,7 @@ namespace pgl {
 			return res;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 		inline auto operator==(const vector<type,size>& lhs, const vector<type,size>& rhs)
 		-> vector<bool,size>
 		{
@@ -312,7 +318,7 @@ namespace pgl {
 			return res;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 		type& min_element(vector<type,size>& vect) {
 			type min = vect.elements[0];
 			type* min_elem = vect.elements;
@@ -326,7 +332,7 @@ namespace pgl {
 			return *min_elem;
 		}
 
-	template<typename type, int size>
+	template<number type, int size>
 		type& max_element(vector<type,size>& vect) {
 			type max = vect.elements[0];
 			type* max_elem = vect.elements;
@@ -346,6 +352,7 @@ namespace pgl {
 	 * ======= TODO !!! =======
 	 * ========================
 	 *
+	 * add initialization in constructors where it's missing
 	 * std::initializer_list<T>: useless ?
 	 * compound assignement operator: *=, /=, +=, -=, ...
 	 * clamp, staturate, lerp(mix)

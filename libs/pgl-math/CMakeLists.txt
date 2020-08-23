@@ -5,10 +5,6 @@ target_include_directories(pgl-math
     $<INSTALL_INTERFACE:include/pangolin>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
-target_link_libraries(pgl-image
-  PRIVATE
-		$<BUILD_INTERFACE:target-flags> stb_image # TODO why?
-)
 
 add_subdirectory(tests)
 
