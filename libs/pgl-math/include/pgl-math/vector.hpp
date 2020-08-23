@@ -13,19 +13,29 @@ namespace pgl {
 	template<typename T>
 		concept number = std::is_arithmetic_v<T>;
 
-	template<number type, int size>
+	template<number type, int dim>
 		struct vector {
-			type elements[size];
+			type elements[dim];
+
+			auto size() const noexcept -> int { return dim; }
+
+			auto begin()        -> type*       { return elements; }
+			auto begin()  const -> const type* { return elements; }
+			auto cbegin() const -> const type* { return elements; }
+			auto end()          -> type*       { return elements+size(); }
+			auto end()    const -> const type* { return elements+size(); }
+			auto cend()   const -> const type* { return elements+size(); }
 
 			constexpr vector() noexcept = default;
 			constexpr explicit vector(const type& e) noexcept {
 				for (auto& elem: elements) { elem = e; }
 			}
+			constexpr vector(const type values[dim]) noexcept : elements{values} { }
 
-			constexpr vector(const type values[size]) noexcept : elements{values} { }
-
-			template<typename... Ts>
-				constexpr vector(Ts&&... ts) : elements{ std::forward<Ts>(ts)... } {  }
+			template<number... Ts>
+				constexpr vector(Ts&&... ts) : elements{ std::forward<Ts>(ts)... } {
+					static_assert(sizeof...(Ts) == dim, "Invalid number of arguments in constructor.");
+				}
 		};
 
 	template<number type>
@@ -34,6 +44,15 @@ namespace pgl {
 				type elements[2];
 				struct { type x, y; };
 			};
+
+			auto size() const noexcept -> int { return 2; }
+
+			auto begin()        -> type*       { return elements; }
+			auto begin()  const -> const type* { return elements; }
+			auto cbegin() const -> const type* { return elements; }
+			auto end()          -> type*       { return elements+size(); }
+			auto end()    const -> const type* { return elements+size(); }
+			auto cend()   const -> const type* { return elements+size(); }
 
 			constexpr vector() noexcept = default;
 			constexpr explicit vector(const type& e)       noexcept : elements{e, e}           { }
@@ -53,6 +72,15 @@ namespace pgl {
 				struct { type x, y, z; };
 				struct { vector<type,2> xy; };
 			};
+
+			auto size() const noexcept -> int { return 3; }
+
+			auto begin()        -> type*       { return elements; }
+			auto begin()  const -> const type* { return elements; }
+			auto cbegin() const -> const type* { return elements; }
+			auto end()          -> type*       { return elements+size(); }
+			auto end()    const -> const type* { return elements+size(); }
+			auto cend()   const -> const type* { return elements+size(); }
 
 			constexpr vector() noexcept = default;
 			constexpr explicit vector(const type& e)                         noexcept : elements{e, e, e}                { }
@@ -77,253 +105,331 @@ namespace pgl {
 				struct { vector<type,2> xy, zw; };
 			};
 
+			auto size() const noexcept -> int { return 4; }
+
+			auto begin()        -> type*       { return elements; }
+			auto begin()  const -> const type* { return elements; }
+			auto cbegin() const -> const type* { return elements; }
+			auto end()          -> type*       { return elements+size(); }
+			auto end()    const -> const type* { return elements+size(); }
+			auto cend()   const -> const type* { return elements+size(); }
+
 			constexpr vector() noexcept = default;
 			constexpr explicit vector(const type& e)                                         noexcept : elements{e, e, e, e}                     { }
 			constexpr vector(const type val[4])                                              noexcept : elements{val[0], val[1], val[2], val[3]} { }
 			constexpr vector(const type& t0, const type& t1, const type& t2, const type& t3) noexcept : elements{t0, t1, t2, t3}                 { }
 			constexpr vector(const vector<type,3>& vect, type w)                             noexcept : elements{vect.x, vect.y, vect.z, w}      { }
 			constexpr vector(const vector<type,2>& lhs, const vector<type,2>& rhs)           noexcept : elements{lhs.x, lhs.y, rhs.x, rhs.y}     { }
-
-			static vector<type,4> right() noexcept { return { 1,  0,  0, 0}; }
-			static vector<type,4> left()  noexcept { return {-1,  0,  0, 0}; }
-			static vector<type,4> up()    noexcept { return { 0,  1,  0, 0}; }
-			static vector<type,4> down()  noexcept { return { 0, -1,  0, 0}; }
-			static vector<type,4> front() noexcept { return { 0,  0,  1, 0}; }
-			static vector<type,4> back()  noexcept { return { 0,  0, -1, 0}; }
 		};
 
-	template<number type, int size>
-	inline auto operator*(const vector<type,size>& lhs, const vector<type,size>& rhs) noexcept
-		-> vector<type,size>
-		{
-			vector<type,size> res(lhs);
-			auto rhs_it = rhs.elements;
-			for (auto& elem: res.elements)
-				elem *= *(rhs_it++);
-			return res;
+	template<number type, int dim>
+	inline auto operator*(
+		const vector<type,dim>& lhs,
+		const vector<type,dim>& rhs) noexcept
+	-> vector<type,dim>
+	{
+		vector<type,dim> res{lhs};
+		auto rhs_it = rhs.begin();
+		for (auto& elem: res) {
+			elem *= *(rhs_it++);
 		}
+		return res;
+	}
 
-	template<number type, int size>
-	inline auto operator*(const vector<type,size>& lhs, const type& rhs) noexcept
-		-> vector<type,size>
-		{
-			vector<type,size> res(lhs);
-			for (auto& elem: res.elements)
-				elem *= rhs;
-			return res;
+	template<number type, number scalar_type, int dim>
+	inline auto operator*(
+		const vector<type,dim>& lhs,
+		const scalar_type& rhs) noexcept
+	-> vector<type,dim>
+	{
+		vector<type,dim> res{lhs};
+		for (auto& elem: res) {
+			elem *= rhs;
 		}
+		return res;
+	}
 
-	template<number type, int size>
-	inline auto operator*(const type& lhs, const vector<type,size>& rhs) noexcept
-		-> vector<type,size>
-		{
-			return rhs * lhs;
+	template<number type, number scalar_type, int dim>
+	inline auto operator*(
+		const scalar_type& lhs,
+		const vector<type,dim>& rhs) noexcept
+	-> vector<type,dim>
+	{
+		return rhs * lhs;
+	}
+
+	template<number type, int dim>
+	inline auto operator/(
+		const vector<type,dim>& lhs,
+		const vector<type,dim>& rhs) noexcept
+	-> vector<type,dim>
+	{
+		vector<type,dim> res{lhs};
+		auto rhs_it = rhs.begin();
+		for (auto& elem: res) {
+			elem /= *(rhs_it++);
 		}
+		return res;
+	}
 
-	template<int size>
-	inline auto operator/(const vector<float,size>& lhs, const vector<float,size>& rhs) noexcept
-		-> vector<float,size>
-		{
-			vector<float,size> res(lhs);
-			auto rhs_it = rhs.elements;
-			for (auto& elem: res.elements)
-				elem /= *(rhs_it++);
-			return res;
+	template<number type, number scalar_type, int dim>
+	inline auto operator/(
+		const vector<type,dim>& lhs,
+		const scalar_type& rhs) noexcept
+	-> vector<type,dim>
+	{
+		vector<type,dim> res{lhs};
+		for (auto& elem: res) {
+			elem /= rhs;
 		}
+		return res;
+	}
 
-	template<int size>
-	inline auto operator/(const vector<float,size>& lhs, const float& rhs) noexcept
-		-> vector<float,size>
-		{
-			vector<float,size> res(lhs);
-			for (auto& elem: res.elements)
-				elem /= rhs;
-			return res;
+	template<number type, number scalar_type, int dim>
+	inline auto operator/(
+		const scalar_type& rhs,
+		const vector<type,dim>& lhs) noexcept
+	-> vector<type,dim>
+	{
+		vector<type,dim> res{lhs};
+		for (auto& elem: res) {
+			elem = rhs/elem;
 		}
+		return res;
+	}
 
-	template<number type, int size>
-	inline auto operator-(const vector<type,size>& lhs, const vector<type,size>& rhs) noexcept
-		-> vector<type,size>
-		{
-			vector<type,size> res(lhs);
-			auto rhs_it = rhs.elements;
-			for (auto& elem: res.elements)
-				elem -= *(rhs_it++);
-			return res;
+	template<number type, int dim>
+	inline auto operator-(
+		const vector<type,dim>& lhs,
+		const vector<type,dim>& rhs) noexcept
+	-> vector<type,dim>
+	{
+		vector<type,dim> res{lhs};
+		auto rhs_it = rhs.begin();
+		for (auto& elem: res) {
+			elem -= *(rhs_it++);
 		}
+		return res;
+	}
 
-	template<number type, int size>
-	inline auto operator-(const vector<type,size>& lhs, const type& rhs) noexcept
-		-> vector<type,size>
-		{
-			vector<type,size> res(lhs);
-			for (auto& elem: res.elements)
-				elem = elem - rhs;
-			return res;
+	template<number type, number scalar_type, int dim>
+	inline auto operator-(
+		const vector<type,dim>& lhs,
+		const scalar_type& rhs) noexcept
+	-> vector<type,dim>
+	{
+		vector<type,dim> res{lhs};
+		for (auto& elem: res) {
+			elem = elem - rhs;
 		}
+		return res;
+	}
 
-	template<number type, int size>
-	inline auto operator-(const type& lhs, const vector<type,size>& rhs) noexcept
-		-> vector<type,size>
+	template<number type, number scalar_type, int dim>
+	inline auto operator-(
+		const scalar_type& lhs,
+		const vector<type,dim>& rhs) noexcept
+		-> vector<type,dim>
 		{
-			vector<type,size> res(rhs);
-			for (auto& elem: res.elements)
+			vector<type,dim> res{rhs};
+			for (auto& elem: res) {
 				elem = lhs - elem;
+			}
 			return res;
 		}
 
-	template<number type, int size>
-	inline auto operator+(const vector<type,size>& lhs, const vector<type,size>& rhs) noexcept
-		-> vector<type,size>
-		{
-			vector<type,size> res(lhs);
-			auto rhs_it = rhs.elements;
-			for (auto& elem: res.elements)
-				elem += *(rhs_it++);
-			return res;
+	template<number type, int dim>
+	inline auto operator+(
+		const vector<type,dim>& lhs,
+		const vector<type,dim>& rhs) noexcept
+	-> vector<type,dim>
+	{
+		vector<type,dim> res{lhs};
+		auto rhs_it = rhs.begin();
+		for (auto& elem: res) {
+			elem += *(rhs_it++);
 		}
+		return res;
+	}
 
-	template<number type, int size>
-	inline auto operator+(const vector<type,size>& lhs, const type& rhs) noexcept
-		-> vector<type,size>
-		{
-			vector<type,size> res(lhs);
-			for (auto& elem: res.elements)
-				elem += rhs;
-			return res;
+	template<number type, number scalar_type, int dim>
+	inline auto operator+(
+		const vector<type,dim>& lhs,
+		const scalar_type& rhs) noexcept
+	-> vector<type,dim>
+	{
+		vector<type,dim> res{lhs};
+		for (auto& elem: res) {
+			elem += rhs;
 		}
+		return res;
+	}
 
-	template<number type, int size>
-	inline auto operator+(const type& lhs, const vector<type,size>& rhs) noexcept
-		-> vector<type,size>
+	template<number type, number scalar_type, int dim>
+	inline auto operator+(
+		const scalar_type& lhs,
+		const vector<type,dim>& rhs) noexcept
+		-> vector<type,dim>
 		{
 			return rhs + lhs;
 		}
 
-	template<number type, int size>
-		inline auto dot(const vector<type,size>& lhs, const vector<type,size>& rhs) noexcept -> type {
-			type res(0);
-			auto lhs_it = lhs.elements;
-			auto rhs_it = rhs.elements;
-			for (;lhs_it != lhs.elements + size; ++lhs_it,++rhs_it)
+	template<number type, int dim>
+		inline auto dot(
+			const vector<type,dim>& lhs,
+			const vector<type,dim>& rhs) noexcept
+		-> type {
+			type res{0};
+			for (auto lhs_it=lhs.begin(), rhs_it=rhs.begin();
+					 lhs_it != lhs.end();
+					 ++lhs_it,++rhs_it)
+			{
 				res += *(lhs_it) * *(rhs_it);
+			}
 			return res;
 		}
 
-	template<number type, int size>
-		inline auto dot(const vector<type,size>& arg) noexcept -> type {
+	template<number type, int dim>
+		inline auto dot(const vector<type,dim>& arg) noexcept
+		-> type
+		{
 			return dot(arg,arg);
 		}
 
-	template<number type, int size>
-		inline auto sum(const vector<type,size>& arg) noexcept -> type {
-			type res(0);
-			for (auto elem: arg.elements)
+	template<number type, int dim>
+		inline auto sum(const vector<type,dim>& arg) noexcept -> type {
+			type res{0};
+			for (auto elem: arg) {
 				res += elem;
+			}
 			return res;
 		}
 
-	template<int size>
-		inline auto normalize(const vector<float,size>& arg) noexcept -> vector<float,size> {
-			float s = sum(arg);
+	template<number type, int dim>
+		inline auto normalize(const vector<type,dim>& arg) noexcept -> vector<type,dim> {
+			type s = sum(arg);
 			return arg/s;
 		}
 
-	template<number type, int size>
-		inline auto max(const vector<type,size>& vec) noexcept -> type {
+	template<number type, int dim>
+		inline auto max(const vector<type,dim>& vec) noexcept -> type {
 			type max = std::numeric_limits<type>::min();
-			for (auto elem: vec.elements) {
+			for (auto elem: vec) {
 				if (elem > max)
 					max = elem;
 			}
 			return max;
 		}
 
-	template<number type, int size>
-		inline auto min(const vector<type,size>& vec) noexcept -> type {
+	template<number type, int dim>
+		inline auto min(const vector<type,dim>& vec) noexcept -> type {
 			type min = std::numeric_limits<type>::max();
-			for (auto elem: vec.elements) {
+			for (auto elem: vec) {
 				if (elem < min)
 					min = elem;
 			}
 			return min;
 		}
 
-	template<number type, int size>
-		inline auto abs(const vector<type,size>& vec) noexcept -> vector<type,size> {
-			vector<type,size> res;
-			auto vec_it = vec.elements;
-			for (auto& elem: res.elements)
+	template<number type, int dim>
+		inline auto abs(const vector<type,dim>& vec) noexcept -> vector<type,dim> {
+			vector<type,dim> res;
+			auto vec_it = vec.begin();
+			for (auto& elem: res)
 				elem = std::abs(*(vec_it++));
 			return res;
 		}
 
-	template<number type, int size>
-		inline auto operator<(const vector<type,size>& lhs, const vector<type,size>& rhs)
-		-> vector<bool,size>
+	template<number type, int dim>
+		inline auto operator<(
+			const vector<type,dim>& lhs,
+			const vector<type,dim>& rhs)
+		-> vector<bool,dim>
 		{
-			vector<bool,size> res;
-			auto lhs_it=lhs.elements, rhs_it=rhs.elements;
-			for (auto& elem: res.elements) {
+			vector<bool,dim> res;
+			auto lhs_it=lhs.begin(), rhs_it=rhs.begin();
+			for (auto& elem: res) {
 				elem = (*(lhs_it++) < *(rhs_it++));
 			}
 			return res;
 		}
 
-	template<number type, int size>
-		inline auto operator>(const vector<type,size>& lhs, const vector<type,size>& rhs)
-		-> vector<bool,size>
+	template<number type, int dim>
+		inline auto operator>(
+			const vector<type,dim>& lhs,
+			const vector<type,dim>& rhs)
+		-> vector<bool,dim>
 		{
-			vector<bool,size> res;
-			auto lhs_it=lhs.elements, rhs_it=rhs.elements;
-			for (auto& elem: res.elements) {
+			vector<bool,dim> res;
+			auto lhs_it=lhs.begin(), rhs_it=rhs.begin();
+			for (auto& elem: res) {
 				elem = (*(lhs_it++) > *(rhs_it++));
 			}
 			return res;
 		}
 
-	template<number type, int size>
-		inline auto operator<=(const vector<type,size>& lhs, const vector<type,size>& rhs)
-		-> vector<bool,size>
+	template<number type, int dim>
+		inline auto operator<=(
+			const vector<type,dim>& lhs,
+			const vector<type,dim>& rhs)
+		-> vector<bool,dim>
 		{
-			vector<bool,size> res;
-			auto lhs_it=lhs.elements, rhs_it=rhs.elements;
-			for (auto& elem: res.elements) {
+			vector<bool,dim> res;
+			auto lhs_it=lhs.begin(), rhs_it=rhs.begin();
+			for (auto& elem: res) {
 				elem = (*(lhs_it++) <= *(rhs_it++));
 			}
 			return res;
 		}
 
-	template<number type, int size>
-		inline auto operator>=(const vector<type,size>& lhs, const vector<type,size>& rhs)
-		-> vector<bool,size>
+	template<number type, int dim>
+		inline auto operator>=(
+			const vector<type,dim>& lhs,
+			const vector<type,dim>& rhs)
+		-> vector<bool,dim>
 		{
-			vector<bool,size> res;
-			auto lhs_it=lhs.elements, rhs_it=rhs.elements;
-			for (auto& elem: res.elements) {
+			vector<bool,dim> res;
+			auto lhs_it=lhs.begin(), rhs_it=rhs.begin();
+			for (auto& elem: res) {
 				elem = (*(lhs_it++) >= *(rhs_it++));
 			}
 			return res;
 		}
 
-	template<number type, int size>
-		inline auto operator==(const vector<type,size>& lhs, const vector<type,size>& rhs)
-		-> vector<bool,size>
+	template<number type, int dim>
+		inline auto operator==(
+			const vector<type,dim>& lhs,
+			const vector<type,dim>& rhs)
+		-> vector<bool,dim>
 		{
-			vector<bool,size> res;
-			auto lhs_it=lhs.elements, rhs_it=rhs.elements;
-			for (auto& elem: res.elements) {
+			vector<bool,dim> res;
+			auto lhs_it=lhs.begin(), rhs_it=rhs.begin();
+			for (auto& elem: res) {
 				elem = (*(lhs_it++) == *(rhs_it++));
 			}
 			return res;
 		}
 
-	template<number type, int size>
-		type& min_element(vector<type,size>& vect) {
-			type min = vect.elements[0];
-			type* min_elem = vect.elements;
+	template<number type, int dim>
+		inline auto operator!=(
+			const vector<type,dim>& lhs,
+			const vector<type,dim>& rhs)
+		-> vector<bool,dim>
+		{
+			vector<bool,dim> res;
+			auto lhs_it=lhs.begin(), rhs_it=rhs.begin();
+			for (auto& elem: res) {
+				elem = (*(lhs_it++) != *(rhs_it++));
+			}
+			return res;
+		}
 
-			for (type* it=vect.elements; it!=vect.elements+size; ++it) {
+	template<number type, int dim>
+		type& min_element(vector<type,dim>& vect) {
+			type* min_elem = vect.begin();
+			type  min = *min_elem;
+
+			for (auto it=vect.begin(); it!=vect.end(); ++it) {
 				if (*it < min) {
 					min = *it;
 					min_elem = it;
@@ -332,12 +438,12 @@ namespace pgl {
 			return *min_elem;
 		}
 
-	template<number type, int size>
-		type& max_element(vector<type,size>& vect) {
-			type max = vect.elements[0];
-			type* max_elem = vect.elements;
+	template<number type, int dim>
+		type& max_element(vector<type,dim>& vect) {
+			type* max_elem = vect.begin();
+			type  max = *max_elem;
 
-			for (type* it=vect.elements; it!=vect.elements+size; ++it) {
+			for (auto it=vect.begin(); it!=vect.end(); ++it) {
 				if (*it > max) {
 					max = *it;
 					max_elem = it;
@@ -353,19 +459,25 @@ namespace pgl {
 	 * ========================
 	 *
 	 * add initialization in constructors where it's missing
-	 * std::initializer_list<T>: useless ?
 	 * compound assignement operator: *=, /=, +=, -=, ...
 	 * clamp, staturate, lerp(mix)
 	 * all() (AND), any() (OR)
 	 * select() -> component wise ?:
 	 * frame ?
 	 *
-	 * SIMD
 	 * benchmark
-	 * tests
-	 *
+	 * SIMD
 	 * more utility functions
+	 *
 	 */
+
+	using bool2 = vector<bool,2>;
+	using bool3 = vector<bool,3>;
+	using bool4 = vector<bool,4>;
+
+	using uint2 = vector<unsigned int,2>;
+	using uint3 = vector<unsigned int,3>;
+	using uint4 = vector<unsigned int,4>;
 
 	using int2 = vector<int,2>;
 	using int3 = vector<int,3>;
