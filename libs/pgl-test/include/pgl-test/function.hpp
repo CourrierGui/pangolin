@@ -4,10 +4,6 @@
 #include <string>
 #include <sstream>
 
-/**************************
- * Generic helper TMP stuff
- * ************************/
-
 template<typename...>
 struct type_sequence {};
 
@@ -76,11 +72,6 @@ struct function_traits<R(Args...)>
 template <typename F>
 using function_arg_sequence = typename function_traits<F>::arg_types;
 
-
-/**************************
- * Stuff to call the function invariably
- * ************************/
-
 template<typename F>
 struct func_caller {
 	static_assert(
@@ -145,25 +136,6 @@ struct func_caller<R(Args...)> {
 	}
 };
 
-/*
- * In  a real world use, something like this might be useful instead of calling
- * func_caller immediately, so as to exit the compile easier...  In this
- * example, on ideone.com, you still get pretty gnarly compile errors, though
- * it should be obvious what the problem is early on ;)
- *
- * template <typename F>
- * struct call_func_proof {
- * 	 static_assert(has_operator_func<F>::value || std::is_function<F>::value,
- * 	 "Only functions, functors, etc. may be passed to 'call_func'");
- *
- * 	 static inline auto call_func(const F& func)
- * 	 -> decltype(func_caller<F>::call(func))
- * 	 {
- *   	 return func_caller<F>::call(func);
- * 	 }
- * };
- */
-
 template <typename Tuple, typename F>
 static inline auto call_func(
 	const Tuple& tuple,
@@ -179,50 +151,3 @@ static inline auto call_func_t(const Tuple& tuple, const F& func)
 {
 	return func_caller<FType>::call_typed(tuple, func);
 }
-
-/**************************
- * And example using it
- * ************************/
-
-void test_func(int i1, double d1, int i2, std::string str1, std::string str2, double d2) {
-	std::cout << i1 << ", " << d1 << ", " << i2 << ", " << str1 << ", " << str2 << ", " << d2 << std::endl;
-}
-
-struct test_obj {
-
-	void operator()(double d1, std::string str1, double d2, double d3, int i, std::string str2, double d4) {
-		std::cout << d1 << ", " << str1 << ", " << d2 << ", " << d3 << ", " << i << ", " << str2 << ", " << d4 << std::endl;
-	}
-
-	void operator()() {
-		std::cout << "O.o" << std::endl;
-	} // This throws an error with call_func, because the overloaded () can't be resolved. call_func_t is required
-};
-
-/* int main() { */
-/* 	using namespace std::placeholders; */
-
-/* 	call_func( */
-/* 		[](int i, std::string str1, std::string str2, double d) { */
-/* 			std::cout << i << ", " << str1 << ", " << str2 << ", " << d << std::endl; */
-/* 		} */
-/* 	); */
-
-/* 	std::string stated_str = "My str"; */
-/* 	call_func( */
-/* 		[&](int i, double d, std::string s) { */
-/* 			std::cout << stated_str << ", " << i << ", " << d << ", " << s << std::endl; */
-/* 		} */
-/* 	); */
-/* 	call_func(test_func); */
-/* 	//call_func(test_obj{}); */
-/* 	call_func_t<void(double, std::string, double, double, int, std::string, double)>(test_obj{}); */
-
-/* 	call_func( */
-/* 		std::function<void(double, int, std::string, double)>( */
-/* 			std::bind(test_func, 634, _1, _2, "This one's messed up", _3, _4) */
-/* 		) */
-/* 	); */
-
-/* 	return 0; */
-/* } */
