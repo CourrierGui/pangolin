@@ -19,15 +19,15 @@ namespace pgl {
 
 			inline constexpr auto size() const noexcept -> int { return dim; }
 
-			inline constexpr auto begin()        -> type*       { return elements; }
-			inline constexpr auto begin()  const -> const type* { return elements; }
-			inline constexpr auto cbegin() const -> const type* { return elements; }
-			inline constexpr auto end()          -> type*       { return elements+size(); }
-			inline constexpr auto end()    const -> const type* { return elements+size(); }
-			inline constexpr auto cend()   const -> const type* { return elements+size(); }
+			inline constexpr auto begin()  noexcept       -> type*       { return elements; }
+			inline constexpr auto begin()  const noexcept -> const type* { return elements; }
+			inline constexpr auto cbegin() const noexcept -> const type* { return elements; }
+			inline constexpr auto end()    noexcept       -> type*       { return elements+size(); }
+			inline constexpr auto end()    const noexcept -> const type* { return elements+size(); }
+			inline constexpr auto cend()   const noexcept -> const type* { return elements+size(); }
 
 			inline constexpr vector() noexcept = default;
-			inline constexpr explicit vector(const type& e) noexcept {
+			inline constexpr explicit vector(const type& e) noexcept : elements{} {
 				for (auto& elem: elements) { elem = e; }
 			}
 			inline constexpr vector(const type values[dim]) noexcept : elements{values} { }
@@ -35,6 +35,48 @@ namespace pgl {
 			template<number... Ts>
 				inline constexpr vector(Ts&&... ts) : elements{ std::forward<Ts>(ts)... } {
 					static_assert(sizeof...(Ts) == dim, "Invalid number of arguments in constructor.");
+				}
+
+			inline constexpr auto operator*=(const vector<type,dim>& vec) noexcept -> vector<type,dim>& {
+				auto it = vec.begin();
+				for (auto& e: elements) { e *= *(it++); }
+				return *this;
+			}
+			inline constexpr auto operator/=(const vector<type,dim>& vec) noexcept -> vector<type,dim>& {
+				auto it = vec.begin();
+				for (auto& e: elements) { e /= *(it++); }
+				return *this;
+			}
+			inline constexpr auto operator+=(const vector<type,dim>& vec) noexcept -> vector<type,dim>& {
+				auto it = vec.begin();
+				for (auto& e: elements) { e += *(it++); }
+				return *this;
+			}
+			inline constexpr auto operator-=(const vector<type,dim>& vec) noexcept -> vector<type,dim>& {
+				auto it = vec.begin();
+				for (auto& e: elements) { e -= *(it++); }
+				return *this;
+			}
+
+			template<number scalar_type>
+				inline constexpr auto operator*=(const scalar_type& scalar) noexcept -> vector<type,dim>& {
+					for (auto& e: elements) { e *= scalar; }
+					return *this;
+				}
+			template<number scalar_type>
+				inline constexpr auto operator/=(const scalar_type& scalar) noexcept -> vector<type,dim>& {
+					for (auto& e: elements) { e /= scalar; }
+					return *this;
+				}
+			template<number scalar_type>
+				inline constexpr auto operator+=(const scalar_type& scalar) noexcept -> vector<type,dim>& {
+					for (auto& e: elements) { e += scalar; }
+					return *this;
+				}
+			template<number scalar_type>
+				inline constexpr auto operator-=(const scalar_type& scalar) noexcept -> vector<type,dim>& {
+					for (auto& e: elements) { e -= scalar; }
+					return *this;
 				}
 		};
 
@@ -47,22 +89,60 @@ namespace pgl {
 
 			inline constexpr auto size() const noexcept -> int { return 2; }
 
-			inline constexpr auto begin()        -> type*       { return elements; }
-			inline constexpr auto begin()  const -> const type* { return elements; }
-			inline constexpr auto cbegin() const -> const type* { return elements; }
-			inline constexpr auto end()          -> type*       { return elements+size(); }
-			inline constexpr auto end()    const -> const type* { return elements+size(); }
-			inline constexpr auto cend()   const -> const type* { return elements+size(); }
+			inline constexpr auto begin()  noexcept       -> type*       { return elements; }
+			inline constexpr auto begin()  const noexcept -> const type* { return elements; }
+			inline constexpr auto cbegin() const noexcept -> const type* { return elements; }
+			inline constexpr auto end()    noexcept 	    -> type*       { return elements+size(); }
+			inline constexpr auto end()    const noexcept -> const type* { return elements+size(); }
+			inline constexpr auto cend()   const noexcept -> const type* { return elements+size(); }
 
 			inline constexpr vector() noexcept = default;
 			inline constexpr explicit vector(const type& e)       noexcept : elements{e, e}           { }
 			inline constexpr vector(const type& x, const type& y) noexcept : elements{x, y}           { }
 			inline constexpr vector(const type val[2])            noexcept : elements{val[0], val[1]} { }
 
-			static inline constexpr vector<type,2> right() { return { 1,  0}; }
-			static inline constexpr vector<type,2> left()  { return {-1,  0}; }
-			static inline constexpr vector<type,2> up()    { return { 0,  1}; }
-			static inline constexpr vector<type,2> down()  { return { 0, -1}; }
+			static inline constexpr vector<type,2> right() noexcept { return { 1,  0}; }
+			static inline constexpr vector<type,2> left()  noexcept { return {-1,  0}; }
+			static inline constexpr vector<type,2> up()    noexcept { return { 0,  1}; }
+			static inline constexpr vector<type,2> down()  noexcept { return { 0, -1}; }
+
+			inline constexpr auto operator*=(const vector<type,2>& vec) noexcept -> vector<type,2>& {
+				x *= vec.x, y *= vec.y;
+				return *this;
+			}
+			inline constexpr auto operator/=(const vector<type,2>& vec) noexcept -> vector<type,2>& {
+				x /= vec.x, y /= vec.y;
+				return *this;
+			}
+			inline constexpr auto operator+=(const vector<type,2>& vec) noexcept -> vector<type,2>& {
+				x += vec.x, y += vec.y;
+				return *this;
+			}
+			inline constexpr auto operator-=(const vector<type,2>& vec) noexcept -> vector<type,2>& {
+				x -= vec.x, y -= vec.y;
+				return *this;
+			}
+
+			template<number scalar_type>
+				inline constexpr auto operator*=(const scalar_type& scalar) noexcept -> vector<type,2>& {
+					x *= scalar, y *= scalar;
+					return *this;
+				}
+			template<number scalar_type>
+				inline constexpr auto operator/=(const scalar_type& scalar) noexcept -> vector<type,2>& {
+					x /= scalar, y /= scalar;
+					return *this;
+				}
+			template<number scalar_type>
+				inline constexpr auto operator+=(const scalar_type& scalar) noexcept -> vector<type,2>& {
+					x += scalar, y += scalar;
+					return *this;
+				}
+			template<number scalar_type>
+				inline constexpr auto operator-=(const scalar_type& scalar) noexcept -> vector<type,2>& {
+					x -= scalar, y -= scalar;
+					return *this;
+				}
 		};
 
 	template<number type>
@@ -75,12 +155,12 @@ namespace pgl {
 
 			inline constexpr auto size() const noexcept -> int { return 3; }
 
-			inline constexpr auto begin()        -> type*       { return elements; }
-			inline constexpr auto begin()  const -> const type* { return elements; }
-			inline constexpr auto cbegin() const -> const type* { return elements; }
-			inline constexpr auto end()          -> type*       { return elements+size(); }
-			inline constexpr auto end()    const -> const type* { return elements+size(); }
-			inline constexpr auto cend()   const -> const type* { return elements+size(); }
+			inline constexpr auto begin()  noexcept       -> type*       { return elements; }
+			inline constexpr auto begin()  const noexcept -> const type* { return elements; }
+			inline constexpr auto cbegin() const noexcept -> const type* { return elements; }
+			inline constexpr auto end()    noexcept       -> type*       { return elements+size(); }
+			inline constexpr auto end()    const noexcept -> const type* { return elements+size(); }
+			inline constexpr auto cend()   const noexcept -> const type* { return elements+size(); }
 
 			inline constexpr vector() noexcept = default;
 			inline constexpr explicit vector(const type& e)                         noexcept : elements{e, e, e}                { }
@@ -94,6 +174,44 @@ namespace pgl {
 			static inline constexpr vector<type,3> down()  noexcept { return { 0, -1,  0}; }
 			static inline constexpr vector<type,3> front() noexcept { return { 0,  0,  1}; }
 			static inline constexpr vector<type,3> back()  noexcept { return { 0,  0, -1}; }
+
+			inline constexpr auto operator*=(const vector<type,3>& vec) noexcept -> vector<type,3>& {
+				x *= vec.x, y *= vec.y, z *= vec.z;
+				return *this;
+			}
+			inline constexpr auto operator/=(const vector<type,3>& vec) noexcept -> vector<type,3>& {
+				x /= vec.x, y /= vec.y, z /= vec.z;
+				return *this;
+			}
+			inline constexpr auto operator+=(const vector<type,3>& vec) noexcept -> vector<type,3>& {
+				x += vec.x, y += vec.y, z += vec.z;
+				return *this;
+			}
+			inline constexpr auto operator-=(const vector<type,3>& vec) noexcept -> vector<type,3>& {
+				x -= vec.x, y -= vec.y, z -= vec.z;
+				return *this;
+			}
+
+			template<number scalar_type>
+				inline constexpr auto operator*=(const scalar_type& scalar) noexcept -> vector<type,3>& {
+					x *= scalar, y *= scalar, z *= scalar;
+					return *this;
+				}
+			template<number scalar_type>
+				inline constexpr auto operator/=(const scalar_type& scalar) noexcept -> vector<type,3>& {
+					x /= scalar, y /= scalar, z /= scalar;
+					return *this;
+				}
+			template<number scalar_type>
+				inline constexpr auto operator+=(const scalar_type& scalar) noexcept -> vector<type,3>& {
+					x += scalar, y += scalar, z += scalar;
+					return *this;
+				}
+			template<number scalar_type>
+				inline constexpr auto operator-=(const scalar_type& scalar) noexcept -> vector<type,3>& {
+					x -= scalar, y -= scalar, z -= scalar;
+					return *this;
+				}
 		};
 
 	template<number type>
@@ -107,12 +225,12 @@ namespace pgl {
 
 			inline constexpr auto size() const noexcept -> int { return 4; }
 
-			inline constexpr auto begin()        -> type*       { return elements; }
-			inline constexpr auto begin()  const -> const type* { return elements; }
-			inline constexpr auto cbegin() const -> const type* { return elements; }
-			inline constexpr auto end()          -> type*       { return elements+size(); }
-			inline constexpr auto end()    const -> const type* { return elements+size(); }
-			inline constexpr auto cend()   const -> const type* { return elements+size(); }
+			inline constexpr auto begin()  noexcept       -> type*       { return elements; }
+			inline constexpr auto begin()  const noexcept -> const type* { return elements; }
+			inline constexpr auto cbegin() const noexcept -> const type* { return elements; }
+			inline constexpr auto end()    noexcept       -> type*       { return elements+size(); }
+			inline constexpr auto end()    const noexcept -> const type* { return elements+size(); }
+			inline constexpr auto cend()   const noexcept -> const type* { return elements+size(); }
 
 			inline constexpr vector() noexcept = default;
 			inline constexpr explicit vector(const type& e)                                         noexcept : elements{e, e, e, e}                     { }
@@ -120,6 +238,44 @@ namespace pgl {
 			inline constexpr vector(const type& t0, const type& t1, const type& t2, const type& t3) noexcept : elements{t0, t1, t2, t3}                 { }
 			inline constexpr vector(const vector<type,3>& vect, type w)                             noexcept : elements{vect.x, vect.y, vect.z, w}      { }
 			inline constexpr vector(const vector<type,2>& lhs, const vector<type,2>& rhs)           noexcept : elements{lhs.x, lhs.y, rhs.x, rhs.y}     { }
+
+			inline constexpr auto operator*=(const vector<type,4>& vec) noexcept -> vector<type,4>& {
+				x *= vec.x, y *= vec.y, z *= vec.z, w *= vec.w;
+				return *this;
+			}
+			inline constexpr auto operator/=(const vector<type,4>& vec) noexcept -> vector<type,4>& {
+				x /= vec.x, y /= vec.y, z /= vec.z, w /= vec.w;
+				return *this;
+			}
+			inline constexpr auto operator+=(const vector<type,4>& vec) noexcept -> vector<type,4>& {
+				x += vec.x, y += vec.y, z += vec.z, w += vec.w;
+				return *this;
+			}
+			inline constexpr auto operator-=(const vector<type,4>& vec) noexcept -> vector<type,4>& {
+				x -= vec.x, y -= vec.y, z -= vec.z, w -= vec.w;
+				return *this;
+			}
+
+			template<number scalar_type>
+				inline constexpr auto operator*=(const scalar_type& scalar) noexcept -> vector<type,4>& {
+					x *= scalar, y *= scalar, z *= scalar, w *= scalar;
+					return *this;
+				}
+			template<number scalar_type>
+				inline constexpr auto operator/=(const scalar_type& scalar) noexcept -> vector<type,4>& {
+					x /= scalar, y /= scalar, z /= scalar, w /= scalar;
+					return *this;
+				}
+			template<number scalar_type>
+				inline constexpr auto operator+=(const scalar_type& scalar) noexcept -> vector<type,4>& {
+					x += scalar, y += scalar, z += scalar, w += scalar;
+					return *this;
+				}
+			template<number scalar_type>
+				inline constexpr auto operator-=(const scalar_type& scalar) noexcept -> vector<type,4>& {
+					x -= scalar, y -= scalar, z -= scalar, w -= scalar;
+					return *this;
+				}
 		};
 
 	template<number type, int dim>
@@ -297,7 +453,8 @@ namespace pgl {
 		}
 
 	template<number type, int dim>
-		inline constexpr auto sum(const vector<type,dim>& arg) noexcept -> type {
+		inline constexpr auto sum(const vector<type,dim>& arg) noexcept
+		-> type {
 			type res{0};
 			for (auto elem: arg) {
 				res += elem;
@@ -306,13 +463,17 @@ namespace pgl {
 		}
 
 	template<number type, int dim>
-		inline constexpr auto normalize(const vector<type,dim>& arg) noexcept -> vector<type,dim> {
+		inline constexpr auto normalize(const vector<type,dim>& arg) noexcept
+		-> vector<type,dim>
+		{
 			type s = sum(arg);
 			return arg/s;
 		}
 
 	template<number type, int dim>
-		inline constexpr auto max(const vector<type,dim>& vec) noexcept -> type {
+		inline constexpr auto max(const vector<type,dim>& vec) noexcept
+		-> type
+		{
 			type max = std::numeric_limits<type>::min();
 			for (auto elem: vec) {
 				if (elem > max)
@@ -322,7 +483,9 @@ namespace pgl {
 		}
 
 	template<number type, int dim>
-		inline constexpr auto min(const vector<type,dim>& vec) noexcept -> type {
+		inline constexpr auto min(const vector<type,dim>& vec) noexcept
+		-> type
+		{
 			type min = std::numeric_limits<type>::max();
 			for (auto elem: vec) {
 				if (elem < min)
@@ -332,7 +495,9 @@ namespace pgl {
 		}
 
 	template<number type, int dim>
-		inline constexpr auto abs(const vector<type,dim>& vec) noexcept -> vector<type,dim> {
+		inline constexpr auto abs(const vector<type,dim>& vec) noexcept
+		-> vector<type,dim>
+		{
 			vector<type,dim> res;
 			auto vec_it = vec.begin();
 			for (auto& elem: res)
@@ -343,7 +508,7 @@ namespace pgl {
 	template<number type, int dim>
 		inline constexpr auto operator<(
 			const vector<type,dim>& lhs,
-			const vector<type,dim>& rhs)
+			const vector<type,dim>& rhs) noexcept
 		-> vector<bool,dim>
 		{
 			vector<bool,dim> res;
@@ -357,7 +522,7 @@ namespace pgl {
 	template<number type, int dim>
 		inline constexpr auto operator>(
 			const vector<type,dim>& lhs,
-			const vector<type,dim>& rhs)
+			const vector<type,dim>& rhs) noexcept
 		-> vector<bool,dim>
 		{
 			vector<bool,dim> res;
@@ -371,7 +536,7 @@ namespace pgl {
 	template<number type, int dim>
 		inline constexpr auto operator<=(
 			const vector<type,dim>& lhs,
-			const vector<type,dim>& rhs)
+			const vector<type,dim>& rhs) noexcept
 		-> vector<bool,dim>
 		{
 			vector<bool,dim> res;
@@ -385,7 +550,7 @@ namespace pgl {
 	template<number type, int dim>
 		inline constexpr auto operator>=(
 			const vector<type,dim>& lhs,
-			const vector<type,dim>& rhs)
+			const vector<type,dim>& rhs) noexcept
 		-> vector<bool,dim>
 		{
 			vector<bool,dim> res;
@@ -399,7 +564,7 @@ namespace pgl {
 	template<number type, int dim>
 		inline constexpr auto operator==(
 			const vector<type,dim>& lhs,
-			const vector<type,dim>& rhs)
+			const vector<type,dim>& rhs) noexcept
 		-> vector<bool,dim>
 		{
 			vector<bool,dim> res;
@@ -413,7 +578,7 @@ namespace pgl {
 	template<number type, int dim>
 		inline constexpr auto operator!=(
 			const vector<type,dim>& lhs,
-			const vector<type,dim>& rhs)
+			const vector<type,dim>& rhs) noexcept
 		-> vector<bool,dim>
 		{
 			vector<bool,dim> res;
@@ -425,7 +590,7 @@ namespace pgl {
 		}
 
 	template<number type, int dim>
-		inline constexpr auto min_element(vector<type,dim>& vect)
+		inline constexpr auto min_element(vector<type,dim>& vect) noexcept
 		-> type&
 		{
 			type* min_elem = vect.begin();
@@ -440,7 +605,7 @@ namespace pgl {
 		}
 
 	template<number type, int dim>
-		inline constexpr auto max_element(vector<type,dim>& vect)
+		inline constexpr auto max_element(vector<type,dim>& vect) noexcept
 		-> type&
 		{
 			type* max_elem = vect.begin();
@@ -461,14 +626,11 @@ namespace pgl {
 	 * ======= TODO !!! =======
 	 * ========================
 	 *
-	 * add initialization in constructors where it's missing
-	 * compound assignement operator: *=, /=, +=, -=, ...
 	 * clamp, staturate, lerp(mix)
 	 * all() (AND), any() (OR)
 	 * select() -> component wise ?:
 	 * frame ?
 	 * decltype
-	 * inline
 	 *
 	 * benchmark
 	 * SIMD
