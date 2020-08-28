@@ -112,3 +112,22 @@ TEST(Vector, UtilityFunctions) {
 	x = 2; ASSERT_EQ(2, x);
 	z = 2; ASSERT_EQ(2, z);
 }
+
+TEST(Vector, MathFunctions) {
+	pgl::float3 vec{1, 2, 3};
+	auto a = pgl::cos(vec);
+	a = pgl::acos (vec);
+	a = pgl::sin  (vec);
+	a = pgl::asin (vec);
+	a = pgl::tan  (vec);
+	a = pgl::atan (vec);
+	a = pgl::atan (vec, vec);
+	a = pgl::exp  (vec);
+	a = pgl::log  (vec);
+	a = pgl::log2 (vec);
+	a = pgl::log10(vec);
+	a = pgl::cosh (vec);
+	a = pgl::acosh(vec);
+	a = pgl::sinh (vec);
+	a = pgl::asinh(vec);
+}

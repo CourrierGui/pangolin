@@ -1,5 +1,6 @@
 #pragma once
 
+#include <numbers>
 #include <limits>
 #include <cmath>
 #include <initializer_list>
@@ -17,6 +18,13 @@ namespace pgl {
 		struct vector {
 			type elements[dim];
 
+			struct raw_data {
+				type data[dim];
+				int size;
+				raw_data(const int values[dim]) : data{}, size{dim} { auto it=values; for (auto& d: data) { d = *(it++); } }
+			};
+			inline constexpr auto data() noexcept -> raw_data { return raw_data{elements}; }
+
 			inline constexpr auto size() const noexcept -> int { return dim; }
 
 			inline constexpr auto begin()  noexcept       -> type*       { return elements; }
@@ -25,6 +33,7 @@ namespace pgl {
 			inline constexpr auto end()    noexcept       -> type*       { return elements+size(); }
 			inline constexpr auto end()    const noexcept -> const type* { return elements+size(); }
 			inline constexpr auto cend()   const noexcept -> const type* { return elements+size(); }
+
 
 			inline constexpr vector() noexcept = default;
 			inline constexpr explicit vector(const type& e) noexcept : elements{} {
@@ -86,6 +95,13 @@ namespace pgl {
 				type elements[2];
 				struct { type x, y; };
 			};
+
+			struct raw_data {
+				type data[2];
+				int size;
+				raw_data(const int values[2]) : data{values[0], values[1]}, size{2} {  }
+			};
+			inline constexpr auto data() noexcept -> raw_data { return raw_data{elements}; }
 
 			inline constexpr auto size() const noexcept -> int { return 2; }
 
@@ -152,6 +168,13 @@ namespace pgl {
 				struct { type x, y, z; };
 				struct { vector<type,2> xy; };
 			};
+
+			struct raw_data {
+				type data[3];
+				int size;
+				raw_data(int values[3]) : data{values[0], values[1], values[2]}, size{3} {  }
+			};
+			inline constexpr auto data() noexcept -> raw_data { return raw_data{elements}; }
 
 			inline constexpr auto size() const noexcept -> int { return 3; }
 
@@ -222,6 +245,13 @@ namespace pgl {
 				struct { vector<type,3> xyz; };
 				struct { vector<type,2> xy, zw; };
 			};
+
+			struct raw_data {
+				type data[4];
+				int size;
+				raw_data(type val[4]) : data{val[0], val[1], val[2], val[3]}, size{4} {  }
+			};
+			inline constexpr auto data() noexcept -> raw_data { return raw_data{elements}; }
 
 			inline constexpr auto size() const noexcept -> int { return 4; }
 
@@ -620,15 +650,216 @@ namespace pgl {
 			return *max_elem;
 		}
 
+	template<number type, int dim>
+		inline constexpr auto min(const vector<type,dim>& vect, type min_val)
+		-> vector<type,dim>
+		{
+			vector<type,dim> res{vect};
+			for (auto& e: res) { if (e < min_val) { e = min_val; } }
+			return res;
+		}
+
+	template<number type, int dim>
+		inline constexpr auto max(const vector<type,dim>& vect, type max_val)
+		-> vector<type,dim>
+		{
+			vector<type,dim> res{vect};
+			for (auto& e: res) { if (e > max_val) { e = max_val; } }
+			return res;
+		}
+
+	template<number type, int dim>
+		inline constexpr auto clamp(const vector<type,dim>& vect, type lb, type ub) noexcept
+		-> vector<type,dim>
+		{
+			return min(max(vect, lb), ub);
+		}
+
+	template<number type, int dim>
+		inline constexpr auto saturate(const vector<type,dim>& vect) {
+			return clamp(vect, type{0}, type{1});
+		}
+
+	template<number type, int dim>
+		inline constexpr auto any(const vector<type,dim>& vect) noexcept
+		-> bool
+		{
+			bool res = false;
+			for (auto e: vect) { res |= e; }
+			return res;
+		}
+
+	template<number type, int dim>
+		inline constexpr auto pand(const vector<type,dim>& vect) noexcept
+		-> bool
+		{
+			bool res = true;
+			for (const auto& e: vect) { res &= e; }
+			return res;
+		}
+
+	template<number type, int dim, typename Function>
+		inline constexpr auto select(
+			const vector<type,dim>& vect,
+			Function& condition,
+			type on_true, type on_false) noexcept
+		-> vector<type,dim>
+		{
+			vector<type,dim> res{vect};
+			for (auto& e: res) { condition(e) ? on_true : on_false; }
+			return res;
+		}
+
+	template<number type, int dim>
+		inline constexpr auto apply(
+			type (*func)(type),
+			const vector<type,dim>& vect)
+		-> vector<type,dim>
+		{
+			vector<type,dim> res;
+			auto it=vect.begin();
+			for (auto& e: res) {
+				e = func(*(it++));
+			}
+			return res;
+		}
+
+	template<number type, int dim>
+		inline constexpr auto apply(
+			type (*func)(type,type),
+			const vector<type,dim>& x,
+			const vector<type,dim>& y)
+		-> vector<type,dim>
+		{
+			vector<type,dim> res;
+			auto x_it=x.begin();
+			auto y_it=y.begin();
+			for (auto& e: res) {
+				e = func(*(x_it++), *(y_it++));
+			}
+			return res;
+		}
+
+	template<number type, int dim>
+		inline constexpr auto exp(const vector<type,dim>& vect)
+		-> vector<type,dim>
+		{
+			return apply(std::exp, vect);
+		}
+
+	template<number type, int dim>
+		inline constexpr auto log2(const vector<type,dim>& vect)
+		-> vector<type,dim>
+		{
+			return apply(std::log2, vect);
+		}
+
+	template<number type, int dim>
+		inline constexpr auto log10(const vector<type,dim>& vect)
+		-> vector<type,dim>
+		{
+			return apply(std::log10, vect);
+		}
+
+	template<number type, int dim>
+		inline constexpr auto log(const vector<type,dim>& vect)
+		-> vector<type,dim>
+		{
+			return apply(std::log, vect);
+		}
+
+	template<number type, int dim>
+		inline constexpr auto tan(const vector<type,dim>& vect)
+		-> vector<type,dim>
+		{
+			return apply(std::tan, vect);
+		}
+
+	template<number type, int dim>
+		inline constexpr auto atan(const vector<type,dim>& vect)
+		-> vector<type,dim>
+		{
+			return apply(std::atan, vect);
+		}
+
+	template<number type, int dim>
+		inline constexpr auto atan(
+			const vector<type,dim>& x,
+			const vector<type,dim>& y)
+		-> vector<type,dim>
+		{
+			return apply(std::atan2, x, y);
+		}
+
+	template<number type, int dim>
+		inline constexpr auto cos(const vector<type,dim>& vect)
+		-> vector<type,dim>
+		{
+			return apply(std::cos, vect);
+		}
+
+	template<number type, int dim>
+		inline constexpr auto acos(const vector<type,dim>& vect)
+		-> vector<type,dim>
+		{
+			return apply(std::acos, vect);
+		}
+
+	template<number type, int dim>
+		inline constexpr auto sin(const vector<type,dim>& vect)
+		-> vector<type,dim>
+		{
+			return apply(std::sin, vect);
+		}
+
+	template<number type, int dim>
+		inline constexpr auto asin(const vector<type,dim>& vect)
+		-> vector<type,dim>
+		{
+			return apply(std::asin, vect);
+		}
+
+
+	template<number type, int dim>
+		inline constexpr auto cosh(const vector<type,dim>& vect)
+		-> vector<type,dim>
+		{
+			return apply(std::cosh, vect);
+		}
+
+	template<number type, int dim>
+		inline constexpr auto acosh(const vector<type,dim>& vect)
+		-> vector<type,dim>
+		{
+			return apply(std::acosh, vect);
+		}
+
+	template<number type, int dim>
+		inline constexpr auto sinh(const vector<type,dim>& vect)
+		-> vector<type,dim>
+		{
+			return apply(std::sinh, vect);
+		}
+
+
+	template<number type, int dim>
+		inline constexpr auto asinh(const vector<type,dim>& vect)
+		-> vector<type,dim>
+		{
+			return apply(std::asinh, vect);
+		}
+
+	template<number type> struct make_pi { static constexpr type pi = std::numbers::pi_v<type>; };
+	constexpr float  pi {make_pi<float>::pi};
+	constexpr double dpi{make_pi<double>::pi};
+
 	/*
 	 *
 	 * ========================
 	 * ======= TODO !!! =======
 	 * ========================
 	 *
-	 * clamp, staturate, lerp(mix)
-	 * all() (AND), any() (OR)
-	 * select() -> component wise ?:
+	 * lerp(x, y, a) = mix(x, y, a) ?
 	 * frame ?
 	 * decltype
 	 *
