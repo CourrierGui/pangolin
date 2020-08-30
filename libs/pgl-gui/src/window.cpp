@@ -6,12 +6,12 @@
 using namespace std::placeholders;
 
 namespace pgl {
-	namespace ui {
+	namespace gui {
 
 		Window::Window(int height, int width)
 			: height(height), width(width)
 		{
 		}
 
-	} /* end of namespace ui */
+	} /* end of namespace gui */
 } /* end of namespace pgl */

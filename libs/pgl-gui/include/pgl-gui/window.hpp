@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 
 namespace pgl {
-  namespace ui {
+  namespace gui {
 
     class Window {
 			private:

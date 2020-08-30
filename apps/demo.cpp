@@ -9,5 +9,6 @@ int main() {
 
 		window.swap_buffer();
 	}
+
   return 0;
 }
