@@ -14,120 +14,120 @@ namespace pgl {
 		struct matrix {
 			type elements[rows*cols];
 
-			constexpr matrix() noexcept = default;
-			constexpr matrix(const type& e) noexcept;
-			/* constexpr matrix(type&& e)      noexcept; */
-			constexpr matrix(const type values[rows*cols]) noexcept;
+			inline constexpr matrix() noexcept = default;
+			inline constexpr matrix(const type& e) noexcept;
+			/* inline constexpr matrix(type&& e)      noexcept; */
+			inline constexpr matrix(const type values[rows*cols]) noexcept;
 
 			template<typename... Ts>
-				constexpr matrix(
+				inline constexpr matrix(
 					const type& t0,
 					const type& t1,
 					Ts&&... ts
 				) noexcept;
 
-			auto begin()  noexcept       -> type*       { return elements;        }
-			auto begin()  const noexcept -> const type* { return elements;        }
-			auto cbegin() const noexcept -> const type* { return elements;        }
-			auto end()    noexcept       -> type*       { return elements+size(); }
-			auto end()    const noexcept -> const type* { return elements+size(); }
-			auto cend()   const noexcept -> const type* { return elements+size(); }
-			auto size()   const noexcept -> int         { return rows*cols;       }
+			inline constexpr auto begin()  noexcept       -> type*       { return elements;        }
+			inline constexpr auto begin()  const noexcept -> const type* { return elements;        }
+			inline constexpr auto cbegin() const noexcept -> const type* { return elements;        }
+			inline constexpr auto end()    noexcept       -> type*       { return elements+size(); }
+			inline constexpr auto end()    const noexcept -> const type* { return elements+size(); }
+			inline constexpr auto cend()   const noexcept -> const type* { return elements+size(); }
+			inline constexpr auto size()   const noexcept -> int         { return rows*cols;       }
 
-			auto at(int row, int col) const -> type;
-			auto at(int row, int col)       -> type&;
+			inline constexpr auto at(int row, int col) const -> type;
+			inline constexpr auto at(int row, int col)       -> type&;
 
-			auto row(int r) const -> vector<type,cols>;
-			auto col(int c) const -> vector<type,cols>;
-			auto row(int r, const vector<type,cols>& vect) -> void;
-			auto col(int c, const vector<type,rows>& vect) -> void;
+			inline constexpr auto row(int r) const -> vector<type,cols>;
+			inline constexpr auto col(int c) const -> vector<type,cols>;
+			inline constexpr auto row(int r, const vector<type,cols>& vect) -> void;
+			inline constexpr auto col(int c, const vector<type,rows>& vect) -> void;
 
-			static auto zeros() -> matrix<type,rows,cols>;
-			static auto ones()  -> matrix<type,rows,cols>;
+			static inline constexpr auto zeros() -> matrix<type,rows,cols>;
+			static inline constexpr auto ones()  -> matrix<type,rows,cols>;
 
 			template<number type2>
-				auto operator+=(const matrix<type2,rows,cols>& mat) -> matrix<type,rows,cols>&;
+				inline constexpr auto operator+=(const matrix<type2,rows,cols>& mat) -> matrix<type,rows,cols>&;
 			template<number type2>
-				auto operator-=(const matrix<type2,rows,cols>& mat) -> matrix<type,rows,cols>&;
+				inline constexpr auto operator-=(const matrix<type2,rows,cols>& mat) -> matrix<type,rows,cols>&;
 
 			template<number scalar_type>
-				auto operator*=(const scalar_type& scalar) -> matrix<type,rows,cols>&;
+				inline constexpr auto operator*=(const scalar_type& scalar) -> matrix<type,rows,cols>&;
 			template<number scalar_type>
-				auto operator/=(const scalar_type& scalar) -> matrix<type,rows,cols>&;
+				inline constexpr auto operator/=(const scalar_type& scalar) -> matrix<type,rows,cols>&;
 			template<number scalar_type>
-				auto operator+=(const scalar_type& scalar) -> matrix<type,rows,cols>&;
+				inline constexpr auto operator+=(const scalar_type& scalar) -> matrix<type,rows,cols>&;
 			template<number scalar_type>
-				auto operator-=(const scalar_type& scalar) -> matrix<type,rows,cols>&;
+				inline constexpr auto operator-=(const scalar_type& scalar) -> matrix<type,rows,cols>&;
 		};
 
 	template<number type, int dim>
 		struct matrix<type, dim, dim> {
 			type elements[dim*dim];
 
-			constexpr matrix() noexcept = default;
-			constexpr matrix(const type& e) noexcept;
-			/* constexpr matrix(type&& e)      noexcept; */
-			constexpr matrix(const type values[dim*dim]) noexcept;
+			inline constexpr matrix() noexcept = default;
+			inline constexpr matrix(const type& e) noexcept;
+			/* inline constexpr matrix(type&& e)      noexcept; */
+			inline constexpr matrix(const type values[dim*dim]) noexcept;
 
 			template<typename... Ts>
-				constexpr matrix(
+				inline constexpr matrix(
 					const type& t0,
 					const type& t1,
 					Ts&&... ts
 				) noexcept;
 
-			auto begin()  noexcept       -> type*       { return elements;        }
-			auto begin()  const noexcept -> const type* { return elements;        }
-			auto cbegin() const noexcept -> const type* { return elements;        }
-			auto end()    noexcept       -> type*       { return elements+size(); }
-			auto end()    const noexcept -> const type* { return elements+size(); }
-			auto cend()   const noexcept -> const type* { return elements+size(); }
-			auto size()   const noexcept -> int         { return dim*dim;         }
+			inline constexpr auto begin()  noexcept       -> type*       { return elements;        }
+			inline constexpr auto begin()  const noexcept -> const type* { return elements;        }
+			inline constexpr auto cbegin() const noexcept -> const type* { return elements;        }
+			inline constexpr auto end()    noexcept       -> type*       { return elements+size(); }
+			inline constexpr auto end()    const noexcept -> const type* { return elements+size(); }
+			inline constexpr auto cend()   const noexcept -> const type* { return elements+size(); }
+			inline constexpr auto size()   const noexcept -> int         { return dim*dim;         }
 
-			auto inverse() -> matrix<type,dim>&;
+			inline constexpr auto inverse() -> matrix<type,dim>&;
 
-			auto at(int row, int col) const -> type;
-			auto at(int row, int col)       -> type&;
+			inline constexpr auto at(int row, int col) const -> type;
+			inline constexpr auto at(int row, int col)       -> type&;
 
-			auto row(int r) const -> vector<type,dim>;
-			auto col(int c) const -> vector<type,dim>;
-			auto row(int r, const vector<type,dim>& vect) -> void;
-			auto col(int c, const vector<type,dim>& vect) -> void;
+			inline constexpr auto row(int r) const -> vector<type,dim>;
+			inline constexpr auto col(int c) const -> vector<type,dim>;
+			inline constexpr auto row(int r, const vector<type,dim>& vect) -> void;
+			inline constexpr auto col(int c, const vector<type,dim>& vect) -> void;
 
-			static auto identity() -> matrix<type,dim>;
-			static auto zeros()    -> matrix<type,dim>;
-			static auto ones()     -> matrix<type,dim>;
+			static inline constexpr auto identity() -> matrix<type,dim>;
+			static inline constexpr auto zeros()    -> matrix<type,dim>;
+			static inline constexpr auto ones()     -> matrix<type,dim>;
 
 			template<number type2>
-				auto operator*=(const matrix<type2,dim>& mat) -> matrix<type,dim>&;
+				inline constexpr auto operator*=(const matrix<type2,dim>& mat) -> matrix<type,dim>&;
 			template<number type2>
-				auto operator+=(const matrix<type2,dim>& mat) -> matrix<type,dim>&;
+				inline constexpr auto operator+=(const matrix<type2,dim>& mat) -> matrix<type,dim>&;
 			template<number type2>
-				auto operator-=(const matrix<type2,dim>& mat) -> matrix<type,dim>&;
+				inline constexpr auto operator-=(const matrix<type2,dim>& mat) -> matrix<type,dim>&;
 
 			template<number scalar_type>
-				auto operator*=(const scalar_type& scalar) -> matrix<type,dim>&;
+				inline constexpr auto operator*=(const scalar_type& scalar) -> matrix<type,dim>&;
 			template<number scalar_type>
-				auto operator/=(const scalar_type& scalar) -> matrix<type,dim>&;
+				inline constexpr auto operator/=(const scalar_type& scalar) -> matrix<type,dim>&;
 			template<number scalar_type>
-				auto operator+=(const scalar_type& scalar) -> matrix<type,dim>&;
+				inline constexpr auto operator+=(const scalar_type& scalar) -> matrix<type,dim>&;
 			template<number scalar_type>
-				auto operator-=(const scalar_type& scalar) -> matrix<type,dim>&;
+				inline constexpr auto operator-=(const scalar_type& scalar) -> matrix<type,dim>&;
 		};
 
 	template<number type, int rows, int cols>
-		constexpr matrix<type,rows,cols>::matrix(const type& e) noexcept : elements() {
+		inline constexpr matrix<type,rows,cols>::matrix(const type& e) noexcept : elements() {
 			for (auto& elem: elements) { elem = e; }
 		}
 
 	template<number type, int dim>
-		constexpr matrix<type,dim>::matrix(const type& e) noexcept
+		inline constexpr matrix<type,dim>::matrix(const type& e) noexcept
 		: elements() {
 			for (auto& elem: elements) { elem = e; }
 		}
 
 	template<number type, int rows, int cols>
-		constexpr matrix<type,rows,cols>::matrix(const type values[rows*cols]) noexcept
+		inline constexpr matrix<type,rows,cols>::matrix(const type values[rows*cols]) noexcept
 		: elements()
 		{
 			const type* it = values;
@@ -135,7 +135,7 @@ namespace pgl {
 		}
 
 	template<number type, int dim>
-		constexpr matrix<type,dim>::matrix(const type values[dim*dim]) noexcept
+		inline constexpr matrix<type,dim>::matrix(const type values[dim*dim]) noexcept
 		: elements()
 		{
 			const type* it = values;
@@ -144,7 +144,7 @@ namespace pgl {
 
 	template<number type, int rows, int cols>
 		template<typename... Ts>
-		constexpr matrix<type,rows,cols>::matrix(
+		inline constexpr matrix<type,rows,cols>::matrix(
 			const type& t0,
 			const type& t1,
 			Ts&&... ts) noexcept
@@ -158,7 +158,7 @@ namespace pgl {
 
 	template<number type, int dim>
 		template<typename... Ts>
-		constexpr matrix<type,dim>::matrix(
+		inline constexpr matrix<type,dim>::matrix(
 			const type& t0,
 			const type& t1,
 			Ts&&... ts) noexcept
@@ -171,14 +171,14 @@ namespace pgl {
 	}
 
 	template<number type, int dim>
-		auto matrix<type,dim>::inverse()
+		inline constexpr auto matrix<type,dim>::inverse()
 		-> matrix<type,dim>& {
 			//TODO add general formula
 			return *this;
 		}
 
 	template<number type, int dim>
-		auto inverse(const matrix<type,dim>& m)
+		inline constexpr auto inverse(const matrix<type,dim>& m)
 		-> matrix<type,dim>
 		{
 			matrix<type,dim> res{m};
@@ -186,7 +186,7 @@ namespace pgl {
 		}
 
 	template<number type, int rows, int cols>
-		auto transpose(const matrix<type,rows,cols>& m)
+		inline constexpr auto transpose(const matrix<type,rows,cols>& m)
 		-> matrix<type,cols,rows>
 		{
 			matrix<type,cols,rows> res;
@@ -199,14 +199,14 @@ namespace pgl {
 		}
 
 	template<number type, int dim>
-		type trace(const matrix<type,dim>& m) {
+		inline constexpr type trace(const matrix<type,dim>& m) {
 			type res{0};
 			for (int d=0; d<dim; ++d) { res += m.at(d, d); }
 			return res;
 		}
 
 	template<number type, int dim>
-		auto determinant(const matrix<type,dim>& m)
+		inline constexpr auto determinant(const matrix<type,dim>& m)
 		-> type
 		{
 			type det{0};
@@ -215,7 +215,7 @@ namespace pgl {
 		}
 
 	template<number type>
-		auto determinant(const matrix<type,3>& m)
+		inline constexpr auto determinant(const matrix<type,3>& m)
 		-> type
 		{
 			return (  m.at(0, 0) * m.at(1, 1) * m.at(2, 2)
@@ -227,14 +227,14 @@ namespace pgl {
 		}
 
 	template<number type>
-		auto determinant(const matrix<type,2>& m)
+		inline constexpr auto determinant(const matrix<type,2>& m)
 		-> type
 		{
 			return (m.at(0, 0) * m.at(1, 1) - m.at(0, 1) * m.at(1, 0));
 		}
 
 	template<number type, int cols, std::same_as<vector<type,cols>>... VectorTypes>
-		auto matrix_from_row_vectors(
+		inline constexpr auto matrix_from_row_vectors(
 			const vector<type,cols>& v0,
 			VectorTypes&&... args)
 		-> matrix<type, 1+sizeof...(args), cols>
@@ -251,7 +251,7 @@ namespace pgl {
 		}
 
 	template<number type, int rows, std::same_as<vector<type,rows>>... VectorTypes>
-		auto matrix_from_col_vectors(
+		inline constexpr auto matrix_from_col_vectors(
 			const vector<type,rows>& v0,
 			VectorTypes&&... args)
 		-> matrix<type, rows, 1+sizeof...(VectorTypes)>
@@ -267,35 +267,35 @@ namespace pgl {
 		}
 
 	template<number type, int rows, int cols>
-		auto matrix<type,rows,cols>::at(int row, int col) const
+		inline constexpr auto matrix<type,rows,cols>::at(int row, int col) const
 		-> type
 		{
 			return elements[col + cols * row];
 		}
 
 	template<number type, int dim>
-		auto matrix<type,dim>::at(int row, int col) const
+		inline constexpr auto matrix<type,dim>::at(int row, int col) const
 		-> type
 		{
 			return elements[col + dim * row];
 		}
 
 	template<number type, int rows, int cols>
-		auto matrix<type,rows,cols>::at(int row, int col)
+		inline constexpr auto matrix<type,rows,cols>::at(int row, int col)
 		-> type&
 		{
 			return elements[col + cols * row];
 		}
 
 	template<number type, int dim>
-		auto matrix<type,dim>::at(int row, int col)
+		inline constexpr auto matrix<type,dim>::at(int row, int col)
 		-> type&
 		{
 			return elements[col + dim * row];
 		}
 
 	template<number type, int rows, int cols>
-		auto matrix<type,rows,cols>::row(int r) const
+		inline constexpr auto matrix<type,rows,cols>::row(int r) const
 		-> vector<type,cols>
 		{
 			vector<type,cols> res;
@@ -307,7 +307,7 @@ namespace pgl {
 		}
 
 	template<number type, int dim>
-		auto matrix<type,dim>::row(int r) const
+		inline constexpr auto matrix<type,dim>::row(int r) const
 		-> vector<type,dim>
 		{
 			vector<type,dim> res;
@@ -319,7 +319,7 @@ namespace pgl {
 		}
 
 	template<number type, int rows, int cols>
-		auto matrix<type,rows,cols>::col(int c) const
+		inline constexpr auto matrix<type,rows,cols>::col(int c) const
 		-> vector<type,cols>
 		{
 			vector<type,cols> res;
@@ -332,7 +332,7 @@ namespace pgl {
 		}
 
 	template<number type, int dim>
-		auto matrix<type,dim>::col(int c) const
+		inline constexpr auto matrix<type,dim>::col(int c) const
 		-> vector<type,dim>
 		{
 			vector<type,dim> res;
@@ -345,7 +345,7 @@ namespace pgl {
 		}
 
 	template<number type, int dim>
-		auto matrix<type, dim>::identity()
+		inline constexpr auto matrix<type, dim>::identity()
 		-> matrix<type,dim>
 		{
 			matrix<type,dim,dim> id{type{0}};
@@ -354,35 +354,35 @@ namespace pgl {
 		}
 
 	template<number type, int rows, int cols>
-		auto matrix<type,rows,cols>::zeros()
+		inline constexpr auto matrix<type,rows,cols>::zeros()
 		-> matrix<type,rows,cols>
 		{
 			return {type{0}};
 		}
 
 	template<number type, int rows, int cols>
-		auto matrix<type,rows,cols>::ones()
+		inline constexpr auto matrix<type,rows,cols>::ones()
 		-> matrix<type,rows,cols>
 		{
 			return {type{1}};
 		}
 
 	template<number type, int dim>
-		auto matrix<type,dim>::zeros()
+		inline constexpr auto matrix<type,dim>::zeros()
 		-> matrix<type,dim>
 		{
 			return {type{0}};
 		}
 
 	template<number type, int dim>
-		auto matrix<type,dim>::ones()
+		inline constexpr auto matrix<type,dim>::ones()
 		-> matrix<type,dim>
 		{
 			return {type{1}};
 		}
 
 	template<number type, int rows, int cols>
-		auto matrix<type,rows,cols>::row(int r, const vector<type,cols>& vect)
+		inline constexpr auto matrix<type,rows,cols>::row(int r, const vector<type,cols>& vect)
 		-> void
 		{
 			type* elem = elements + (r*cols);
@@ -392,7 +392,7 @@ namespace pgl {
 		}
 
 	template<number type, int rows, int cols>
-		auto matrix<type,rows,cols>::col(int c, const vector<type,rows>& vect)
+		inline constexpr auto matrix<type,rows,cols>::col(int c, const vector<type,rows>& vect)
 		-> void
 		{
 			type* elem = elements + c;
@@ -403,7 +403,7 @@ namespace pgl {
 		}
 
 	template<number type, int dim>
-		auto matrix<type,dim>::row(int r, const vector<type,dim>& vect)
+		inline constexpr auto matrix<type,dim>::row(int r, const vector<type,dim>& vect)
 		-> void
 		{
 			type* elem = elements + (r*dim);
@@ -413,7 +413,7 @@ namespace pgl {
 		}
 
 	template<number type, int dim>
-		auto matrix<type,dim>::col(int c, const vector<type,dim>& vect)
+		inline constexpr auto matrix<type,dim>::col(int c, const vector<type,dim>& vect)
 		-> void
 		{
 			type* elem = elements + c;
@@ -425,7 +425,7 @@ namespace pgl {
 
 	template<number type, int dim>
 		template<number type2>
-		auto matrix<type,dim>::operator*=(const matrix<type2,dim>& mat)
+		inline constexpr auto matrix<type,dim>::operator*=(const matrix<type2,dim>& mat)
 		-> matrix<type,dim>&
 		{
 			pgl::matrix<type,dim> tmp{type{0}};
@@ -442,7 +442,7 @@ namespace pgl {
 
 	template<number type, int rows, int cols>
 		template<number type2>
-		auto matrix<type,rows,cols>::operator+=(const matrix<type2,rows,cols>& mat)
+		inline constexpr auto matrix<type,rows,cols>::operator+=(const matrix<type2,rows,cols>& mat)
 		-> matrix<type,rows,cols>&
 		{
 			auto this_it = begin();
@@ -455,7 +455,7 @@ namespace pgl {
 
 	template<number type, int dim>
 		template<number type2>
-		auto matrix<type,dim>::operator+=(const matrix<type2,dim>& mat)
+		inline constexpr auto matrix<type,dim>::operator+=(const matrix<type2,dim>& mat)
 		-> matrix<type,dim>&
 		{
 			auto this_it = begin();
@@ -468,7 +468,7 @@ namespace pgl {
 
 	template<number type, int rows, int cols>
 		template<number type2>
-		auto matrix<type,rows,cols>::operator-=(const matrix<type2,rows,cols>& mat)
+		inline constexpr auto matrix<type,rows,cols>::operator-=(const matrix<type2,rows,cols>& mat)
 		-> matrix<type,rows,cols>&
 		{
 			auto this_it = begin();
@@ -481,7 +481,7 @@ namespace pgl {
 
 	template<number type, int dim>
 		template<number type2>
-		auto matrix<type,dim>::operator-=(const matrix<type2,dim>& mat)
+		inline constexpr auto matrix<type,dim>::operator-=(const matrix<type2,dim>& mat)
 		-> matrix<type,dim>&
 		{
 			auto this_it = begin();
@@ -494,7 +494,7 @@ namespace pgl {
 
 	template<number type, int rows, int cols>
 		template<number scalar_type>
-		auto matrix<type,rows,cols>::operator*=(const scalar_type& scalar)
+		inline constexpr auto matrix<type,rows,cols>::operator*=(const scalar_type& scalar)
 			-> matrix<type,rows,cols>&
 		{
 			auto this_it = begin();
@@ -506,7 +506,7 @@ namespace pgl {
 
 	template<number type, int dim>
 		template<number scalar_type>
-		auto matrix<type,dim>::operator*=(const scalar_type& scalar)
+		inline constexpr auto matrix<type,dim>::operator*=(const scalar_type& scalar)
 			-> matrix<type,dim>&
 		{
 			auto this_it = begin();
@@ -518,7 +518,7 @@ namespace pgl {
 
 	template<number type, int rows, int cols>
 		template<number scalar_type>
-		auto matrix<type,rows,cols>::operator/=(const scalar_type& scalar)
+		inline constexpr auto matrix<type,rows,cols>::operator/=(const scalar_type& scalar)
 			-> matrix<type,rows,cols>&
 		{
 			auto this_it = begin();
@@ -530,7 +530,7 @@ namespace pgl {
 
 	template<number type, int dim>
 		template<number scalar_type>
-		auto matrix<type,dim>::operator/=(const scalar_type& scalar)
+		inline constexpr auto matrix<type,dim>::operator/=(const scalar_type& scalar)
 			-> matrix<type,dim>&
 		{
 			auto this_it = begin();
@@ -542,7 +542,7 @@ namespace pgl {
 
 	template<number type, int rows, int cols>
 		template<number scalar_type>
-		auto matrix<type,rows,cols>::operator+=(const scalar_type& scalar)
+		inline constexpr auto matrix<type,rows,cols>::operator+=(const scalar_type& scalar)
 			-> matrix<type,rows,cols>&
 		{
 			auto this_it = begin();
@@ -554,7 +554,7 @@ namespace pgl {
 
 	template<number type, int dim>
 		template<number scalar_type>
-		auto matrix<type,dim>::operator+=(const scalar_type& scalar)
+		inline constexpr auto matrix<type,dim>::operator+=(const scalar_type& scalar)
 			-> matrix<type,dim>&
 		{
 			auto this_it = begin();
@@ -566,7 +566,7 @@ namespace pgl {
 
 	template<number type, int rows, int cols>
 		template<number scalar_type>
-		auto matrix<type,rows,cols>::operator-=(const scalar_type& scalar)
+		inline constexpr auto matrix<type,rows,cols>::operator-=(const scalar_type& scalar)
 			-> matrix<type,rows,cols>&
 		{
 			auto this_it = begin();
@@ -578,7 +578,7 @@ namespace pgl {
 
 	template<number type, int dim>
 		template<number scalar_type>
-		auto matrix<type,dim>::operator-=(const scalar_type& scalar)
+		inline constexpr auto matrix<type,dim>::operator-=(const scalar_type& scalar)
 			-> matrix<type,dim>&
 		{
 			auto this_it = begin();
@@ -589,7 +589,7 @@ namespace pgl {
 		}
 
 	template<number type, number type2, int rows, int cols>
-		auto operator<(
+		inline constexpr auto operator<(
 			const matrix<type,rows,cols>& lhs,
 			const matrix<type2,rows,cols>& rhs)
 		-> matrix<bool,rows,cols>
@@ -605,7 +605,7 @@ namespace pgl {
 		}
 
 	template<number type, number type2, int rows, int cols>
-		auto operator>(
+		inline constexpr auto operator>(
 			const matrix<type,rows,cols>& lhs,
 			const matrix<type2,rows,cols>& rhs)
 		-> matrix<bool,rows,cols>
@@ -621,7 +621,7 @@ namespace pgl {
 		}
 
 	template<number type, number type2, int rows, int cols>
-		auto operator<=(
+		inline constexpr auto operator<=(
 			const matrix<type,rows,cols>& lhs,
 			const matrix<type2,rows,cols>& rhs)
 		-> matrix<bool,rows,cols>
@@ -637,7 +637,7 @@ namespace pgl {
 		}
 
 	template<number type, number type2, int rows, int cols>
-		auto operator>=(
+		inline constexpr auto operator>=(
 			const matrix<type,rows,cols>& lhs,
 			const matrix<type2,rows,cols>& rhs)
 		-> matrix<bool,rows,cols>
@@ -653,7 +653,7 @@ namespace pgl {
 		}
 
 	template<number type, number type2, int rows, int cols>
-		auto operator==(
+		inline constexpr auto operator==(
 			const matrix<type,rows,cols>& lhs,
 			const matrix<type2,rows,cols>& rhs)
 		-> matrix<bool,rows,cols>
@@ -669,7 +669,7 @@ namespace pgl {
 		}
 
 	template<number type, number type2, int rows, int cols>
-		auto operator!=(
+		inline constexpr auto operator!=(
 			const matrix<type,rows,cols>& lhs,
 			const matrix<type2,rows,cols>& rhs)
 		-> matrix<bool,rows,cols>
@@ -685,7 +685,7 @@ namespace pgl {
 		}
 
 	template<number type, number type2, int rows, int cols, int free_dim>
-		constexpr auto operator*(
+		inline constexpr auto operator*(
 			const matrix<type,rows,free_dim>& lhs,
 			const matrix<type2,free_dim,cols>& rhs) noexcept
 		-> matrix<decltype(std::declval<type>()*std::declval<type2>()),rows,cols>
@@ -702,7 +702,7 @@ namespace pgl {
 		}
 
 	template<number type, number type2, int rows, int cols>
-		constexpr auto operator+(
+		inline constexpr auto operator+(
 			const matrix<type,rows,cols>& lhs,
 			const matrix<type2,rows,cols>& rhs)
 		-> matrix<decltype(std::declval<type>()+std::declval<type2>()),rows,cols>
@@ -713,7 +713,7 @@ namespace pgl {
 		}
 
 	template<number type, number type2, int rows, int cols>
-		constexpr auto operator-(
+		inline constexpr auto operator-(
 			const matrix<type,rows,cols>& lhs,
 			const matrix<type2,rows,cols>& rhs)
 		-> matrix<decltype(std::declval<type>()-std::declval<type2>()),rows,cols>
@@ -724,7 +724,7 @@ namespace pgl {
 		}
 
 	template<number type, number scalar_type, int rows, int cols>
-		constexpr auto operator*(
+		inline constexpr auto operator*(
 			const matrix<type,rows,cols>& mat,
 			const scalar_type& scalar)
 		-> matrix<decltype(scalar*std::declval<type>()),rows,cols>
@@ -735,7 +735,7 @@ namespace pgl {
 		}
 
 	template<number type, number scalar_type, int rows, int cols>
-		constexpr auto operator/(
+		inline constexpr auto operator/(
 			const matrix<type,rows,cols>& mat,
 			const scalar_type& scalar)
 		-> matrix<decltype(scalar/std::declval<type>()),rows,cols>
@@ -746,7 +746,7 @@ namespace pgl {
 		}
 
 	template<number type, number scalar_type, int rows, int cols>
-		constexpr auto operator+(
+		inline constexpr auto operator+(
 			const matrix<type,rows,cols>& mat,
 			const scalar_type& scalar)
 		-> matrix<decltype(scalar+std::declval<type>()),rows,cols>
@@ -757,7 +757,7 @@ namespace pgl {
 		}
 
 	template<number type, number scalar_type, int rows, int cols>
-		constexpr auto operator-(
+		inline constexpr auto operator-(
 			const matrix<type,rows,cols>& mat,
 			const scalar_type& scalar)
 		-> matrix<decltype(scalar-std::declval<type>()),rows,cols>
@@ -768,7 +768,7 @@ namespace pgl {
 		}
 
 	template<number type, number scalar_type, int rows, int cols>
-		constexpr auto operator*(
+		inline constexpr auto operator*(
 			const scalar_type& scalar,
 			const matrix<type,rows,cols>& mat)
 		-> matrix<decltype(scalar*std::declval<type>()),rows,cols>
@@ -777,7 +777,7 @@ namespace pgl {
 		}
 
 	template<number type, number scalar_type, int rows, int cols>
-		constexpr auto operator/(
+		inline constexpr auto operator/(
 			const scalar_type& scalar,
 			const matrix<type,rows,cols>& mat)
 		-> matrix<decltype(scalar/std::declval<type>()),rows,cols>
@@ -790,7 +790,7 @@ namespace pgl {
 		}
 
 	template<number type, number scalar_type, int rows, int cols>
-		constexpr auto operator+(
+		inline constexpr auto operator+(
 			const scalar_type& scalar,
 			const matrix<type,rows,cols>& mat)
 		-> matrix<decltype(scalar+std::declval<type>()),rows,cols>
@@ -799,7 +799,7 @@ namespace pgl {
 		}
 
 	template<number type, number scalar_type, int rows, int cols>
-		constexpr auto operator-(
+		inline constexpr auto operator-(
 			const scalar_type& scalar,
 			const matrix<type,rows,cols>& mat)
 		-> matrix<decltype(scalar-std::declval<type>()),rows,cols>
@@ -829,6 +829,7 @@ namespace pgl {
 	 * ======= TODO !!! =======
 	 * ========================
 	 *
+	 * inline
 	 * cross, inverse
 	 * template some of the utility functions for containers (quaternion, vector, matrix, ...), for ex: max, min, clamp, min_element, max_element, ...
 	 * operator[] ?
@@ -836,6 +837,7 @@ namespace pgl {
 	 * constexpr
 	 * iterator ?
 	 * how to handle out of bounds ?
+	 * make elements private and change struct to class
 	 *
 	 */
 
