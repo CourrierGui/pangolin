@@ -849,6 +849,16 @@ namespace pgl {
 			return apply(std::asinh, vect);
 		}
 
+	template<number type, int dim>
+		constexpr inline auto lerp(
+			const vector<type,dim>& x,
+			const vector<type,dim>& y,
+			type a) noexcept
+		-> vector<type,dim>
+		{
+			return x * (static_cast<type>(1) - a) + y * a;
+		}
+
 	template<number type> struct make_pi { static constexpr type pi = std::numbers::pi_v<type>; };
 	constexpr float  pi {make_pi<float>::pi};
 	constexpr double dpi{make_pi<double>::pi};
@@ -859,13 +869,10 @@ namespace pgl {
 	 * ======= TODO !!! =======
 	 * ========================
 	 *
-	 * lerp(x, y, a) = mix(x, y, a) ?
 	 * frame ?
 	 * decltype
-	 *
 	 * benchmark
 	 * SIMD
-	 * more utility functions
 	 *
 	 */
 
