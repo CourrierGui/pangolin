@@ -164,23 +164,19 @@ inline constexpr auto clamp(const cont& vect, typename cont::value_type lb, type
 }
 
 template<container cont>
-inline constexpr auto saturate(const cont& vect) {
+inline constexpr auto saturate(const cont& vect) -> cont {
 	return clamp(vect, typename cont::value_type{0}, typename cont::value_type{1});
 }
 
 template<container cont>
-inline constexpr auto any(const cont& vect) noexcept
--> bool
-{
+inline constexpr auto any(const cont& vect) noexcept -> bool {
 	bool res = false;
 	for (auto e: vect) { res |= e; }
 	return res;
 }
 
 template<container cont>
-inline constexpr auto pand(const cont& vect) noexcept
--> bool
-{
+inline constexpr auto pand(const cont& vect) noexcept -> bool {
 	bool res = true;
 	for (const auto& e: vect) { res &= e; }
 	return res;
@@ -188,8 +184,7 @@ inline constexpr auto pand(const cont& vect) noexcept
 
 template<container cont, typename Function>
 inline constexpr auto select(
-	const cont& vect,
-	Function& condition,
+	const cont& vect, Function& condition,
 	typename cont::value_type on_true, typename cont::value_type on_false) noexcept
 -> cont
 {
@@ -198,11 +193,11 @@ inline constexpr auto select(
 	return res;
 }
 
-	template<container cont, number type>
-	inline constexpr auto apply(
-		type (*func)(type),
-		const cont& vect)
-	-> cont
+template<container cont, number type>
+inline constexpr auto apply(
+	type (*func)(type),
+	const cont& vect)
+-> cont
 {
 	cont res;
 	auto it=vect.begin();
@@ -212,12 +207,12 @@ inline constexpr auto select(
 	return res;
 }
 
-	template<container cont, number type>
-	inline constexpr auto apply(
-		type (*func)(type,type),
-		const cont& x,
-		const cont& y)
-	-> cont
+template<container cont, number type>
+inline constexpr auto apply(
+	type (*func)(type,type),
+	const cont& x,
+	const cont& y)
+-> cont
 {
 	cont res;
 	auto x_it=x.begin();
@@ -228,111 +223,77 @@ inline constexpr auto select(
 	return res;
 }
 
-	template<container cont>
-inline constexpr auto exp(const cont& vect)
-	-> cont
-{
+template<container cont>
+inline constexpr auto exp(const cont& vect) -> cont {
 	return apply<cont,typename cont::value_type>(std::exp, vect);
 }
 
-	template<container cont>
-inline constexpr auto log2(const cont& vect)
-	-> cont
-{
+template<container cont>
+inline constexpr auto log2(const cont& vect) -> cont {
 	return apply<cont, typename cont::value_type>(std::log2, vect);
 }
 
-	template<container cont>
-inline constexpr auto log10(const cont& vect)
-	-> cont
-{
+template<container cont>
+inline constexpr auto log10(const cont& vect) -> cont {
 	return apply<cont,typename cont::value_type>(std::log10, vect);
 }
 
-	template<container cont>
-inline constexpr auto log(const cont& vect)
-	-> cont
-{
+template<container cont>
+inline constexpr auto log(const cont& vect) -> cont {
 	return apply<cont, typename cont::value_type>(std::log, vect);
 }
 
-	template<container cont>
-inline constexpr auto tan(const cont& vect)
-	-> cont
-{
+template<container cont>
+inline constexpr auto tan(const cont& vect) -> cont {
 	return apply<cont,typename cont::value_type>(std::tan, vect);
 }
 
-	template<container cont>
-inline constexpr auto atan(const cont& vect)
-	-> cont
-{
+template<container cont>
+inline constexpr auto atan(const cont& vect) -> cont {
 	return apply<cont, typename cont::value_type>(std::atan, vect);
 }
 
-	template<container cont>
-inline constexpr auto atan(
-	const cont& x,
-	const cont& y)
-	-> cont
-{
+template<container cont>
+inline constexpr auto atan(const cont& x, const cont& y) -> cont {
 	return apply<cont,typename cont::value_type>(std::atan2, x, y);
 }
 
-	template<container cont>
-inline constexpr auto cos(const cont& vect)
-	-> cont
-{
+template<container cont>
+inline constexpr auto cos(const cont& vect) -> cont {
 	return apply<cont,typename cont::value_type>(std::cos, vect);
 }
 
-	template<container cont>
-inline constexpr auto acos(const cont& vect)
-	-> cont
-{
+template<container cont>
+inline constexpr auto acos(const cont& vect) -> cont {
 	return apply<cont,typename cont::value_type>(std::acos, vect);
 }
 
-	template<container cont>
-inline constexpr auto sin(const cont& vect)
-	-> cont
-{
+template<container cont>
+inline constexpr auto sin(const cont& vect) -> cont {
 	return apply<cont,typename cont::value_type>(std::sin, vect);
 }
 
-	template<container cont>
-inline constexpr auto asin(const cont& vect)
-	-> cont
-{
+template<container cont>
+inline constexpr auto asin(const cont& vect) -> cont {
 	return apply<cont,typename cont::value_type>(std::asin, vect);
 }
 
-
-	template<container cont>
-inline constexpr auto cosh(const cont& vect)
-	-> cont
-{
+template<container cont>
+inline constexpr auto cosh(const cont& vect) -> cont {
 	return apply<cont,typename cont::value_type>(std::cosh, vect);
 }
 
-	template<container cont>
-inline constexpr auto acosh(const cont& vect)
-	-> cont
-{
+template<container cont>
+inline constexpr auto acosh(const cont& vect) -> cont {
 	return apply<cont,typename cont::value_type>(std::acosh, vect);
 }
 
-	template<container cont>
-inline constexpr auto sinh(const cont& vect)
-	-> cont
-{
+template<container cont>
+inline constexpr auto sinh(const cont& vect) -> cont {
 	return apply<cont,typename cont::value_type>(std::sinh, vect);
 }
 
-
-	template<container cont>
-inline constexpr auto asinh(const cont& vect)
-	-> cont
-{
+template<container cont>
+inline constexpr auto asinh(const cont& vect) -> cont {
 	return apply<cont,typename cont::value_type>(std::asinh, vect);
 }
