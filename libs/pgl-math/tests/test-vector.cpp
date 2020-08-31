@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <pgl-math/vector.hpp>
+#include <pgl-math/algorithms.hpp>
 
 template<pgl::number type, int dim>
 void assert_equal(
