@@ -5,7 +5,10 @@
 namespace pgl {
 
 	template<typename T>
-		concept number = std::is_arithmetic_v<T>;
+		concept integral = std::is_arithmetic_v<T>;
+
+	template<typename T>
+		concept number = std::is_arithmetic_v<T> && !std::is_same_v<T,bool>;
 
 	template<typename T>
 		concept container =

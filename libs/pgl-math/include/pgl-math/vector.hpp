@@ -3,229 +3,137 @@
 #include <numbers>
 #include <limits>
 #include <cmath>
-#include <initializer_list>
-#include <iostream>
 #include <utility>
+#include <initializer_list>
 
 #include <pgl-math/utils.hpp>
+#include <pgl-math/base-vector.hpp>
 
 namespace pgl {
 
+	//TODO create only one base_vector and math_vector but specialize vector as it contains the methods which should be specialized
+	// Is this still usefull ?
 	template<number type, int dim>
-		struct vector {
-			using value_type     = type;
-			using size_type      = int;
-			using iterator       = type*;
-			using const_iterator = const type*;
-			template<typename T> using container_of = vector<T,dim>;
+		struct algebric_vector : public base_vector<type, dim> {
+			inline constexpr          algebric_vector()                               noexcept : base_vector<type,dim>{}     {  }
+			inline constexpr explicit algebric_vector(const type& e)                  noexcept : base_vector<type,dim>{e}    {  }
+			inline constexpr          algebric_vector(const type arr[dim])            noexcept : base_vector<type,dim>{arr}  {  }
+			inline constexpr algebric_vector(std::convertible_to<type> auto ... args) noexcept : base_vector<type,dim>{ std::forward<type>(args)... } {  } // C++ 20 <3
 
-			type elements[dim];
+			//TODO create a class math_algebric_vector to factor these methods
+			/* inline constexpr auto operator*=(const algebric_vector<type,dim>&) noexcept -> algebric_vector<type,dim>&; */
+			/* inline constexpr auto operator/=(const algebric_vector<type,dim>&) noexcept -> algebric_vector<type,dim>&; */
+			/* inline constexpr auto operator+=(const algebric_vector<type,dim>&) noexcept -> algebric_vector<type,dim>&; */
+			/* inline constexpr auto operator-=(const algebric_vector<type,dim>&) noexcept -> algebric_vector<type,dim>&; */
 
-			struct raw_data {
-				type data[dim];
-				int size;
-				inline constexpr raw_data(const type[dim]) noexcept;
-			};
-			inline constexpr auto data() noexcept -> raw_data;
-			inline constexpr auto size() const noexcept -> int;
+			/* template<number scalar_type> inline constexpr auto operator*=(const scalar_type&) noexcept -> algebric_vector<type,dim>&; */
+			/* template<number scalar_type> inline constexpr auto operator/=(const scalar_type&) noexcept -> algebric_vector<type,dim>&; */
+			/* template<number scalar_type> inline constexpr auto operator+=(const scalar_type&) noexcept -> algebric_vector<type,dim>&; */
+			/* template<number scalar_type> inline constexpr auto operator-=(const scalar_type&) noexcept -> algebric_vector<type,dim>&; */
+		};
 
-			inline constexpr auto begin()  noexcept       -> type*;
-			inline constexpr auto begin()  const noexcept -> const type*;
-			inline constexpr auto cbegin() const noexcept -> const type*;
-			inline constexpr auto end()    noexcept       -> type*;
-			inline constexpr auto end()    const noexcept -> const type*;
-			inline constexpr auto cend()   const noexcept -> const type*;
+	template<typename type, int size> struct vector {  };
 
+	template<number type, int dim>
+		struct vector<type,dim> : public algebric_vector<type,dim> {
+			inline constexpr          vector()                               noexcept : algebric_vector<type,dim>{}     {  }
+			inline constexpr explicit vector(const type& e)                  noexcept : algebric_vector<type,dim>{e}    {  }
+			inline constexpr          vector(const type arr[dim])            noexcept : algebric_vector<type,dim>{arr}  {  }
+			/* inline constexpr vector(const std::initializer_list<type>& args) noexcept : algebric_vector<type,dim>{args} {  } */
+			template<number... Types> inline constexpr vector(const type& t, Types&&... types) noexcept : algebric_vector<type,dim>{ t, std::forward<Types>(types)... } {  }
 
-			inline constexpr vector() noexcept;
-			inline constexpr explicit vector(const type&) noexcept;
-			inline constexpr vector(const type[dim]) noexcept;
+			/* static inline constexpr vector<type,dim> right() noexcept; */
+			/* static inline constexpr vector<type,dim> left()  noexcept; */
+			/* static inline constexpr vector<type,dim> up()    noexcept; */
+			/* static inline constexpr vector<type,dim> down()  noexcept; */
+			/* static inline constexpr vector<type,dim> front() noexcept; */
+			/* static inline constexpr vector<type,dim> back()  noexcept; */
+		};
 
-			template<number... Ts>
-				inline constexpr vector(Ts&&... ts);
-			inline constexpr auto operator*=(const vector<type,dim>&) noexcept -> vector<type,dim>&;
-			inline constexpr auto operator/=(const vector<type,dim>&) noexcept -> vector<type,dim>&;
-			inline constexpr auto operator+=(const vector<type,dim>&) noexcept -> vector<type,dim>&;
-			inline constexpr auto operator-=(const vector<type,dim>&) noexcept -> vector<type,dim>&;
+	template<int dim>
+		struct vector<bool,dim> : public base_vector<bool, dim> {
+			inline constexpr          vector()                noexcept;
+			inline constexpr explicit vector(bool)            noexcept;
+			inline constexpr          vector(const bool[dim]) noexcept;
+			/* template<number... Ts> inline constexpr vector(Ts&&... ts) noexcept; */
+			inline constexpr vector(bool values, ...) noexcept;
 
-			template<number scalar_type> inline constexpr auto operator*=(const scalar_type&) noexcept -> vector<type,dim>&;
-			template<number scalar_type> inline constexpr auto operator/=(const scalar_type&) noexcept -> vector<type,dim>&;
-			template<number scalar_type> inline constexpr auto operator+=(const scalar_type&) noexcept -> vector<type,dim>&;
-			template<number scalar_type> inline constexpr auto operator-=(const scalar_type&) noexcept -> vector<type,dim>&;
+			/* inline constexpr auto operator&=(const vector<bool,dim>&) noexcept -> vector<bool,dim>&; */
+			/* inline constexpr auto operator|=(const vector<bool,dim>&) noexcept -> vector<bool,dim>&; */
+			/* inline constexpr auto operator^=(const vector<bool,dim>&) noexcept -> vector<bool,dim>&; */
+			/* inline constexpr auto operator!=(const vector<bool,dim>&) noexcept -> vector<bool,dim>&; */
 		};
 
 	template<number type>
-		struct vector<type,2> {
-			union {
-				type elements[2];
-				struct { type x, y; };
-			};
-			using value_type     = type;
-			using size_type      = int;
-			using iterator       = type*;
-			using const_iterator = const type*;
-			template<typename T> using container_of = vector<T,2>;
+		struct vector<type,2> : public algebric_vector<type,2> {
+			inline constexpr          vector()                      noexcept : algebric_vector<type,2>{}       {  }
+			inline constexpr explicit vector(const type& e)         noexcept : algebric_vector<type,2>{e}      {  }
+			inline constexpr          vector(const type arr[2])     noexcept : algebric_vector<type,2>{arr}    {  }
+			inline constexpr vector(const type& e1, const type& e2) noexcept : algebric_vector<type,2>( e1, e2 ) {  }
 
-			struct raw_data {
-				type data[2];
-				int size;
-				inline constexpr raw_data(const type[2]) noexcept;
-			};
-			inline constexpr auto data() noexcept -> raw_data;
-
-			inline constexpr auto size() const noexcept -> int;
-
-			inline constexpr auto begin()  noexcept       -> type*;
-			inline constexpr auto begin()  const noexcept -> const type*;
-			inline constexpr auto cbegin() const noexcept -> const type*;
-			inline constexpr auto end()    noexcept 	    -> type*;
-			inline constexpr auto end()    const noexcept -> const type*;
-			inline constexpr auto cend()   const noexcept -> const type*;
-
-			inline constexpr vector()                         noexcept;
-			inline constexpr explicit vector(const type&)     noexcept;
-			inline constexpr vector(const type&, const type&) noexcept;
-			inline constexpr vector(const type[2])            noexcept;
-
-			static inline constexpr vector<type,2> right() noexcept;
-			static inline constexpr vector<type,2> left()  noexcept;
-			static inline constexpr vector<type,2> up()    noexcept;
-			static inline constexpr vector<type,2> down()  noexcept;
-
-			inline constexpr auto operator*=(const vector<type,2>&) noexcept -> vector<type,2>&;
-			inline constexpr auto operator/=(const vector<type,2>&) noexcept -> vector<type,2>&;
-			inline constexpr auto operator+=(const vector<type,2>&) noexcept -> vector<type,2>&;
-			inline constexpr auto operator-=(const vector<type,2>&) noexcept -> vector<type,2>&;
-
-			template<number scalar_type> inline constexpr auto operator*=(const scalar_type& scalar) noexcept -> vector<type,2>&;
-			template<number scalar_type> inline constexpr auto operator/=(const scalar_type& scalar) noexcept -> vector<type,2>&;
-			template<number scalar_type> inline constexpr auto operator+=(const scalar_type& scalar) noexcept -> vector<type,2>&;
-			template<number scalar_type> inline constexpr auto operator-=(const scalar_type& scalar) noexcept -> vector<type,2>&;
+			/* static inline constexpr vector<type,2> right() noexcept; */
+			/* static inline constexpr vector<type,2> left()  noexcept; */
+			/* static inline constexpr vector<type,2> up()    noexcept; */
+			/* static inline constexpr vector<type,2> down()  noexcept; */
 		};
 
 	template<number type>
-		struct vector<type,3> {
-			union {
-				type elements[3];
-				struct { type x, y, z; };
-				struct { vector<type,2> xy; };
-			};
-			using value_type     = type;
-			using size_type      = int;
-			using iterator       = type*;
-			using const_iterator = const type*;
-			template<typename T> using container_of = vector<T,3>;
+		struct vector<type,3> : public algebric_vector<type,3> {
+			inline constexpr vector()                                               noexcept : algebric_vector<type,3>{}            {  }
+			inline constexpr explicit vector(const type& e)                         noexcept : algebric_vector<type,3>{e}           {  }
+			inline constexpr vector(const type arr[3])                              noexcept : algebric_vector<type,3>{arr}         {  }
+			inline constexpr vector(const type& e1, const type& e2, const type& e3) noexcept : algebric_vector<type,3>( e1, e2, e3 )  {  }
+			inline constexpr vector(const vector<type,2>& v, const type& e)         noexcept : algebric_vector<type,3>( v.x, v.y, e ) {  }
 
-			struct raw_data {
-				type data[3];
-				int size;
-				inline constexpr raw_data(const type[3]) noexcept;
-			};
-			inline constexpr auto data() noexcept -> raw_data;
-
-			inline constexpr auto size() const noexcept -> int;
-
-			inline constexpr auto begin()  noexcept       -> type*;
-			inline constexpr auto begin()  const noexcept -> const type*;
-			inline constexpr auto cbegin() const noexcept -> const type*;
-			inline constexpr auto end()    noexcept       -> type*;
-			inline constexpr auto end()    const noexcept -> const type*;
-			inline constexpr auto cend()   const noexcept -> const type*;
-
-			inline constexpr vector()                                         noexcept;
-			inline constexpr explicit vector(const type&)                     noexcept;
-			inline constexpr vector(const type& t0, const type&, const type&) noexcept;
-			inline constexpr vector(const type[3])                            noexcept;
-			inline constexpr vector(const vector<type,2>&, const type&)       noexcept;
-
-			static inline constexpr vector<type,3> right() noexcept;
-			static inline constexpr vector<type,3> left()  noexcept;
-			static inline constexpr vector<type,3> up()    noexcept;
-			static inline constexpr vector<type,3> down()  noexcept;
-			static inline constexpr vector<type,3> front() noexcept;
-			static inline constexpr vector<type,3> back()  noexcept;
-
-			inline constexpr auto operator*=(const vector<type,3>& vec) noexcept -> vector<type,3>&;
-			inline constexpr auto operator/=(const vector<type,3>& vec) noexcept -> vector<type,3>&;
-			inline constexpr auto operator+=(const vector<type,3>& vec) noexcept -> vector<type,3>&;
-			inline constexpr auto operator-=(const vector<type,3>& vec) noexcept -> vector<type,3>&;
-
-			template<number scalar_type> inline constexpr auto operator*=(const scalar_type& scalar) noexcept -> vector<type,3>&;
-			template<number scalar_type> inline constexpr auto operator/=(const scalar_type& scalar) noexcept -> vector<type,3>&;
-			template<number scalar_type> inline constexpr auto operator+=(const scalar_type& scalar) noexcept -> vector<type,3>&;
-			template<number scalar_type> inline constexpr auto operator-=(const scalar_type& scalar) noexcept -> vector<type,3>&;
+			/* static inline constexpr vector<type,3> right() noexcept; */
+			/* static inline constexpr vector<type,3> left()  noexcept; */
+			/* static inline constexpr vector<type,3> up()    noexcept; */
+			/* static inline constexpr vector<type,3> down()  noexcept; */
+			/* static inline constexpr vector<type,3> front() noexcept; */
+			/* static inline constexpr vector<type,3> back()  noexcept; */
 		};
 
 	template<number type>
-		struct vector<type,4> {
-			union {
-				type elements[4];
-				struct { type x, y, z, w; };
-				struct { vector<type,3> xyz; };
-				struct { vector<type,2> xy, zw; };
-			};
-			using value_type     = type;
-			using size_type      = int;
-			using iterator       = type*;
-			using const_iterator = const type*;
-			template<typename T> using container_of = vector<T,4>;
+		struct vector<type,4> : public algebric_vector<type,4> {
+			inline constexpr vector()                                                               noexcept : algebric_vector<type,4>{}                   {  }
+			inline constexpr explicit vector(const type& e)                                         noexcept : algebric_vector<type,4>{e}                  {  }
+			inline constexpr vector(const type arr[4])                                              noexcept : algebric_vector<type,4>{arr}                {  }
+			inline constexpr vector(const type& e1, const type& e2, const type& e3, const type& e4) noexcept : algebric_vector<type,4>( e1, e2, e3, e4 )     {  }
 
-			struct raw_data {
-				type data[4];
-				int size;
-				inline constexpr raw_data(const type[4]) noexcept;
-			};
-			inline constexpr auto data() noexcept -> raw_data;
+			// Can these constructors be one template ?
+			inline constexpr vector(const vector<type,3>& v, const type& e)                         noexcept : algebric_vector<type,4>( v.x, v.y, v.z, e )   {  }
+			inline constexpr vector(const vector<type,2>& v, const vector<type,2>& w)               noexcept : algebric_vector<type,4>( v.x, v.y, w.x, w.y ) {  }
 
-			inline constexpr auto size() const noexcept -> int;
-
-			inline constexpr auto begin()  noexcept       -> type*;
-			inline constexpr auto begin()  const noexcept -> const type*;
-			inline constexpr auto cbegin() const noexcept -> const type*;
-			inline constexpr auto end()    noexcept       -> type*;
-			inline constexpr auto end()    const noexcept -> const type*;
-			inline constexpr auto cend()   const noexcept -> const type*;
-
-			inline constexpr vector() noexcept;
-			inline constexpr explicit vector(const type&)                                  noexcept;
-			inline constexpr vector(const type[4])                                         noexcept;
-			inline constexpr vector(const type& t0, const type&, const type&, const type&) noexcept;
-			inline constexpr vector(const vector<type,3>&, type)                           noexcept;
-			inline constexpr vector(const vector<type,2>&, const vector<type,2>&)          noexcept;
-
-			inline constexpr auto operator*=(const vector<type,4>& vec) noexcept -> vector<type,4>&;
-			inline constexpr auto operator/=(const vector<type,4>& vec) noexcept -> vector<type,4>&;
-			inline constexpr auto operator+=(const vector<type,4>& vec) noexcept -> vector<type,4>&;
-			inline constexpr auto operator-=(const vector<type,4>& vec) noexcept -> vector<type,4>&;
-
-			template<number scalar_type> inline constexpr auto operator*=(const scalar_type& scalar) noexcept -> vector<type,4>&;
-			template<number scalar_type> inline constexpr auto operator/=(const scalar_type& scalar) noexcept -> vector<type,4>&;
-			template<number scalar_type> inline constexpr auto operator+=(const scalar_type& scalar) noexcept -> vector<type,4>&;
-			template<number scalar_type> inline constexpr auto operator-=(const scalar_type& scalar) noexcept -> vector<type,4>&;
+			/* static inline constexpr vector<type,4> right() noexcept; */
+			/* static inline constexpr vector<type,4> left()  noexcept; */
+			/* static inline constexpr vector<type,4> up()    noexcept; */
+			/* static inline constexpr vector<type,4> down()  noexcept; */
+			/* static inline constexpr vector<type,4> front() noexcept; */
+			/* static inline constexpr vector<type,4> back()  noexcept; */
 		};
 
-	template<number type, int dim>                     inline constexpr auto operator*(const vector<type,dim>&, const vector<type,dim>&) noexcept -> vector<type,dim>;
-	template<number type, number scalar_type, int dim> inline constexpr auto operator*(const vector<type,dim>&, const scalar_type&     ) noexcept -> vector<type,dim>;
-	template<number type, number scalar_type, int dim> inline constexpr auto operator*(const scalar_type&,      const vector<type,dim>&) noexcept -> vector<type,dim>;
+/*	template<number type, int dim>                     inline constexpr auto operator*(const vector<type,dim>&, const vector<type,dim>&) noexcept -> vector<type,dim>;*/
+/*	template<number type, number scalar_type, int dim> inline constexpr auto operator*(const vector<type,dim>&, const scalar_type&     ) noexcept -> vector<type,dim>;*/
+/*	template<number type, number scalar_type, int dim> inline constexpr auto operator*(const scalar_type&,      const vector<type,dim>&) noexcept -> vector<type,dim>;*/
 
-	template<number type, int dim>                     inline constexpr auto operator/(const vector<type,dim>&, const vector<type,dim>&) noexcept -> vector<type,dim>;
-	template<number type, number scalar_type, int dim> inline constexpr auto operator/(const vector<type,dim>&, const scalar_type&     ) noexcept -> vector<type,dim>;
-	template<number type, number scalar_type, int dim> inline constexpr auto operator/(const scalar_type&,      const vector<type,dim>&) noexcept -> vector<type,dim>;
+/*	template<number type, int dim>                     inline constexpr auto operator/(const vector<type,dim>&, const vector<type,dim>&) noexcept -> vector<type,dim>;*/
+/*	template<number type, number scalar_type, int dim> inline constexpr auto operator/(const vector<type,dim>&, const scalar_type&     ) noexcept -> vector<type,dim>;*/
+/*	template<number type, number scalar_type, int dim> inline constexpr auto operator/(const scalar_type&,      const vector<type,dim>&) noexcept -> vector<type,dim>;*/
 
-	template<number type, int dim>                     inline constexpr auto operator-(const vector<type,dim>&, const vector<type,dim>&) noexcept -> vector<type,dim>;
-	template<number type, number scalar_type, int dim> inline constexpr auto operator-(const vector<type,dim>&, const scalar_type&     ) noexcept -> vector<type,dim>;
-	template<number type, number scalar_type, int dim> inline constexpr auto operator-(const scalar_type&,      const vector<type,dim>&) noexcept -> vector<type,dim>;
+/*	template<number type, int dim>                     inline constexpr auto operator-(const vector<type,dim>&, const vector<type,dim>&) noexcept -> vector<type,dim>;*/
+/*	template<number type, number scalar_type, int dim> inline constexpr auto operator-(const vector<type,dim>&, const scalar_type&     ) noexcept -> vector<type,dim>;*/
+/*	template<number type, number scalar_type, int dim> inline constexpr auto operator-(const scalar_type&,      const vector<type,dim>&) noexcept -> vector<type,dim>;*/
 
-	template<number type, int dim>                     inline constexpr auto operator+(const vector<type,dim>&, const vector<type,dim>&) noexcept -> vector<type,dim>;
-	template<number type, number scalar_type, int dim> inline constexpr auto operator+(const vector<type,dim>&, const scalar_type&     ) noexcept -> vector<type,dim>;
-	template<number type, number scalar_type, int dim> inline constexpr auto operator+(const scalar_type&,      const vector<type,dim>&) noexcept -> vector<type,dim>;
+/*	template<number type, int dim>                     inline constexpr auto operator+(const vector<type,dim>&, const vector<type,dim>&) noexcept -> vector<type,dim>;*/
+/*	template<number type, number scalar_type, int dim> inline constexpr auto operator+(const vector<type,dim>&, const scalar_type&     ) noexcept -> vector<type,dim>;*/
+/*	template<number type, number scalar_type, int dim> inline constexpr auto operator+(const scalar_type&,      const vector<type,dim>&) noexcept -> vector<type,dim>;*/
 
-	template<number type, int dim> inline constexpr auto dot(const vector<type,dim>&, const vector<type,dim>&) noexcept -> type;
-	template<number type, int dim> inline constexpr auto dot(const vector<type,dim>&)                          noexcept -> type;
-	template<number type, int dim> inline constexpr auto sum(const vector<type,dim>&)                          noexcept -> type;
-	template<number type, int dim> inline constexpr auto abs(const vector<type,dim>&)                          noexcept -> vector<type,dim>;
-	template<number type, int dim> inline constexpr auto normalize(const vector<type,dim>&)                    noexcept -> vector<type,dim>;
-	template<number type, int dim> constexpr inline auto lerp (const vector<type,dim>&, const vector<type,dim>&, type) noexcept -> vector<type,dim>;
+/*	template<number type, int dim> inline constexpr auto dot(const vector<type,dim>&, const vector<type,dim>&) noexcept -> type;*/
+/*	template<number type, int dim> inline constexpr auto dot(const vector<type,dim>&)                          noexcept -> type;*/
+/*	template<number type, int dim> inline constexpr auto sum(const vector<type,dim>&)                          noexcept -> type;*/
+/*	template<number type, int dim> inline constexpr auto abs(const vector<type,dim>&)                          noexcept -> vector<type,dim>;*/
+/*	template<number type, int dim> inline constexpr auto normalize(const vector<type,dim>&)                    noexcept -> vector<type,dim>;*/
+/*	template<number type, int dim> constexpr inline auto lerp(const vector<type,dim>&, const vector<type,dim>&, type) noexcept -> vector<type,dim>;*/
 
 	/*
 	 *
@@ -233,6 +141,8 @@ namespace pgl {
 	 * ======= TODO !!! =======
 	 * ========================
 	 *
+	 * copy, move constructor
+	 * operator=
 	 * frame ?
 	 * decltype
 	 * benchmark
@@ -255,7 +165,5 @@ namespace pgl {
 	using float2 = vector<float,2>;
 	using float3 = vector<float,3>;
 	using float4 = vector<float,4>;
-
-#include <pgl-math/impl/vector.hpp>
 
 } /* end of namespace pgl */

@@ -32,7 +32,7 @@ find_package(Freetype REQUIRED)
 add_library(target-flags INTERFACE)
 target_compile_options(target-flags
   INTERFACE
-  -Wall -Wextra -Wpedantic
+	-Wall -Wextra -Wpedantic -Weffc++
 )
 target_compile_features(target-flags INTERFACE cxx_std_20)
 
