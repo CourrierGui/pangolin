@@ -252,9 +252,9 @@ namespace pgl {
 			const matrix<type,rows,cols>& mat)
 		-> matrix<decltype(scalar-std::declval<type>()),rows,cols>;
 
-	using bool22 = matrix<bool,2,2>;
-	using bool33 = matrix<bool,3,3>;
-	using bool44 = matrix<bool,4,4>;
+	/* using bool22 = matrix<bool,2,2>; */
+	/* using bool33 = matrix<bool,3,3>; */
+	/* using bool44 = matrix<bool,4,4>; */
 
 	using int22 = matrix<int,2,2>;
 	using int33 = matrix<int,3,3>;

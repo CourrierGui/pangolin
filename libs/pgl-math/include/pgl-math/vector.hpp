@@ -15,10 +15,10 @@ namespace pgl {
 	// Is this still usefull ?
 	template<number type, int dim>
 		struct algebric_vector : public base_vector<type, dim> {
-			inline constexpr          algebric_vector()                               noexcept : base_vector<type,dim>{}     {  }
-			inline constexpr explicit algebric_vector(const type& e)                  noexcept : base_vector<type,dim>{e}    {  }
-			inline constexpr          algebric_vector(const type arr[dim])            noexcept : base_vector<type,dim>{arr}  {  }
-			inline constexpr algebric_vector(std::convertible_to<type> auto ... args) noexcept : base_vector<type,dim>{ std::forward<type>(args)... } {  } // C++ 20 <3
+			inline constexpr          algebric_vector()                                        noexcept : base_vector<type,dim>{}     {  }
+			inline constexpr explicit algebric_vector(const type& e)                           noexcept : base_vector<type,dim>{e}    {  }
+			inline constexpr          algebric_vector(const type arr[dim])                     noexcept : base_vector<type,dim>{arr}  {  }
+			inline constexpr          algebric_vector(std::convertible_to<type> auto ... args) noexcept : base_vector<type,dim>{ std::forward<type>(args)... } {  } // C++ 20 <3
 
 			//TODO create a class math_algebric_vector to factor these methods
 			/* inline constexpr auto operator*=(const algebric_vector<type,dim>&) noexcept -> algebric_vector<type,dim>&; */

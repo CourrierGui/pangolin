@@ -796,9 +796,9 @@ inline constexpr auto operator-(
 	return mat-scalar;
 }
 
-template struct matrix<bool,2,2>;
-template struct matrix<bool,3,3>;
-template struct matrix<bool,4,4>;
+/* template struct matrix<bool,2,2>; */
+/* template struct matrix<bool,3,3>; */
+/* template struct matrix<bool,4,4>; */
 
 template struct matrix<int,2,2>;
 template struct matrix<int,3,3>;

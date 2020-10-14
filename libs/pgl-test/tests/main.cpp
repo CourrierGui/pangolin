@@ -43,18 +43,14 @@ struct T {
 
 int main() {
 	std::clog
-		<< pgl::test::function_property(add, commutative_property)
-		<< '\n'
-		<< pgl::test::function_property(add, [](int x, int y){ return add(x,0) == x && add(0, y) == y; })
-		<< '\n'
-		<< pgl::test::function_property(add, T())
-		<< '\n'
-		<< pgl::test::function_property(make_adder, &Adder::add, adder_add_zero)
-		<< '\n'
-		<< pgl::test::function_property(make_adder, &Adder::add, [](const Adder& a, int x) { return a.add(0)==a.get(); })
-		<< '\n'
-		<< pgl::test::function_property(make_adder, &Adder::add, S())
-		<< '\n';
+		<< pgl::test::function_property(add, commutative_property) << '\n'
+		<< pgl::test::function_property(add, [](int x, int y){ return add(x,0) == x && add(0, y) == y; }) << '\n'
+		<< pgl::test::function_property(add, T()) << '\n';
+
+	std::clog
+		<< pgl::test::function_property(make_adder, &Adder::add, adder_add_zero) << '\n'
+		<< pgl::test::function_property(make_adder, &Adder::add, [](const Adder& a, int x) { return a.add(0)==a.get(); }) << '\n'
+		<< pgl::test::function_property(make_adder, &Adder::add, S()) << '\n';
 
 	return 0;
 }

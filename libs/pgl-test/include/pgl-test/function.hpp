@@ -127,7 +127,8 @@ struct func_caller<R(Args...)> {
 			const std::tuple<Args...>& tuple,
 			const F& func)
 		{
-			return real_call(tuple, std::function<R(Args...)>(func), std::index_sequence_for<Args...>{});
+			return real_call(
+				tuple, std::function<R(Args...)>(func), std::index_sequence_for<Args...>{});
 		}
 
 	static inline R call(const std::tuple<Args...>& tuple, R (*func)(Args...))

@@ -1,7 +1,8 @@
 #include <pgl-gui/glfw-window.hpp>
+#include <pgl-math/vector.hpp>
 
 int main() {
-	pgl::gui::GLFWWindow& window = pgl::gui::GLFWWindow::make_window(600, 400, "Pangolin demo");
+	auto& window = pgl::gui::GLFWWindow::make_window(600, 400, "Pangolin demo");
 
 	while (window.is_open()) {
 		window.poll_events();

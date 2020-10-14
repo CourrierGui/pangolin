@@ -3,6 +3,7 @@ target_link_libraries(demo
 	PRIVATE
 		pangolin::pangolin
 		pangolin::pgl-gui
+		pangolin::pgl-math
 		target-flags
 )
 
