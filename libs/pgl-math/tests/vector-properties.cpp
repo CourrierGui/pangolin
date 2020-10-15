@@ -57,8 +57,8 @@ void check_multiplication() {
 }
 
 int main() {
-	check_multiplication<float>();
-	check_multiplication<double>();
+	check_multiplication<float>  ();
+	check_multiplication<double> ();
 	check_multiplication<int16_t>();
 	check_multiplication<int32_t>();
 	check_multiplication<int64_t>();

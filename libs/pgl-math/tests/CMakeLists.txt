@@ -1,4 +1,4 @@
-foreach(test_name test-vector.cpp) # test-matrix.cpp test-quaternion.cpp)
+foreach(test_name test-vector.cpp test-matrix.cpp) # test-quaternion.cpp)
 	get_filename_component(bin_name ${test_name} NAME_WE)
 
 	add_executable(Pgl.${bin_name} ${test_name})

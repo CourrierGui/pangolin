@@ -56,8 +56,8 @@ class Camera {
      */
     Camera(
       float posX, float posY, float posZ,
-      float upX, float upY, float upZ,
-      float yaw, float pitch
+      float upX,  float upY,  float upZ,
+      float yaw,  float pitch
     );
 
     /**
