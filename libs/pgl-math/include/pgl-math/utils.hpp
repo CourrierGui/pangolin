@@ -1,6 +1,7 @@
 #pragma once
 
 #include <type_traits>
+#include <numbers>
 
 namespace pgl {
 
@@ -23,5 +24,18 @@ namespace pgl {
 			{a.cbegin()};
 			{a.cend()  };
 		};
+
+	constexpr float  pi  {std::numbers::pi_v<float>};
+	constexpr double dpi {std::numbers::pi_v<double>};
+
+	template<typename type>
+		type radians(type degrees) {
+			return std::numbers::pi_v<type>*degrees/180;
+		}
+
+	template<typename type>
+		type degrees(type radians) {
+			return 180*radians/std::numbers::pi_v<type>;
+		}
 
 } /* end of namespace pgl */

@@ -66,7 +66,15 @@ namespace pgl {
 			return res;
 		}
 
-	constexpr float  pi  {std::numbers::pi_v<float>};
-	constexpr double dpi {std::numbers::pi_v<double>};
+	template<typename type>
+		auto cross(const vector<type,3>& lhs, const vector<type,3>& rhs)
+			-> vector<type,3>
+		{
+			return vector<type,3>{
+				lhs.y*rhs.z - lhs.z*rhs.y,
+				lhs.z*rhs.x - lhs.x*rhs.z,
+				lhs.x*rhs.y - lhs.y*rhs.x
+			};
+		}
 
 } /* end of namespace pgl */

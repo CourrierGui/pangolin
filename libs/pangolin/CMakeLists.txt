@@ -1,4 +1,5 @@
 add_library(pangolin SHARED
+	src/camera.cpp
   src/game-object.cpp
   src/mesh.cpp
   src/particle-generator.cpp
@@ -19,7 +20,7 @@ target_include_directories(pangolin
 )
 target_link_libraries(pangolin
   PUBLIC
-    pangolin::pgl-image
+    pangolin::pgl-image pangolin::pgl-math
   PRIVATE
     assimp glfw pangolin::glad Freetype::Freetype
     $<BUILD_INTERFACE:target-flags>

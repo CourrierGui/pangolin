@@ -253,6 +253,9 @@ namespace pgl {
 	template<number type, uint32_t dim> inline constexpr auto normalize(const vector<type,dim>&)                    noexcept -> vector<type,dim>;
 	template<number type, uint32_t dim> constexpr inline auto lerp(const vector<type,dim>&, const vector<type,dim>&, type) noexcept -> vector<type,dim>;
 
+	template<typename type>
+		auto cross(const vector<type,3>& lhs, const vector<type,3>& rhs) -> vector<type,3>;
+
 	/*
 	 *
 	 * ========================

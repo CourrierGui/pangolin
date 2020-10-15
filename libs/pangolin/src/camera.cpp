@@ -1,100 +1,106 @@
 #include <pangolin/camera.hpp>
+#include <pgl-math/utils.hpp>
 
 #include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <cmath>
 
 #include <vector>
 
-Camera::Camera(glm::vec3 position,
-               glm::vec3 up,
-               float yaw, float pitch)
-  : m_front(glm::vec3(0.0f, 0.0f, -1.0f)),
-  m_movement_speed(SPEED),
-  m_mouse_sensitivity(SENSITIVITY),
-  m_zoom(ZOOM)
-{
-  m_position = position;
-  m_world_up = up;
-  m_yaw      = yaw;
-  m_pitch    = pitch;
-  update_camera_vectors();
-}
+namespace pgl {
 
-Camera::Camera(
-  float posX, float posY, float posZ,
-  float upX, float upY, float upZ,
-  float yaw, float pitch)
-  : m_front(glm::vec3(0.0f, 0.0f, -1.0f)),
-  m_movement_speed(SPEED),
-  m_mouse_sensitivity(SENSITIVITY),
-  m_zoom(ZOOM) 
-{
-  m_position = glm::vec3(posX, posY, posZ);
-  m_world_up = glm::vec3(upX, upY, upZ);
-  m_yaw = yaw;
-  m_pitch = pitch;
-  update_camera_vectors();
-}
+	Camera::Camera(
+		pgl::float3 position,
+		pgl::float3 up,
+		float yaw, float pitch)
+		: _front(pgl::float3(0.0f, 0.0f, -1.0f)),
+			_movement_speed(SPEED),
+			_mouse_sensitivity(SENSITIVITY),
+			_zoom(ZOOM)
+	{
+		_position = position;
+		_world_up = up;
+		_yaw      = yaw;
+		_pitch    = pitch;
+		update_camera_vectors();
+	}
 
-glm::mat4 Camera::get_matrix_view() {
-  return glm::lookAt(m_position, m_position + m_front, m_up);
-}
+	Camera::Camera(
+		float posX, float posY, float posZ,
+		float upX, float upY, float upZ,
+		float yaw, float pitch)
+		: _front(pgl::float3(0.0f, 0.0f, -1.0f)),
+			_movement_speed(SPEED),
+			_mouse_sensitivity(SENSITIVITY),
+			_zoom(ZOOM)
+	{
+		_position = pgl::float3(posX, posY, posZ);
+		_world_up = pgl::float3(upX, upY, upZ);
+		_yaw = yaw;
+		_pitch = pitch;
+		update_camera_vectors();
+	}
 
-void Camera::process_keyboard(Camera_Movement direction, float deltaTime) {
-  float velocity = m_movement_speed * deltaTime;
-  if (direction == FORWARD)
-    m_position += m_front * velocity;
-  if (direction == BACKWARD)
-    m_position -= m_front * velocity;
-  if (direction == LEFT)
-    m_position -= m_right * velocity;
-  if (direction == RIGHT)
-    m_position += m_right * velocity;
-}
+	pgl::float44 Camera::get_matrix_view() {
+		//TODO implement lookAt function
+		/* return glm::lookAt(_position, _position + _front, _up); */
+	}
 
-void Camera::process_mouse_movement(
-  float xoffset, float yoffset,
-  GLboolean constrainPitch)
-{
-  xoffset *= m_mouse_sensitivity;
-  yoffset *= m_mouse_sensitivity;
+	void Camera::process_keyboard(CameraMovement direction, float deltaTime) {
+		float velocity = _movement_speed * deltaTime;
+		if (direction == CameraMovement::FORWARD)
+			_position += _front * velocity;
+		if (direction == CameraMovement::BACKWARD)
+			_position -= _front * velocity;
+		if (direction == CameraMovement::LEFT)
+			_position -= _right * velocity;
+		if (direction == CameraMovement::RIGHT)
+			_position += _right * velocity;
+	}
 
-  m_yaw   += xoffset;
-  m_pitch += yoffset;
+	void Camera::process_mouse_movement(
+		float xoffset, float yoffset,
+		bool constrainPitch)
+	{
+		xoffset *= _mouse_sensitivity;
+		yoffset *= _mouse_sensitivity;
 
-  // Make sure that when pitch is out of bounds, screen doesn't get flipped
-  if (constrainPitch) {
-    if (m_pitch > 89.0f)
-      m_pitch = 89.0f;
-    if (m_pitch < -89.0f)
-      m_pitch = -89.0f;
-  }
+		_yaw   += xoffset;
+		_pitch += yoffset;
 
-  // Update m_front, m_right and Up Vectors using the updated Euler angles
-  update_camera_vectors();
-}
+		// Make sure that when pitch is out of bounds, screen doesn't get flipped
+		if (constrainPitch) {
+			if (_pitch > 89.0f)
+				_pitch = 89.0f;
+			if (_pitch < -89.0f)
+				_pitch = -89.0f;
+		}
 
-void Camera::process_mouse_scroll(float yoffset) {
-  m_zoom -= yoffset;
-  if (m_zoom <= 1.0f)
-    m_zoom = 1.0f;
-  if (m_zoom >= 45.0f)
-    m_zoom = 45.0f;
-}
+		// Update _front, _right and Up Vectors using the updated Euler angles
+		update_camera_vectors();
+	}
 
-void Camera::update_camera_vectors() {
-  // Calculate the new m_front vector
-  glm::vec3 front;
-  front.x = std::cos(glm::radians(m_yaw)) * std::cos(glm::radians(m_pitch));
-  front.y = std::sin(glm::radians(m_pitch));
-  front.z = std::sin(glm::radians(m_yaw)) * std::cos(glm::radians(m_pitch));
-  m_front = glm::normalize(front);
-  // Also re-calculate the m_right and Up vector
+	void Camera::process_mouse_scroll(float yoffset) {
+		_zoom -= yoffset;
+		if (_zoom <= 1.0f)
+			_zoom = 1.0f;
+		if (_zoom >= 45.0f)
+			_zoom = 45.0f;
+	}
 
-  // Normalize the vectors, because their length gets closer to 0 the more you
-  // look up or down which results in slower movement.
-  m_right = glm::normalize(glm::cross(m_front, m_world_up));
-  m_up    = glm::normalize(glm::cross(m_right, m_front));
-}
+	void Camera::update_camera_vectors() {
+		// Calculate the new m_front vector
+		pgl::float3 front;
+		//TODO implement radians function
+		front.x = std::cos(pgl::radians(_yaw)) * std::cos(pgl::radians(_pitch));
+		front.y = std::sin(pgl::radians(_pitch));
+		front.z = std::sin(pgl::radians(_yaw)) * std::cos(pgl::radians(_pitch));
+		_front = pgl::normalize(front);
+		// Also re-calculate the _right and Up vector
+
+		// Normalize the vectors, because their length gets closer to 0 the more you
+		// look up or down which results in slower movement.
+		_right = pgl::normalize(pgl::cross(_front, _world_up));
+		_up    = pgl::normalize(pgl::cross(_right, _front));
+	}
+
+} /* end of namespace pgl */

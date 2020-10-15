@@ -67,3 +67,4 @@ template float pgl::sum<float, 3>(pgl::float3 const&);
 
 template pgl::float3 pgl::normalize<float, 3>(pgl::float3 const&);
 template pgl::float3 pgl::abs<float, 3>      (pgl::float3 const&);
+template pgl::float3 pgl::cross<float>       (pgl::float3 const&, pgl::float3 const&);
