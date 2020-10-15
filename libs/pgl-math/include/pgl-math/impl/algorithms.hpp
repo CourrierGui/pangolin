@@ -1,5 +1,7 @@
 #include <limits>
 
+namespace pgl {
+
 template<container cont>
 inline constexpr auto max(const cont& vec) noexcept
 -> typename cont::value_type
@@ -297,3 +299,5 @@ template<container cont>
 inline constexpr auto asinh(const cont& vect) -> cont {
 	return apply<cont,typename cont::value_type>(std::asinh, vect);
 }
+
+} /* end of namespace pgl */

@@ -1,7 +1,46 @@
 #include <gtest/gtest.h>
 
+#include <pgl-math/base-vector.hpp>
 #include <pgl-math/vector.hpp>
 #include <pgl-math/algorithms.hpp>
+
+template<pgl::integral type, uint32_t dim>
+void assert_equal(
+	const pgl::base_vector<type,dim>& lhs,
+	const pgl::base_vector<type,dim>& rhs)
+{
+	auto lhs_it = lhs.begin();
+	auto rhs_it = rhs.begin();
+
+	while (lhs_it != lhs.end()) {
+		ASSERT_EQ(*(lhs_it++), *(rhs_it++));
+	}
+}
+
+
+TEST(Base, Construction) {
+	pgl::base_vector<int32_t,2> i2{1, 2};
+	pgl::base_vector<int32_t,3> i3{1, 2, 3};
+	pgl::base_vector<int32_t,4> i4{1, 2, 3, 4};
+	pgl::base_vector<int32_t,5> i5{1, 2, 3, 4, 5};
+
+	assert_equal(pgl::base_vector<int32_t,2>{1, 2},          i2);
+	assert_equal(pgl::base_vector<int32_t,3>{1, 2, 3},       i3);
+	assert_equal(pgl::base_vector<int32_t,4>{1, 2, 3, 4},    i4);
+	assert_equal(pgl::base_vector<int32_t,5>{1, 2, 3, 4, 5}, i5);
+
+	ASSERT_EQ(1, i2.x);
+	ASSERT_EQ(2, i2.y);
+
+	ASSERT_EQ(1, i3.x);
+	ASSERT_EQ(2, i3.y);
+	ASSERT_EQ(3, i3.z);
+
+	ASSERT_EQ(1, i4.x);
+	ASSERT_EQ(2, i4.y);
+	ASSERT_EQ(3, i4.z);
+	ASSERT_EQ(4, i4.w);
+}
 
 template<pgl::number type, int dim>
 void assert_equal(
@@ -24,7 +63,7 @@ TEST(Vector, Construction) {
 
 	pgl::vector<int,7> i2{1, 2, 3, 4, 5, 6, 7};
 	int i=1;
-	for(auto elem: i2) {
+	for (const auto& elem: i2) {
 		ASSERT_EQ(i++, elem);
 	}
 
@@ -46,6 +85,11 @@ TEST(Vector, Construction) {
 
 	pgl::int3 i7{ pgl::int2{1, 2}, 3 };
 	assert_equal(pgl::int3{1, 2, 3}, i7);
+
+	pgl::bool3 b3{false, true, true};
+	ASSERT_FALSE(b3.x);
+	ASSERT_TRUE(b3.y);
+	ASSERT_TRUE(b3.z);
 }
 
 TEST(Vector, Makers) {

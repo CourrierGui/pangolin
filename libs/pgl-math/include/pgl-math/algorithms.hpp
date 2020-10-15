@@ -24,8 +24,8 @@ namespace pgl {
 	template<container cont> inline constexpr auto min(const cont&, typename cont::value_type min_val) noexcept -> cont;
 	template<container cont> inline constexpr auto max(const cont&, typename cont::value_type max_val) noexcept -> cont;
 
-	template<container cont> inline constexpr auto clamp(
-		const cont&, typename cont::value_type lb, typename cont::value_type ub) noexcept -> cont;
+	template<container cont>
+		inline constexpr auto clamp(const cont& vect, typename cont::value_type lb, typename cont::value_type ub) noexcept -> cont;
 	template<container cont> inline constexpr auto saturate(const cont&);
 
 	template<container cont> inline constexpr auto any(const cont&) noexcept -> bool;
@@ -56,6 +56,6 @@ namespace pgl {
 	template<container cont> inline constexpr auto atan (const cont&) -> cont;
 	template<container cont> inline constexpr auto atan (const cont&, const cont&) -> cont;
 
-#include <pgl-math/impl/algorithms.hpp>
-
 } /* end of namespace pgl */
+
+#include <pgl-math/impl/algorithms.hpp>
