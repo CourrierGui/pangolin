@@ -9,10 +9,7 @@ namespace pgl {
 
 	template<integral type, uint32_t dim, template<typename T, uint32_t d> class vector_type>
 		struct base {
-			using value_type     = type;
-			using size_type      = uint32_t;
-			using iterator       = type*;
-			using const_iterator = const type*;
+			template<typename T> using container_of = vector_type<T,dim>;
 
 			inline constexpr base() noexcept = default;
 
@@ -34,6 +31,8 @@ namespace pgl {
 
 	template<integral type, template<typename T, uint32_t d> class vector_type>
 		struct base<type,4, vector_type> {
+			template<typename T> using container_of = vector_type<T,4>;
+
 			inline constexpr          base()                                        noexcept = default;
 			inline constexpr          base(const type arr[4])                       noexcept : elements{arr[0], arr[1], arr[2], arr[3]} { }
 			inline constexpr explicit base(const type& e)                           noexcept : elements{e, e, e, e} { }
@@ -51,6 +50,8 @@ namespace pgl {
 
 	template<integral type, template<typename T, uint32_t d> class vector_type>
 		struct base<type,3, vector_type> {
+			template<typename T> using container_of = vector_type<T,3>;
+
 			inline constexpr          base()                                        noexcept = default;
 			inline constexpr          base(const type arr[3])                       noexcept : elements{arr[0], arr[1], arr[2]} { }
 			inline constexpr explicit base(const type& e)                           noexcept : elements{e, e, e} { }
@@ -66,6 +67,8 @@ namespace pgl {
 
 	template<integral type,template<typename T, uint32_t d> class vector_type>
 		struct base<type,2,vector_type> {
+			template<typename T> using container_of = vector_type<T,2>;
+
 			inline constexpr          base()                                        noexcept = default;
 			inline constexpr          base(const type arr[2])                       noexcept : elements{arr[0], arr[1]} { }
 			inline constexpr explicit base(const type& e)                           noexcept : elements{e, e} { }
@@ -78,13 +81,12 @@ namespace pgl {
 			};
 		};
 
-	template<integral type, uint32_t dim>
-		struct base_vector : public base<type,dim,base_vector> {
+	template<integral type, uint32_t dim, template<typename T,uint32_t d> class vector_type>
+		struct base_vector : public base<type,dim,vector_type> {
 			using value_type     = type;
 			using size_type      = int;
 			using iterator       = type*;
 			using const_iterator = const type*;
-			template<typename T> using container_of = base_vector<T,dim>;
 
 			struct raw_data {
 				type data[dim];
@@ -101,13 +103,13 @@ namespace pgl {
 			inline constexpr auto end()    const noexcept -> const type* { return this->elements + size(); }
 			inline constexpr auto cend()   const noexcept -> const type* { return this->elements + size(); }
 
-			inline constexpr base_vector() noexcept : base<type,dim,base_vector>{} {  }
+			inline constexpr base_vector() noexcept : base<type,dim,vector_type>{} {  }
 
-			inline constexpr explicit base_vector(const type& e) noexcept : base<type,dim,base_vector>{e} { }
+			inline constexpr explicit base_vector(const type& e) noexcept : base<type,dim,vector_type>{e} { }
 
-			inline constexpr base_vector(const type arr[dim]) noexcept : base<type,dim,base_vector>{arr} { }
+			inline constexpr base_vector(const type arr[dim]) noexcept : base<type,dim,vector_type>{arr} { }
 
-			inline constexpr base_vector(std::convertible_to<type> auto ... args) noexcept : base<type,dim,base_vector>{ std::forward<type>(args)... } { }
+			inline constexpr base_vector(std::convertible_to<type> auto ... args) noexcept : base<type,dim,vector_type>{ std::forward<type>(args)... } { }
 		};
 
 } /* end of namespace pgl */

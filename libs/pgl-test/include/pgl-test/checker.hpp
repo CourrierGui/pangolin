@@ -102,7 +102,8 @@ namespace pgl {
 			{
 				std::vector<std::tuple<std::remove_cvref_t<Args>...>> res;
 				for (uint32_t i=0; i<size; ++i) {
-					res.push_back(std::make_tuple(RandomGenerator<std::remove_cvref_t<Args>>().get()...));
+					res.push_back(
+						std::make_tuple(RandomGenerator<std::remove_cvref_t<Args>>().get()...));
 				}
 				return res;
 			}
@@ -162,17 +163,20 @@ namespace pgl {
 						if (res) {
 							std::clog << count << " tests passed";
 							if (_is_trivial.has_value()) {
-								std::clog << " with " << std::floor(float(nb_trivial)/size*100) << "% of trival cases" ;
+								std::clog << " with "
+									<< std::floor(float(nb_trivial)/size*100) << "% of trival cases" ;
 							}
 							std::clog << " (elapsed " << duration.count()*1000 << " ms).\n";
 							if (_classifier.has_value()) {
 								for (const auto& [label, count]: _label_distribution) {
-									std::clog << "* " << label << ": " << std::floor(float(count)/size*100) << "%\n";
+									std::clog << "* " << label
+										<< ": " << std::floor(float(count)/size*100) << "%\n";
 								}
 							}
 							std::clog << '\n';
 						} else {
-							std::clog << "Test failed after " << count << " attempt" << (count == 1 ? "" : "s" );
+							std::clog << "Test failed after " << count
+								<< " attempt" << (count == 1 ? "" : "s" );
 							std::clog << " (" << duration.count()*1000 << " ms).\n";
 							print_parameters(std::clog, _false_arg);
 							std::clog << "\n\n";
@@ -246,7 +250,11 @@ namespace pgl {
 
 		template<class Ret, class Args>
 			auto is_commutative(Ret (*func)(Args,Args) ) {
-				return [func](Args lhs, Args rhs) -> bool { return func(lhs,rhs) == func(rhs,lhs);  };
+				return [func](Args lhs, Args rhs)
+					-> bool
+				{
+					return func(lhs,rhs) == func(rhs,lhs);
+				};
 			}
 
 	} /* end of namespace test */

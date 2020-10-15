@@ -11,36 +11,37 @@
 
 namespace pgl {
 
-	template<number type, uint32_t dim>
-		struct algebric_vector : public base_vector<type, dim> {
-			inline constexpr          algebric_vector()                                        noexcept : base_vector<type,dim>{}     {  }
-			inline constexpr explicit algebric_vector(const type& e)                           noexcept : base_vector<type,dim>{e}    {  }
-			inline constexpr          algebric_vector(const type arr[dim])                     noexcept : base_vector<type,dim>{arr}  {  }
-			inline constexpr          algebric_vector(std::convertible_to<type> auto ... args) noexcept : base_vector<type,dim>{ std::forward<type>(args)... } {  } // C++ 20 <3
+	template<number type, uint32_t dim, template<typename T, uint32_t d> class vector_type>
+		struct algebric_vector : public base_vector<type, dim,vector_type> {
+			inline constexpr          algebric_vector()                                        noexcept : base_vector<type,dim,vector_type>{}     {  }
+			inline constexpr explicit algebric_vector(const type& e)                           noexcept : base_vector<type,dim,vector_type>{e}    {  }
+			inline constexpr          algebric_vector(const type arr[dim])                     noexcept : base_vector<type,dim,vector_type>{arr}  {  }
+			// C++ 20 <3
+			inline constexpr          algebric_vector(std::convertible_to<type> auto ... args) noexcept : base_vector<type,dim,vector_type>{ std::forward<type>(args)... } {  }
 
 			//TODO create a class math_algebric_vector to factor these methods
-			inline constexpr auto operator*=(const algebric_vector<type,dim>& vect) noexcept -> algebric_vector<type,dim>& {
+			inline constexpr auto operator*=(const algebric_vector<type,dim,vector_type>& vect) noexcept -> algebric_vector<type,dim,vector_type>& {
 				auto it = vect.cbegin();
 				for (auto& e: this->elements) {
 					e *= *(it++);
 				}
 				return *this;
 			}
-			inline constexpr auto operator/=(const algebric_vector<type,dim>& vect) noexcept -> algebric_vector<type,dim>& {
+			inline constexpr auto operator/=(const algebric_vector<type,dim,vector_type>& vect) noexcept -> algebric_vector<type,dim,vector_type>& {
 				auto it = vect.cbegin();
 				for (auto& e: this->elements) {
 					e /= *(it++);
 				}
 				return *this;
 			}
-			inline constexpr auto operator+=(const algebric_vector<type,dim>& vect) noexcept -> algebric_vector<type,dim>& {
+			inline constexpr auto operator+=(const algebric_vector<type,dim,vector_type>& vect) noexcept -> algebric_vector<type,dim,vector_type>& {
 				auto it = vect.cbegin();
 				for (auto& e: this->elements) {
 					e += *(it++);
 				}
 				return *this;
 			}
-			inline constexpr auto operator-=(const algebric_vector<type,dim>& vect) noexcept -> algebric_vector<type,dim>& {
+			inline constexpr auto operator-=(const algebric_vector<type,dim,vector_type>& vect) noexcept -> algebric_vector<type,dim,vector_type>& {
 				auto it = vect.cbegin();
 				for (auto& e: this-> elements) {
 					e -= *(it++);
@@ -48,25 +49,25 @@ namespace pgl {
 				return *this;
 			}
 
-			inline constexpr auto operator*=(std::convertible_to<type> auto scalar) noexcept -> algebric_vector<type,dim>& {
+			inline constexpr auto operator*=(std::convertible_to<type> auto scalar) noexcept -> algebric_vector<type,dim,vector_type>& {
 				for (auto& e: this->elements) {
 					e *= scalar;
 				}
 				return *this;
 			}
-			template<number scalar_type> inline constexpr auto operator/=(std::convertible_to<type> auto scalar) noexcept -> algebric_vector<type,dim>& {
+			template<number scalar_type> inline constexpr auto operator/=(std::convertible_to<type> auto scalar) noexcept -> algebric_vector<type,dim,vector_type>& {
 				for (auto& e: this->elements) {
 					e /= scalar;
 				}
 				return *this;
 			}
-			template<number scalar_type> inline constexpr auto operator+=(std::convertible_to<type> auto scalar) noexcept -> algebric_vector<type,dim>& {
+			template<number scalar_type> inline constexpr auto operator+=(std::convertible_to<type> auto scalar) noexcept -> algebric_vector<type,dim,vector_type>& {
 				for (auto& e: this->elements) {
 					e += scalar;
 				}
 				return *this;
 			}
-			template<number scalar_type> inline constexpr auto operator-=(std::convertible_to<type> auto scalar) noexcept -> algebric_vector<type,dim>& {
+			template<number scalar_type> inline constexpr auto operator-=(std::convertible_to<type> auto scalar) noexcept -> algebric_vector<type,dim,vector_type>& {
 				for (auto& e: this->elements) {
 					e -= scalar;
 				}
@@ -77,19 +78,19 @@ namespace pgl {
 	template<typename type, uint32_t dim> struct vector {  };
 
 	template<number type, uint32_t dim>
-		struct vector<type,dim> : public algebric_vector<type,dim> {
-			inline constexpr          vector()                               noexcept : algebric_vector<type,dim>{}     {  }
-			inline constexpr explicit vector(const type& e)                  noexcept : algebric_vector<type,dim>{e}    {  }
-			inline constexpr          vector(const type arr[dim])            noexcept : algebric_vector<type,dim>{arr}  {  }
-			inline constexpr vector(std::convertible_to<type> auto ... args) noexcept : algebric_vector<type,dim>{ std::forward<type>(args)... } {  }
+		struct vector<type,dim> : public algebric_vector<type,dim,vector> {
+			inline constexpr          vector()                               noexcept : algebric_vector<type,dim,vector>{}     {  }
+			inline constexpr explicit vector(const type& e)                  noexcept : algebric_vector<type,dim,vector>{e}    {  }
+			inline constexpr          vector(const type arr[dim])            noexcept : algebric_vector<type,dim,vector>{arr}  {  }
+			inline constexpr vector(std::convertible_to<type> auto ... args) noexcept : algebric_vector<type,dim,vector>{ std::forward<type>(args)... } {  }
 		};
 
 	template<uint32_t dim>
-		struct vector<bool,dim> : public base_vector<bool, dim> {
-			inline constexpr          vector()                    noexcept : base_vector<bool, dim>{}    {  }
-			inline constexpr explicit vector(bool b)              noexcept : base_vector<bool, dim>{b}   {  }
-			inline constexpr          vector(const bool arr[dim]) noexcept : base_vector<bool, dim>{arr} {  }
-			inline constexpr vector(std::convertible_to<bool> auto ... args) noexcept : base_vector<bool,dim>{ std::forward<bool>(args)... } {  }
+		struct vector<bool,dim> : public base_vector<bool, dim,vector> {
+			inline constexpr          vector()                    noexcept : base_vector<bool, dim,vector>{}    {  }
+			inline constexpr explicit vector(bool b)              noexcept : base_vector<bool, dim,vector>{b}   {  }
+			inline constexpr          vector(const bool arr[dim]) noexcept : base_vector<bool, dim,vector>{arr} {  }
+			inline constexpr vector(std::convertible_to<bool> auto ... args) noexcept : base_vector<bool,dim,vector>{ std::forward<bool>(args)... } {  }
 
 			/* inline constexpr auto operator&=(const vector<bool,dim>&) noexcept -> vector<bool,dim>&; */
 			/* inline constexpr auto operator|=(const vector<bool,dim>&) noexcept -> vector<bool,dim>&; */
@@ -98,11 +99,11 @@ namespace pgl {
 		};
 
 	template<number type>
-		struct vector<type,2> : public algebric_vector<type,2> {
-			inline constexpr          vector()                      noexcept : algebric_vector<type,2>{}         {  }
-			inline constexpr explicit vector(const type& e)         noexcept : algebric_vector<type,2>{e}        {  }
-			inline constexpr          vector(const type arr[2])     noexcept : algebric_vector<type,2>{arr}      {  }
-			inline constexpr vector(const type& e1, const type& e2) noexcept : algebric_vector<type,2>( e1, e2 ) {  }
+		struct vector<type,2> : public algebric_vector<type,2,vector> {
+			inline constexpr          vector()                      noexcept : algebric_vector<type,2,vector>{}         {  }
+			inline constexpr explicit vector(const type& e)         noexcept : algebric_vector<type,2,vector>{e}        {  }
+			inline constexpr          vector(const type arr[2])     noexcept : algebric_vector<type,2,vector>{arr}      {  }
+			inline constexpr vector(const type& e1, const type& e2) noexcept : algebric_vector<type,2,vector>( e1, e2 ) {  }
 
 			static inline constexpr vector<type,2> right() noexcept { return { type{ 1}, type{ 0} }; }
 			static inline constexpr vector<type,2> left()  noexcept { return { type{-1}, type{ 0} }; }
@@ -111,12 +112,12 @@ namespace pgl {
 		};
 
 	template<number type>
-		struct vector<type,3> : public algebric_vector<type,3> {
-			inline constexpr vector()                                               noexcept : algebric_vector<type,3>{}              {  }
-			inline constexpr explicit vector(const type& e)                         noexcept : algebric_vector<type,3>{e}             {  }
-			inline constexpr vector(const type arr[3])                              noexcept : algebric_vector<type,3>{arr}           {  }
-			inline constexpr vector(const type& e1, const type& e2, const type& e3) noexcept : algebric_vector<type,3>( e1, e2, e3 )  {  }
-			inline constexpr vector(const vector<type,2>& v, const type& e)         noexcept : algebric_vector<type,3>( v.x, v.y, e ) {  }
+		struct vector<type,3> : public algebric_vector<type,3,vector> {
+			inline constexpr vector()                                               noexcept : algebric_vector<type,3,vector>{}              {  }
+			inline constexpr explicit vector(const type& e)                         noexcept : algebric_vector<type,3,vector>{e}             {  }
+			inline constexpr vector(const type arr[3])                              noexcept : algebric_vector<type,3,vector>{arr}           {  }
+			inline constexpr vector(const type& e1, const type& e2, const type& e3) noexcept : algebric_vector<type,3,vector>( e1, e2, e3 )  {  }
+			inline constexpr vector(const vector<type,2>& v, const type& e)         noexcept : algebric_vector<type,3,vector>( v.x, v.y, e ) {  }
 
 			static inline constexpr vector<type,3> right() noexcept { return { type{ 1}, type{ 0}, type{ 0} }; }
 			static inline constexpr vector<type,3> left()  noexcept { return { type{-1}, type{ 0}, type{ 0} }; }
@@ -127,15 +128,15 @@ namespace pgl {
 		};
 
 	template<number type>
-		struct vector<type,4> : public algebric_vector<type,4> {
-			inline constexpr vector()                                                               noexcept : algebric_vector<type,4>{}                   {  }
-			inline constexpr explicit vector(const type& e)                                         noexcept : algebric_vector<type,4>{e}                  {  }
-			inline constexpr vector(const type arr[4])                                              noexcept : algebric_vector<type,4>{arr}                {  }
-			inline constexpr vector(const type& e1, const type& e2, const type& e3, const type& e4) noexcept : algebric_vector<type,4>( e1, e2, e3, e4 )   {  }
+		struct vector<type,4> : public algebric_vector<type,4,vector> {
+			inline constexpr vector()                                                               noexcept : algebric_vector<type,4,vector>{}                   {  }
+			inline constexpr explicit vector(const type& e)                                         noexcept : algebric_vector<type,4,vector>{e}                  {  }
+			inline constexpr vector(const type arr[4])                                              noexcept : algebric_vector<type,4,vector>{arr}                {  }
+			inline constexpr vector(const type& e1, const type& e2, const type& e3, const type& e4) noexcept : algebric_vector<type,4,vector>( e1, e2, e3, e4 )   {  }
 
 			// Can these constructors be one template ?
-			inline constexpr vector(const vector<type,3>& v, const type& e)                         noexcept : algebric_vector<type,4>( v.x, v.y, v.z, e )   {  }
-			inline constexpr vector(const vector<type,2>& v, const vector<type,2>& w)               noexcept : algebric_vector<type,4>( v.x, v.y, w.x, w.y ) {  }
+			inline constexpr vector(const vector<type,3>& v, const type& e)                         noexcept : algebric_vector<type,4,vector>( v.x, v.y, v.z, e )   {  }
+			inline constexpr vector(const vector<type,2>& v, const vector<type,2>& w)               noexcept : algebric_vector<type,4,vector>( v.x, v.y, w.x, w.y ) {  }
 
 			static inline constexpr vector<type,4> right() noexcept { return { type{ 1}, type{ 0}, type{ 0}, type{0} }; }
 			static inline constexpr vector<type,4> left()  noexcept { return { type{-1}, type{ 0}, type{ 0}, type{0} }; }

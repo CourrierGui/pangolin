@@ -178,7 +178,7 @@ inline constexpr auto any(const cont& vect) noexcept -> bool {
 }
 
 template<container cont>
-inline constexpr auto pand(const cont& vect) noexcept -> bool {
+inline constexpr auto all(const cont& vect) noexcept -> bool {
 	bool res = true;
 	for (const auto& e: vect) { res &= e; }
 	return res;

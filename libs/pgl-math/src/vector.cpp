@@ -21,29 +21,29 @@
 
 /* template struct Declare<pgl::vector, bool>; */
 
-template struct pgl::base_vector<bool,2>;
-template struct pgl::base_vector<bool,3>;
-template struct pgl::base_vector<bool,4>;
+template struct pgl::base_vector<bool,2,pgl::vector>;
+template struct pgl::base_vector<bool,3,pgl::vector>;
+template struct pgl::base_vector<bool,4,pgl::vector>;
 
-template struct pgl::base_vector<uint32_t,2>;
-template struct pgl::base_vector<uint32_t,3>;
-template struct pgl::base_vector<uint32_t,4>;
+template struct pgl::base_vector<uint32_t,2,pgl::vector>;
+template struct pgl::base_vector<uint32_t,3,pgl::vector>;
+template struct pgl::base_vector<uint32_t,4,pgl::vector>;
 
-template struct pgl::base_vector<int32_t,2>;
-template struct pgl::base_vector<int32_t,3>;
-template struct pgl::base_vector<int32_t,4>;
+template struct pgl::base_vector<int32_t,2,pgl::vector>;
+template struct pgl::base_vector<int32_t,3,pgl::vector>;
+template struct pgl::base_vector<int32_t,4,pgl::vector>;
 
-template struct pgl::algebric_vector<int32_t,2>;
-template struct pgl::algebric_vector<int32_t,3>;
-template struct pgl::algebric_vector<int32_t,4>;
+template struct pgl::algebric_vector<int32_t,2,pgl::vector>;
+template struct pgl::algebric_vector<int32_t,3,pgl::vector>;
+template struct pgl::algebric_vector<int32_t,4,pgl::vector>;
 
-/* template struct pgl::algebric_vector<uint32_t,2>; */
-/* template struct pgl::algebric_vector<uint32_t,3>; */
-/* template struct pgl::algebric_vector<uint32_t,4>; */
+/* template struct pgl::algebric_vector<uint32_t,2,pgl::vector>; */
+/* template struct pgl::algebric_vector<uint32_t,3,pgl::vector>; */
+/* template struct pgl::algebric_vector<uint32_t,4,pgl::vector>; */
 
-template struct pgl::algebric_vector<float,2>;
-template struct pgl::algebric_vector<float,3>;
-template struct pgl::algebric_vector<float,4>;
+template struct pgl::algebric_vector<float,2,pgl::vector>;
+template struct pgl::algebric_vector<float,3,pgl::vector>;
+template struct pgl::algebric_vector<float,4,pgl::vector>;
 
 /* template struct pgl::vector<uint32_t,2>; */
 /* template struct pgl::vector<uint32_t,3>; */

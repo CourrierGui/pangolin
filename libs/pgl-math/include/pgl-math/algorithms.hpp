@@ -29,7 +29,7 @@ namespace pgl {
 	template<container cont> inline constexpr auto saturate(const cont&);
 
 	template<container cont> inline constexpr auto any(const cont&) noexcept -> bool;
-	template<container cont> inline constexpr auto pand(const cont&) noexcept -> bool;
+	template<container cont> inline constexpr auto all(const cont&) noexcept -> bool;
 	template<container cont, typename Function> inline constexpr auto select(
 		const cont&, Function&, typename cont::value_type, typename cont::value_type) noexcept -> cont;
 
