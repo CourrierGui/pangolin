@@ -1,19 +1,64 @@
 find_package(Doxygen)
-if(NOT DOXYGEN_FOUND)
-	message("doxygen not found, i will not generate/install the documentation")
-else()
-	configure_file(Doxyfile.in Doxyfile)
+find_package(Sphinx REQUIRED)
 
-	set(DOXYGEN_INPUT ${CMAKE_BINARY_DIR}/doc/Doxyfile)
-	set(DOXYGEN_OUTPUT ${APIDOC_DIR}/html/index.html)
+# get_target_property(MATH_PUBLIC_HEADERS_DIR
+# 	pangolin::pgl-math INTERFACE_INCLUDE_DIRECTORIES
+# )
+set(MATH_PUBLIC_HEADERS_DIR "${CMAKE_SOURCE_DIR}/libs/pgl-math/include/pgl-math")
 
-	add_custom_target(doc ALL
-		COMMAND ${CMAKE_COMMAND} -E echo_append "Building API Documentation..."
-		COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT} > /dev/null
-		COMMAND ${CMAKE_COMMAND} -E echo "Done."
-	)
+set(DOXYGEN_INPUT_DIR  ${MATH_PUBLIC_HEADERS_DIR})
+set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/doxygen)
+set(DOXYGEN_INDEX_FILE ${DOXYGEN_OUTPUT_DIR}/xml/index.xml)
+set(DOXYFILE_IN        ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
+set(DOXYFILE_OUT       ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
 
-	install(DIRECTORY ${CMAKE_BINARY_DIR}/doc/html 
-		DESTINATION share/doc/${CMAKE_PROJECT_NAME})
+# Replace variables inside @@ with the current values
+configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
 
-endif()
+# Doxygen won't create this for us
+file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR})
+
+# Only regenerate Doxygen when the Doxyfile or public headers change
+add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
+	DEPENDS ${MATH_PUBLIC_HEADERS_DIR}
+	COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
+	MAIN_DEPENDENCY ${DOXYFILE_OUT} ${DOXYFILE_IN}
+	COMMENT "Generating docs"
+	VERBATIM
+)
+
+# Nice named target so we can run the job easily
+add_custom_target(doxygen ALL DEPENDS ${DOXYGEN_INDEX_FILE})
+
+set(SPHINX_SOURCE     ${CMAKE_CURRENT_SOURCE_DIR}       )
+set(SPHINX_BUILD      ${CMAKE_CURRENT_BINARY_DIR}/sphinx)
+set(SPHINX_INDEX_FILE ${SPHINX_BUILD}/index.html        )
+
+# Only regenerate Sphinx when:
+# - Doxygen has rerun
+# - Our doc files have been updated
+# - The Sphinx config has been updated
+add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
+	COMMAND
+	${SPHINX_EXECUTABLE} -b html
+	# Tell Breathe where to find the Doxygen output
+	-Dbreathe_projects.${CMAKE_PROJECT_NAME}=${DOXYGEN_OUTPUT_DIR}/xml
+	${SPHINX_SOURCE} ${SPHINX_BUILD}
+	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+	DEPENDS
+	# Other docs files you want to track should go here (or in some variable)
+	${CMAKE_CURRENT_SOURCE_DIR}/index.rst
+	${CMAKE_CURRENT_SOURCE_DIR}/math.rst
+	${DOXYGEN_INDEX_FILE}
+	MAIN_DEPENDENCY ${SPHINX_SOURCE}/conf.py
+	COMMENT "Generating documentation with Sphinx"
+)
+
+# Nice named target so we can run the job easily
+add_custom_target(sphinx ALL DEPENDS ${SPHINX_INDEX_FILE})
+
+# Add an install target to install the docs
+include(GNUInstallDirs)
+install(DIRECTORY ${SPHINX_BUILD}
+	DESTINATION ${CMAKE_INSTALL_DOCDIR}
+)
