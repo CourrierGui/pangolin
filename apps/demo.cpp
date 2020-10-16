@@ -1,5 +1,4 @@
 #include <pgl-gui/glfw-window.hpp>
-#include <pgl-math/vector.hpp>
 
 int main() {
 	auto& window = pgl::gui::GLFWWindow::make_window(600, 400, "Pangolin demo");

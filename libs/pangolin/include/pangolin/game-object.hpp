@@ -1,10 +1,11 @@
 #pragma once
 
 #include <glad/glad.h>
-#include <glm/glm.hpp>
 
 #include <pangolin/texture.hpp>
 #include <pangolin/sprite-renderer.hpp>
+
+#include <pgl-math/vector.hpp>
 
 namespace pgl {
 
@@ -16,8 +17,8 @@ namespace pgl {
 	class GameObject {
 		public:
 			// object state
-			glm::vec2 position, size, velocity;
-			glm::vec3 color;
+			pgl::float2 position, size, velocity;
+			pgl::float3 color;
 			float     rotation;
 			bool      is_solid;
 			bool      destroyed;
@@ -27,10 +28,14 @@ namespace pgl {
 
 			// constructor(s)
 			GameObject();
+
 			GameObject(
-				const glm::vec2& pos, const glm::vec2& size, Texture2D& sprite,
-				const glm::vec3& color=glm::vec3(1.0f), const glm::vec2& velocity=glm::vec2(0.0f, 0.0f)
-				);
+				const pgl::float2& pos, const pgl::float2& size, Texture2D& sprite,
+				const pgl::float3& color=pgl::float3(1.0f),
+				const pgl::float2& velocity=pgl::float2(0.0f, 0.0f)
+			);
+
+			virtual ~GameObject();
 
 			// draw sprite
 			virtual void draw(render2D::SpriteRenderer& renderer);

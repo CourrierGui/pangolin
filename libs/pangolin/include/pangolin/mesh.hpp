@@ -3,7 +3,6 @@
 #include <vector>
 #include <string>
 
-#include <glm/glm.hpp>
 #include <glad/glad.h>
 
 #include <pangolin/shader.hpp>
@@ -13,9 +12,9 @@ namespace pgl {
 	namespace render3D {
 
 		struct Vertex {
-			glm::vec3 position;
-			glm::vec3 normal;
-			glm::vec2 tex_coords;
+			pgl::float3 position;
+			pgl::float3 normal;
+			pgl::float2 tex_coords;
 		};
 
 		struct Texture {

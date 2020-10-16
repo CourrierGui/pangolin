@@ -3,8 +3,8 @@
 #include <string>
 
 #include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <pgl-math/vector.hpp>
+#include <pgl-math/impl/matrix.hpp>
 
 namespace pgl {
 
@@ -33,15 +33,18 @@ namespace pgl {
 			);
 
 			/* utility functions */
-			void setFloat   (const char* name, float value                       );
 			void setInteger (const char* name, int   value                       );
+
+			void setFloat   (const char* name, float value                       );
 			void setVector2f(const char* name, float x, float y                  );
-			void setVector2f(const char* name, const glm::vec2& value            );
 			void setVector3f(const char* name, float x, float y, float z         );
-			void setVector3f(const char* name, const glm::vec3& value            );
 			void setVector4f(const char* name, float x, float y, float z, float w);
-			void setVector4f(const char* name, const glm::vec4& value            );
-			void setMatrix4 (const char* name, const glm::mat4& matrix           );
+
+			void setVector2f(const char* name, const pgl::float2& value          );
+			void setVector3f(const char* name, const pgl::float3& value          );
+			void setVector4f(const char* name, const pgl::float4& value          );
+
+			void setMatrix4 (const char* name, const pgl::float44& matrix        );
 
 		private:
 			/**

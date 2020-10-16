@@ -59,8 +59,9 @@ Mesh Model::process_mesh(aiMesh* mesh, const aiScene* scene) {
       vertex.tex_coords.x = mesh->mTextureCoords[0][i].x;
       vertex.tex_coords.y = mesh->mTextureCoords[0][i].y;
     }
-    else
-      vertex.tex_coords = glm::vec2(0.0f, 0.0f);
+		else {
+			vertex.tex_coords = pgl::float2(0.0f, 0.0f);
+		}
     vertices.push_back(vertex);
   }
 

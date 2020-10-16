@@ -4,86 +4,77 @@
 #include <vector>
 
 #include <glad/glad.h>
-#include <glm/glm.hpp>
 
 #include <pangolin/shader.hpp>
 #include <pangolin/texture.hpp>
 #include <pangolin/game-object.hpp>
+#include <pgl-math/vector.hpp>
 
 namespace pgl {
 
-/**
- * Represents a single particle and its state
- * */
-struct Particle {
-  glm::vec2 position, velocity;
-  glm::vec4 color;
-  float     life;
+	/*
+	 * Represents a single particle and its state
+	 * */
+	struct Particle {
+		pgl::float2 position, velocity;
+		pgl::float4 color;
+		float       life;
 
-  Particle() : position(0.0f), velocity(0.0f), color(1.0f), life(0.0f) { }
-};
+		Particle() : position(0.0f), velocity(0.0f), color(1.0f), life(0.0f) { }
+	};
 
-/**
- * ParticleGenerator acts as a container for rendering a large number of
- * particles by repeatedly spawning and updating particles and killing
- * them after a given amount of time.
- */
-class ParticleGenerator {
-  public:
-    /* constructor */
-    ParticleGenerator(Shader& shader, Texture2D& texture, unsigned int amount);
+	/*
+	 * ParticleGenerator acts as a container for rendering a large number of
+	 * particles by repeatedly spawning and updating particles and killing
+	 * them after a given amount of time.
+	 */
+	class ParticleGenerator {
+		public:
+			/* constructor */
+			ParticleGenerator(Shader& shader, Texture2D& texture, unsigned int amount);
 
-    /* update all particles */
-    void update(
-      float dt, GameObject& object,
-      unsigned int new_particles,
-      const glm::vec2& offset
-    );
-    void update(
-      float dt, GameObject& object,
-      unsigned int new_particles
-    );
+			/* update all particles */
+			void update(
+				float dt, GameObject& object, unsigned int new_particles, const pgl::float2& offset
+			);
 
-    /* render all particles */
-    void draw();
+			void update(float dt, GameObject& object, unsigned int new_particles);
 
-  private:
-    /* state */
-    std::vector<Particle> particles;
-    unsigned int          amount;
+			/* render all particles */
+			void draw();
 
-    /* render state */
-    Shader    shader;
-    Texture2D texture;
-    unsigned int      vao;
+		private:
+			/* state */
+			std::vector<Particle> particles;
+			unsigned int          amount;
 
-    /**
-     * stores the index of the last particle used (for quick access to next
-     * dead particle)
-     */
-    static unsigned int last_used_particle;
+			/* render state */
+			Shader       shader;
+			Texture2D    texture;
+			unsigned int vao;
 
-    /**
-     * initializes buffer and vertex attributes
-     */
-    void init();
+			/*
+			 * stores the index of the last particle used (for quick access to next
+			 * dead particle)
+			 */
+			static unsigned int last_used_particle;
 
-    /**
-     * returns the first Particle index that's currently unused e.g. Life <=
-     * 0.0f or 0 if no particle is currently inactive
-     */
-    unsigned int first_unused_particle();
+			/*
+			 * initializes buffer and vertex attributes
+			 */
+			void init();
 
-    /**
-     * respawns particle
-     */
-    void respawn_particle(
-      Particle& particle, GameObject& object,
-      const glm::vec2& offset
-    );
-    void respawn_particle(
-      Particle& particle, GameObject& object
-    );
-};
+			/**
+			 * returns the first Particle index that's currently unused e.g. Life <=
+			 * 0.0f or 0 if no particle is currently inactive
+			 */
+			unsigned int first_unused_particle();
+
+			/**
+			 * respawns particle
+			 */
+			void respawn_particle(Particle& particle, GameObject& object, const pgl::float2& offset);
+			void respawn_particle(Particle& particle, GameObject& object);
+	};
 
 } /* end of namespace pgl */
