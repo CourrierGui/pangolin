@@ -4,7 +4,6 @@
 #include <pangolin/texture.hpp>
 
 #include <glad/glad.h>
-#include <glm/glm.hpp>
 
 namespace pgl {
 	namespace render2D {

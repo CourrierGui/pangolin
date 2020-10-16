@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <cmath>
 #include <pgl-math/vector.hpp>
-#include <pgl-math/impl/matrix.hpp>
+#include <pgl-math/matrix.hpp>
 
 #include <vector>
 

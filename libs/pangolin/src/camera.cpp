@@ -1,5 +1,6 @@
 #include <pangolin/camera.hpp>
 #include <pgl-math/utils.hpp>
+#include <pgl-math/algorithms.hpp>
 
 #include <glad/glad.h>
 #include <cmath>
@@ -12,15 +13,14 @@ namespace pgl {
 		pgl::float3 position,
 		pgl::float3 up,
 		float yaw, float pitch)
-		: _front(pgl::float3(0.0f, 0.0f, -1.0f)),
-			_movement_speed(SPEED),
-			_mouse_sensitivity(SENSITIVITY),
-			_zoom(ZOOM)
+		: _position{position},
+			_front{pgl::float3(0.0f, 0.0f, -1.0f)},
+			_up{}, _right{}, _world_up{up},
+			_yaw{yaw}, _pitch{pitch},
+			_movement_speed{SPEED},
+			_mouse_sensitivity{SENSITIVITY},
+			_zoom{ZOOM}
 	{
-		_position = position;
-		_world_up = up;
-		_yaw      = yaw;
-		_pitch    = pitch;
 		update_camera_vectors();
 	}
 
@@ -28,21 +28,19 @@ namespace pgl {
 		float posX, float posY, float posZ,
 		float upX, float upY, float upZ,
 		float yaw, float pitch)
-		: _front(pgl::float3(0.0f, 0.0f, -1.0f)),
-			_movement_speed(SPEED),
-			_mouse_sensitivity(SENSITIVITY),
-			_zoom(ZOOM)
+		: _position{posX, posY, posZ},
+			_front{pgl::float3(0.0f, 0.0f, -1.0f)},
+			_up{}, _right{}, _world_up{upX, upY, upZ},
+			_yaw{yaw}, _pitch{pitch},
+			_movement_speed{SPEED},
+			_mouse_sensitivity{SENSITIVITY},
+			_zoom{ZOOM}
 	{
-		_position = pgl::float3(posX, posY, posZ);
-		_world_up = pgl::float3(upX, upY, upZ);
-		_yaw = yaw;
-		_pitch = pitch;
 		update_camera_vectors();
 	}
 
 	pgl::float44 Camera::get_matrix_view() {
-		//TODO implement lookAt function
-		/* return glm::lookAt(_position, _position + _front, _up); */
+		return pgl::look_at(_position, _position + _front, _up);
 	}
 
 	void Camera::process_keyboard(CameraMovement direction, float deltaTime) {

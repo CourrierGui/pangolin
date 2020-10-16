@@ -8,6 +8,9 @@ target_include_directories(pgl-math
 target_precompile_headers(pgl-math
 	INTERFACE
 		include/pgl-math/vector.hpp
+		include/pgl-math/impl/matrix.hpp
+		include/pgl-math/impl/vector.hpp
+		include/pgl-math/impl/algorithms.hpp
 		include/pgl-math/matrix.hpp
 		include/pgl-math/quaternion.hpp
 )

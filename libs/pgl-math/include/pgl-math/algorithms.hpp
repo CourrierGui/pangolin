@@ -1,6 +1,8 @@
 #pragma once
 
 #include <pgl-math/utils.hpp>
+#include <pgl-math/matrix.hpp>
+#include <pgl-math/vector.hpp>
 
 namespace pgl {
 
@@ -30,32 +32,34 @@ namespace pgl {
 
 	template<container cont> inline constexpr auto any(const cont&) noexcept -> bool;
 	template<container cont> inline constexpr auto all(const cont&) noexcept -> bool;
-	template<container cont, typename Function> inline constexpr auto select(
-		const cont&, Function&, typename cont::value_type, typename cont::value_type) noexcept -> cont;
+
+	template<container cont, typename Function>
+		inline constexpr auto select(
+			const cont&, Function&, typename cont::value_type, typename cont::value_type) noexcept -> cont;
 
 	template<container cont, number type>
 		inline constexpr auto apply(type (*func)(type), const cont&) -> cont;
 	template<container cont, number type>
 		inline constexpr auto apply(type (*func)(type,type), const cont& x, const cont& y) -> cont;
 
-	template<container cont> inline constexpr auto exp  (const cont&) -> cont;
-	template<container cont> inline constexpr auto log  (const cont&) -> cont;
-	template<container cont> inline constexpr auto log2 (const cont&) -> cont;
-	template<container cont> inline constexpr auto log10(const cont&) -> cont;
+	template<container cont> inline constexpr auto exp  (const cont&) noexcept -> cont;
+	template<container cont> inline constexpr auto log  (const cont&) noexcept -> cont;
+	template<container cont> inline constexpr auto log2 (const cont&) noexcept -> cont;
+	template<container cont> inline constexpr auto log10(const cont&) noexcept -> cont;
 
-	template<container cont> inline constexpr auto cosh (const cont&) -> cont;
-	template<container cont> inline constexpr auto acosh(const cont&) -> cont;
-	template<container cont> inline constexpr auto sinh (const cont&) -> cont;
-	template<container cont> inline constexpr auto asinh(const cont&) -> cont;
+	template<container cont> inline constexpr auto cosh (const cont&) noexcept -> cont;
+	template<container cont> inline constexpr auto acosh(const cont&) noexcept -> cont;
+	template<container cont> inline constexpr auto sinh (const cont&) noexcept -> cont;
+	template<container cont> inline constexpr auto asinh(const cont&) noexcept -> cont;
 
-	template<container cont> inline constexpr auto cos  (const cont&) -> cont;
-	template<container cont> inline constexpr auto acos (const cont&) -> cont;
-	template<container cont> inline constexpr auto sin  (const cont&) -> cont;
-	template<container cont> inline constexpr auto asin (const cont&) -> cont;
-	template<container cont> inline constexpr auto tan  (const cont&) -> cont;
-	template<container cont> inline constexpr auto atan (const cont&) -> cont;
-	template<container cont> inline constexpr auto atan (const cont&, const cont&) -> cont;
+	template<container cont> inline constexpr auto cos  (const cont&) noexcept -> cont;
+	template<container cont> inline constexpr auto acos (const cont&) noexcept -> cont;
+	template<container cont> inline constexpr auto sin  (const cont&) noexcept -> cont;
+	template<container cont> inline constexpr auto asin (const cont&) noexcept -> cont;
+	template<container cont> inline constexpr auto tan  (const cont&) noexcept -> cont;
+	template<container cont> inline constexpr auto atan (const cont&) noexcept -> cont;
+	template<container cont> inline constexpr auto atan (const cont&, const cont&) noexcept -> cont;
+
+	template<number type> inline constexpr auto look_at(const vector<type,3>&, const vector<type,3>&, const vector<type,3>&) noexcept -> matrix<type,4>;
 
 } /* end of namespace pgl */
-
-#include <pgl-math/impl/algorithms.hpp>
