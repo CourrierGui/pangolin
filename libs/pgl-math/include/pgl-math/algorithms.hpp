@@ -21,6 +21,8 @@ namespace pgl {
 
 	template<container cont> inline constexpr auto min(const cont&)               noexcept -> typename cont::value_type;
 	template<container cont> inline constexpr auto max(const cont&)               noexcept -> typename cont::value_type;
+	template<container cont> inline constexpr auto min(const cont& vec, const cont& min) noexcept -> cont;
+	template<container cont> inline constexpr auto max(const cont& vec, const cont& max) noexcept -> cont;
 	template<container cont> inline constexpr auto min_element(cont&)             noexcept -> typename cont::value_type&;
 	template<container cont> inline constexpr auto max_element(cont&)             noexcept -> typename cont::value_type&;
 	template<container cont> inline constexpr auto min(const cont&, typename cont::value_type min_val) noexcept -> cont;
@@ -28,6 +30,8 @@ namespace pgl {
 
 	template<container cont>
 		inline constexpr auto clamp(const cont& vect, typename cont::value_type lb, typename cont::value_type ub) noexcept -> cont;
+	template<container cont>
+		inline constexpr auto clamp(const cont& x, const cont& min, const cont& max) noexcept -> cont;
 	template<container cont> inline constexpr auto saturate(const cont&);
 
 	template<container cont> inline constexpr auto any(const cont&) noexcept -> bool;
@@ -61,6 +65,12 @@ namespace pgl {
 	template<container cont> inline constexpr auto atan (const cont&, const cont&) noexcept -> cont;
 
 	template<number type> inline constexpr auto look_at(const vector<type,3>&, const vector<type,3>&, const vector<type,3>&) noexcept -> matrix<type,4>;
+	template<number type> inline constexpr auto ortho(type left, type right, type bottom, type top) -> matrix<type, 4>;
+	template<number type> inline constexpr auto ortho(type left, type right, type bottom, type top, type zNear, type zFar) -> matrix<type,4>;
+
+	template<number type> inline constexpr auto translate(const vector<type,3>&,const vector<type,3>&) -> vector<type,3>;
+	template<number type> inline constexpr auto rotate(const vector<type,3>&,const type&,const vector<type,3>&) -> vector<type,3>;
+	template<number type> inline constexpr auto scale(const vector<type,3>&,const vector<type,3>&) -> vector<type,3>;
 
 } /* end of namespace pgl */
 

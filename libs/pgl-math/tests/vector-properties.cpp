@@ -147,5 +147,37 @@ int main() {
 	);
 	check_look_at.check("look_at function");
 
+	auto check_ortho = pgl::test::make_checker(
+		[](float left, float right, float bottom, float top)
+		-> bool
+		{
+			auto pgl_mat = pgl::ortho(left, right, bottom, top);
+			auto glm_mat = glm::ortho(left, right, bottom, top);
+			auto glm_it = glm::value_ptr(glm_mat);
+			bool res = true;
+			for (const auto& pgl_elem: pgl_mat) {
+				res &= (approximatelyEqualAbsRel(pgl_elem, *(glm_it++), 1e-5, 1e-5));
+			}
+			return res;
+		}
+	);
+	check_ortho.check("ortho function");
+
+	auto check_ortho2 = pgl::test::make_checker(
+		[](float left, float right, float bottom, float top, float zNear, float zFar)
+		-> bool
+		{
+			auto pgl_mat = pgl::ortho(left, right, bottom, top, zNear, zFar);
+			auto glm_mat = glm::ortho(left, right, bottom, top, zNear, zFar);
+			auto glm_it = glm::value_ptr(glm_mat);
+			bool res = true;
+			for (const auto& pgl_elem: pgl_mat) {
+				res &= (approximatelyEqualAbsRel(pgl_elem, *(glm_it++), 1e-5, 1e-5));
+			}
+			return res;
+		}
+	);
+	check_ortho2.check("ortho2 function");
+
 	return 0;
 }

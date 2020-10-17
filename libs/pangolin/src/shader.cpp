@@ -90,8 +90,8 @@ namespace pgl {
 	}
 
 	void Shader::setMatrix4(const char* name, const pgl::float44& matrix) {
-		//TODO implement an equivalent to glm::value_ptr
-		/* glUniformMatrix4fv(glGetUniformLocation(id, name), 1, false, pgl::value_ptr(matrix)); */
+		//TODO check if it works
+		glUniformMatrix4fv(glGetUniformLocation(id, name), 1, false, matrix.elements);
 	}
 
 	void Shader::check_compile_errors(

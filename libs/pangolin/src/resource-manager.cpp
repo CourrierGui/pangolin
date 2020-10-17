@@ -97,8 +97,8 @@ namespace pgl {
 				geometry_shader_file.close();
 				geometry_code = g_shader_stream.str();
 			}
-		}
-		catch (const std::exception& e) {
+
+		} catch (const std::exception& e) {
 			std::cerr << "ERROR::SHADER: Failed to read shader files\n";
 		}
 		const char *v_shader_code = vertex_code.c_str();

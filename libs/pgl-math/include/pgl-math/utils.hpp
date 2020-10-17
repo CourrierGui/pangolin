@@ -2,6 +2,7 @@
 
 #include <type_traits>
 #include <numbers>
+#include <concepts>
 
 namespace pgl {
 
@@ -28,12 +29,12 @@ namespace pgl {
 	constexpr float  pi  {std::numbers::pi_v<float>};
 	constexpr double dpi {std::numbers::pi_v<double>};
 
-	template<typename type>
+	template<std::floating_point type>
 		type radians(type degrees) {
 			return std::numbers::pi_v<type>*degrees/180;
 		}
 
-	template<typename type>
+	template<std::floating_point type>
 		type degrees(type radians) {
 			return 180*radians/std::numbers::pi_v<type>;
 		}

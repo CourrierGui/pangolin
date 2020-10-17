@@ -4,8 +4,8 @@ namespace pgl {
 
 	GameObject::GameObject()
 		: position(0.0f, 0.0f), size(1.0f, 1.0f),
-		velocity(0.0f), color(1.0f), rotation(0.0f),
-		is_solid(false), destroyed(false), sprite()
+			velocity(0.0f), color(1.0f), rotation(0.0f),
+			is_solid(false), destroyed(false), sprite()
 	{
 	}
 

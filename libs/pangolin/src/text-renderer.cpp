@@ -1,9 +1,8 @@
 #include <iostream>
 
-#include <glm/gtc/matrix_transform.hpp>
-
 #include <pangolin/text-renderer.hpp>
 #include <pangolin/resource-manager.hpp>
+#include <pgl-math/algorithms.hpp>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -20,14 +19,15 @@ namespace pgl {
 		{
 
 			text_shader.use();
-			/* text_shader.setMatrix4( */
-			/* 	"projection", */
-			/* 	glm::ortho( */
-			/* 		0.0f, static_cast<float>(width), */
-			/* 		static_cast<float>(height), */
-			/* 		0.0f */
-			/* 	) */
-			/* ); */
+			text_shader.setMatrix4(
+				"projection",
+				pgl::ortho(
+					0.0f,
+					static_cast<float>(width),
+					static_cast<float>(height),
+					0.0f
+				)
+			);
 			text_shader.setInteger("text", 0);
 
 			// configure VAO/VBO for texture quads

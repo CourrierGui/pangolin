@@ -88,7 +88,6 @@ namespace pgl {
 	void Camera::update_camera_vectors() {
 		// Calculate the new m_front vector
 		pgl::float3 front;
-		//TODO implement radians function
 		front.x = std::cos(pgl::radians(_yaw)) * std::cos(pgl::radians(_pitch));
 		front.y = std::sin(pgl::radians(_pitch));
 		front.z = std::sin(pgl::radians(_yaw)) * std::cos(pgl::radians(_pitch));

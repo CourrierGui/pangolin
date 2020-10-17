@@ -19,9 +19,9 @@ namespace pgl {
 			// object state
 			pgl::float2 position, size, velocity;
 			pgl::float3 color;
-			float     rotation;
-			bool      is_solid;
-			bool      destroyed;
+			float       rotation;
+			bool        is_solid;
+			bool        destroyed;
 
 			// render state
 			Texture2D   sprite;

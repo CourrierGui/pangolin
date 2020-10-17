@@ -1,4 +1,5 @@
 #include <pangolin/sprite-renderer.hpp>
+#include <pgl-math/algorithms.hpp>
 
 namespace pgl {
 	namespace render2D {
@@ -48,13 +49,14 @@ namespace pgl {
 			// prepare transformations
 			shader.use();
 			pgl::float44 model = pgl::float44{1.0f};
-			/* model = pgl::translate(model, pgl::float3(position, 0.0f)); */
+			//TODO implement these functions
+			model = pgl::translate(model, pgl::float3(position, 0.0f));
 
-			/* model = pgl::translate(model, pgl::float3(0.5f * size.x, 0.5f * size.y, 0.0f)); */
-			/* model = pgl::rotate(model, glm::radians(rotate), pgl::float3(0.0f, 0.0f, 1.0f)); */
-			/* model = pgl::translate(model, pgl::float3(-0.5f * size.x, -0.5f * size.y, 0.0f)); */
+			model = pgl::translate(model, pgl::float3(0.5f * size.x, 0.5f * size.y, 0.0f));
+			model = pgl::rotate(model, pgl::radians(rotate), pgl::float3(0.0f, 0.0f, 1.0f));
+			model = pgl::translate(model, pgl::float3(-0.5f * size.x, -0.5f * size.y, 0.0f));
 
-			/* model = pgl::scale(model, pgl::float3(size, 1.0f)); */
+			model = pgl::scale(model, pgl::float3(size, 1.0f));
 
 			shader.setMatrix4("model", model);
 			shader.setVector3f("spriteColor", color);
@@ -68,10 +70,10 @@ namespace pgl {
 		}
 
 		void SpriteRenderer::draw(
-			Texture2D& texture,
+			Texture2D&         texture,
 			const pgl::float2& position,
 			const pgl::float2& size,
-			float      rotate)
+			float              rotate)
 		{
 			draw(texture, position, size, rotate, pgl::float3(1.0f));
 		}

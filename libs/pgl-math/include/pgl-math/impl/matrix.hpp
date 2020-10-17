@@ -705,6 +705,15 @@ namespace pgl {
 			return res;
 		}
 
+	template<number type, uint32_t rows, uint32_t cols>
+		inline constexpr auto operator-(const matrix<type,rows,cols>& mat)
+		-> matrix<type,rows,cols>
+		{
+			matrix<type,rows,cols> res(type{0}); //TODO make the constructor unambiguous
+			res -= mat;
+			return res;
+		}
+
 	template<number type, number type2, uint32_t rows, uint32_t cols>
 		inline constexpr auto operator-(
 			const matrix<type,rows,cols>& lhs,

@@ -212,6 +212,15 @@ namespace pgl {
 			res -= rhs;
 			return res;
 		}
+	template<number type, uint32_t dim>
+		inline constexpr auto operator-(const vector<type,dim>& vec) noexcept
+		-> vector<type,dim>
+		{
+			vector<type,dim> res(type{0});
+			res -= vec;
+			return res;
+		}
+
 	template<number type, number scalar_type, uint32_t dim>
 		inline constexpr auto operator-(const scalar_type& lhs, const vector<type,dim>& rhs) noexcept
 		-> vector<type,dim>
@@ -251,7 +260,8 @@ namespace pgl {
 	template<number type, uint32_t dim> inline constexpr auto sum(const vector<type,dim>&)                          noexcept -> type;
 	template<number type, uint32_t dim> inline constexpr auto abs(const vector<type,dim>&)                          noexcept -> vector<type,dim>;
 	template<number type, uint32_t dim> inline constexpr auto normalize(const vector<type,dim>&)                    noexcept -> vector<type,dim>;
-	template<number type, uint32_t dim> inline constexpr auto norm(const vector<type,dim>&)                    noexcept -> type;
+	template<number type, uint32_t dim> inline constexpr auto norm(const vector<type,dim>&)                         noexcept -> type;
+
 	template<number type, uint32_t dim> constexpr inline auto lerp(const vector<type,dim>&, const vector<type,dim>&, type) noexcept -> vector<type,dim>;
 
 	template<typename type>

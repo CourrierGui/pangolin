@@ -29,6 +29,40 @@ namespace pgl {
 		}
 
 	template<container cont>
+		inline constexpr auto max(const cont& vec, const cont& max) noexcept
+		-> cont
+		{
+			cont res{vec};
+			auto res_it = res.begin();
+			auto max_it = max.begin();
+			while (res_it != res.end() || max_it != max.end()) {
+				if (*res_it > *max_it) {
+					*res_it = *max_it;
+				}
+				++res_it;
+				++max_it;
+			}
+			return res;
+		}
+
+	template<container cont>
+		inline constexpr auto min(const cont& vec, const cont& min) noexcept
+		-> cont
+		{
+			cont res{vec};
+			auto res_it = res.begin();
+			auto min_it = min.begin();
+			while (res_it != res.end() || min_it != min.end()) {
+				if (*res_it < *min_it) {
+					*res_it = *min_it;
+				}
+				++res_it;
+				++min_it;
+			}
+			return res;
+		}
+
+	template<container cont>
 		inline constexpr auto operator<(
 			const cont& lhs,
 			const cont& rhs) noexcept
@@ -161,10 +195,17 @@ namespace pgl {
 		}
 
 	template<container cont>
-		inline constexpr auto clamp(const cont& vect, typename cont::value_type lb, typename cont::value_type ub) noexcept
+		inline constexpr auto clamp(const cont& x, typename cont::value_type lb, typename cont::value_type ub) noexcept
 		-> cont
 		{
-			return min(max(vect, lb), ub);
+			return min(max(x, lb), ub);
+		}
+
+	template<container cont>
+		inline constexpr auto clamp(const cont& x, const cont& lb, const cont& ub) noexcept
+		-> cont
+		{
+			return min(max(x, lb), ub);
 		}
 
 	template<container cont>
@@ -326,6 +367,56 @@ namespace pgl {
 				s.z, u.z, -f.z, type{0},
 				-dot(s, camera), -dot(u, camera), dot(f, camera), type{1},
 			};
+		}
+
+	template<number type>
+		inline constexpr auto ortho(type left, type right, type bottom, type top) -> matrix<type, 4> {
+			return pgl::matrix<type,4>{
+				type{2} / (right - left),         type{0},                           type{0}, type{0},
+				type{0},                          type{2} / (top - bottom),          type{0}, type{0},
+				type{0},                          type{0},                          -type{1}, type{0},
+			 -(right + left) / (right - left), -(top + bottom) / (top - bottom),   type{0}, type{1}
+			};
+		}
+
+	template<number type>
+		inline constexpr auto ortho(type left, type right, type bottom, type top, type zNear, type zFar)
+		-> matrix<type,4>
+		{
+			return {
+				type{2}/(right-left),       type{0},                    type{0},                   type{0},
+				type{0},                    type{2}/(top-bottom),       type{0},                   type{0},
+				type{0},                    type{0},                    type{2}/(zFar-zNear),      type{0},
+			 -(right+left)/(right-left), -(top+bottom)/(top-bottom), -(zNear+zFar)/(zFar-zNear), type{1}
+			};
+		}
+
+	template<number type>
+		inline constexpr auto translate(const matrix<type,4>& mat, const vector<type,3>& trans)
+		-> matrix<type,4>
+		{
+			auto res{mat};
+			res.col(3) = mat.col(0)*trans.x + mat.col(1)*trans.y + mat.col(2)*trans.z + mat.col(4);
+			return res;
+		}
+
+	template<number type>
+		inline constexpr auto rotate(const matrix<type,4>& mat, const type& radians, const vector<type,3>& axis)
+		-> matrix<type,4>
+		{
+			//TODO implement this function
+		}
+
+	template<number type>
+		inline constexpr auto scale(const matrix<type,4>& mat, const vector<type,3>& scale)
+		-> matrix<type,4>
+		{
+			matrix<type,4> res;
+			res.col(0) = mat.col(0) * scale.x;
+			res.col(1) = mat.col(1) * scale.y;
+			res.col(2) = mat.col(2) * scale.z;
+			res.col(3) = mat.col(3);
+			return res;
 		}
 
 } /* end of namespace pgl */
