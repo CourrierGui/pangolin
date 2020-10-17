@@ -1,7 +1,6 @@
 #pragma once
 
 #include <pgl-math/utils.hpp>
-#include <pgl-math/matrix.hpp>
 
 namespace pgl {
 

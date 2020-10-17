@@ -1,6 +1,10 @@
 #include <pgl-math/matrix.hpp>
 /* #include <pgl-math/impl/matrix.hpp> */
 #include <pgl-math/vector.hpp>
+#include <pgl-math/algorithms.hpp>
+
+#include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
 
 #include <gtest/gtest.h>
 
@@ -230,4 +234,16 @@ TEST(Matrix, Properties) {
 	};
 	ASSERT_EQ(30, pgl::trace(mat));
 	//TODO determinant
+}
+
+TEST(Matrix, Geometry) {
+	glm::vec3 glm_camera = {0.0, 0.0, 0.0};
+	glm::vec3 glm_target = {0.0, 0.0, 0.0};
+	glm::vec3 glm_up = {0.0, 0.0, 0.0};
+	auto expected_mat = glm::lookAt(glm_camera, glm_target, glm_up);
+
+	pgl::float3 pgl_camera = {0.0, 0.0, 0.0};
+	pgl::float3 pgl_target = {0.0, 0.0, 0.0};
+	pgl::float3 pgl_up = {0.0, 0.0, 0.0};
+	auto mat = pgl::look_at(pgl_camera, pgl_target, pgl_up);
 }

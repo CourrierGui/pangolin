@@ -1,10 +1,12 @@
+find_package(glm REQUIRED)
+
 foreach(test_name test-vector.cpp test-matrix.cpp) # test-quaternion.cpp)
 	get_filename_component(bin_name ${test_name} NAME_WE)
 
 	add_executable(Pgl.${bin_name} ${test_name})
 	target_link_libraries(Pgl.${bin_name}
 		PRIVATE
-			gtest gtest_main
+			gtest gtest_main glm
 			pangolin::pgl-math target-flags
 	)
 

@@ -63,3 +63,5 @@ namespace pgl {
 	template<number type> inline constexpr auto look_at(const vector<type,3>&, const vector<type,3>&, const vector<type,3>&) noexcept -> matrix<type,4>;
 
 } /* end of namespace pgl */
+
+#include <pgl-math/impl/algorithms.hpp>

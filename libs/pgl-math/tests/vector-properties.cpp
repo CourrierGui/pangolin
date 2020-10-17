@@ -1,7 +1,13 @@
 #include <pgl-test/checker.hpp>
+
 #include <pgl-math/base-vector.hpp>
 #include <pgl-math/vector.hpp>
 #include <pgl-math/algorithms.hpp>
+#include <pgl-math/matrix.hpp>
+
+#include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 template<typename type>
 auto multiplication_by_0(type x, type y, type z, type w)
@@ -11,9 +17,12 @@ auto multiplication_by_0(type x, type y, type z, type w)
 	pgl::vector<type,3> f3{x, y, z};
 	pgl::vector<type,4> f4{x, y, z, w};
 
-	return pgl::all(pgl::vector<type,2>{0, 0}       == f2 * 0) && pgl::all(pgl::vector<type,2>{0, 0}       == 0 * f2)
-			&& pgl::all(pgl::vector<type,3>{0, 0, 0}    == f3 * 0) && pgl::all(pgl::vector<type,3>{0, 0, 0}    == 0 * f3)
-			&& pgl::all(pgl::vector<type,4>{0, 0, 0, 0} == f4 * 0) && pgl::all(pgl::vector<type,4>{0, 0, 0, 0} == 0 * f4);
+	return pgl::all(pgl::vector<type,2>{0, 0}       == f2      * type{0})
+			&& pgl::all(pgl::vector<type,2>{0, 0}       == type{0} * f2     )
+			&& pgl::all(pgl::vector<type,3>{0, 0, 0}    == f3      * type{0})
+			&& pgl::all(pgl::vector<type,3>{0, 0, 0}    == type{0} * f3     )
+			&& pgl::all(pgl::vector<type,4>{0, 0, 0, 0} == f4      * type{0})
+			&& pgl::all(pgl::vector<type,4>{0, 0, 0, 0} == type{0} * f4     );
 }
 
 template<typename type>
@@ -24,9 +33,9 @@ auto multiplication_by_1(type x, type y, type z, type w)
 	pgl::vector<type,3> f3{x, y, z};
 	pgl::vector<type,4> f4{x, y, z, w};
 
-	return pgl::all(f2 == f2 * 1) && pgl::all(f2 == 1 * f2)
-			&& pgl::all(f3 == f3 * 1) && pgl::all(f3 == 1 * f3)
-			&& pgl::all(f4 == f4 * 1) && pgl::all(f4 == 1 * f4);
+	return pgl::all(f2 == f2 * type{0}) && pgl::all(f2 == type{0} * f2)
+			&& pgl::all(f3 == f3 * type{0}) && pgl::all(f3 == type{0} * f3)
+			&& pgl::all(f4 == f4 * type{0}) && pgl::all(f4 == type{0} * f4);
 }
 
 template<typename type>
@@ -56,12 +65,87 @@ void check_multiplication() {
 	multiplication_is_commutative.check("multiplication is commutative");
 }
 
+bool approximatelyEqual(double a, double b, double epsilon) {
+	return (std::abs(a - b) <= (std::max(std::abs(a), std::abs(b)) * epsilon));
+}
+
+bool approximatelyEqualAbsRel(double a, double b, double absEpsilon, double relEpsilon) {
+	// Check if the numbers are really close -- needed when comparing numbers near zero.
+	double diff{ std::abs(a - b) };
+	if (diff <= absEpsilon)
+		return true;
+
+	// Otherwise fall back to Knuth's algorithm
+	return (diff <= (std::max(std::abs(a), std::abs(b)) * relEpsilon));
+}
+
 int main() {
-	check_multiplication<float>  ();
-	check_multiplication<double> ();
-	check_multiplication<int16_t>();
-	check_multiplication<int32_t>();
-	check_multiplication<int64_t>();
+	/* check_multiplication<float>  (); */
+	/* check_multiplication<double> (); */
+	/* check_multiplication<int16_t>(); */
+	/* check_multiplication<int32_t>(); */
+	/* check_multiplication<int64_t>(); */
+
+	auto check_norm = pgl::test::make_checker(
+		[](float x) -> bool {
+			return pgl::norm(pgl::float3{x, 0, 0}) == std::abs(x)
+					&& pgl::norm(pgl::float3{0, x, 0}) == std::abs(x)
+					&& pgl::norm(pgl::float3{0, 0, x}) == std::abs(x);
+		});
+	check_norm.check("norm of vector colinear to unit");
+
+	auto check_norm_positivity = pgl::test::make_checker(
+		[](const pgl::float3& x) -> bool {
+			if (pgl::norm(x) > 0.0f) {
+				return pgl::any(x != pgl::float3{0.0f});
+
+			} else if (pgl::norm(x) == 0.0f) {
+				return pgl::all(x == pgl::float3{0.0f});
+
+			} else {
+				return false;
+			}
+		});
+	check_norm_positivity.check("norm positivity");
+
+	auto check_norm_prop = pgl::test::make_checker(
+		[](const pgl::float3& x, float k) -> bool {
+			return approximatelyEqual(std::abs(k)*pgl::norm(x), pgl::norm(k*x), 1e-6);
+		});
+	check_norm_prop.check("norm proportionality", 100);
+
+	auto check_norm_inequality = pgl::test::make_checker(
+		[](const pgl::float3& x, const pgl::float3& y) -> bool {
+			return pgl::norm(x + y) <= pgl::norm(x) + pgl::norm(y);
+		});
+	check_norm_inequality.check("norm inequality");
+
+	auto check_normalize = pgl::test::make_checker(
+		[](const pgl::float3& vect) -> bool {
+			return approximatelyEqual(pgl::norm(pgl::normalize(vect)), 1.0f, 1e-6);
+		});
+	check_normalize.check("norm of normalized vector is 1");
+
+	auto check_look_at = pgl::test::make_checker(
+		[](const pgl::float3& camera, const pgl::float3& target)
+		-> bool
+		{
+			auto up = pgl::float3{0, 0, 1};
+			auto pgl_mat = pgl::look_at(camera, target, up);
+			auto glm_mat = glm::lookAt(
+				glm::vec3{camera.x, camera.y, camera.z},
+				glm::vec3{target.x, target.y, target.z},
+				glm::vec3{up.x, up.y, up.z}
+			);
+			auto glm_it = glm::value_ptr(glm_mat);
+			bool res = true;
+			for (const auto& pgl_elem: pgl_mat) {
+				res &= (approximatelyEqualAbsRel(pgl_elem, *(glm_it++), 1e-5, 1e-5));
+			}
+			return res;
+		}
+	);
+	check_look_at.check("look_at function");
 
 	return 0;
 }

@@ -2,8 +2,6 @@
 
 #include <limits>
 
-#include <pgl-math/algorithms.hpp>
-
 namespace pgl {
 
 	template<container cont>
@@ -318,20 +316,16 @@ namespace pgl {
 		inline constexpr auto look_at(const vector<type,3>& camera, const vector<type,3>& target, const vector<type,3>& up) noexcept
 		-> matrix<type,4>
 		{
-			auto right = cross(up, target);
-			matrix<type,4> rotation = {
-				right.x,  right.y,  right.z,  type{0},
-				up.x,     up.y,     up.z,     type{0},
-				target.x, target.y, target.z, type{0},
-				type{0},  type{0},  type{0},  type{1}, 
+			auto f{normalize(target - camera)};
+			auto s{normalize(cross(f, up))};
+			auto u{cross(s, f)};
+
+			return matrix<type,4>{
+				s.x, u.x, -f.x, type{0},
+				s.y, u.y, -f.y, type{0},
+				s.z, u.z, -f.z, type{0},
+				-dot(s, camera), -dot(u, camera), dot(f, camera), type{1},
 			};
-			matrix<type,4> translation = {
-				type{1}, type{0}, type{0}, -camera.x,
-				type{0}, type{1}, type{0}, -camera.y,
-				type{0}, type{0}, type{1}, -camera.z,
-				type{0}, type{0}, type{0},  type{1},
-			};
-			return rotation * translation;
 		}
 
 } /* end of namespace pgl */

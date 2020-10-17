@@ -70,21 +70,37 @@ namespace pgl {
 
 				public:
 					RandomGenerator() : gen{std::random_device{}()},
-						distrib{std::numeric_limits<Type>::min(), std::numeric_limits<Type>::max()} { }
+						/* distrib{std::numeric_limits<Type>::min(), std::numeric_limits<Type>::max()} { } */
+						distrib{-100'000'000, 100'000'000} { }
 
 					Type get() { return distrib(gen); }
 			};
+
+		template<template<typename T, uint32_t d> class range, typename Type, uint32_t dim>
+			class RandomGenerator<range<Type,dim>> {
+				public:
+					RandomGenerator() { }
+
+					auto get() -> range<Type,dim> {
+						range<Type,dim> t{};
+						for (auto& val: t) {
+							val = RandomGenerator<Type>().get();
+						}
+						return t;
+					}
+			};
+
 
 		template<SequenceContainer Type>
 			class RandomGenerator<Type> {
 				private:
 					using ValueType = typename Type::value_type;
 					std::mt19937 gen;
-					std::uniform_int_distribution<ValueType> distrib;
+					std::uniform_int_distribution<typename Type::size_type> distrib;
 
 				public:
 					RandomGenerator() : gen{std::random_device{}()},
-						distrib{ValueType{0}, ValueType{MAX_CONTAINER_SIZE}} { }
+						distrib{ValueType{0}, MAX_CONTAINER_SIZE} { }
 
 					Type get() {
 						Type t{};

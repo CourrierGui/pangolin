@@ -1,7 +1,7 @@
 #pragma once
 
-#include <pgl-math/vector.hpp>
-#include <pgl-math/base-vector.hpp>
+#include <cmath>
+#include <iostream>
 
 namespace pgl {
 
@@ -31,7 +31,7 @@ namespace pgl {
 		inline constexpr auto sum(const vector<type,dim>& arg) noexcept
 		-> type {
 			type res{0};
-			for (auto elem: arg) {
+			for (const auto& elem: arg) {
 				res += elem;
 			}
 			return res;
@@ -41,8 +41,14 @@ namespace pgl {
 		inline constexpr auto normalize(const vector<type,dim>& arg) noexcept
 		-> vector<type,dim>
 		{
-			type s = sum(arg);
-			return arg/s;
+			return arg/norm(arg);
+		}
+
+	template<number type, uint32_t dim>
+		inline constexpr auto norm(const vector<type,dim>& arg) noexcept
+		-> type
+		{
+			return std::sqrt(dot(arg, arg));
 		}
 
 	template<number type, uint32_t dim>

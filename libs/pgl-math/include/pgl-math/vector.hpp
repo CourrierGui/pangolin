@@ -43,7 +43,7 @@ namespace pgl {
 			}
 			inline constexpr auto operator-=(const algebric_vector<type,dim,vector_type>& vect) noexcept -> algebric_vector<type,dim,vector_type>& {
 				auto it = vect.cbegin();
-				for (auto& e: this-> elements) {
+				for (auto& e: this->elements) {
 					e -= *(it++);
 				}
 				return *this;
@@ -251,6 +251,7 @@ namespace pgl {
 	template<number type, uint32_t dim> inline constexpr auto sum(const vector<type,dim>&)                          noexcept -> type;
 	template<number type, uint32_t dim> inline constexpr auto abs(const vector<type,dim>&)                          noexcept -> vector<type,dim>;
 	template<number type, uint32_t dim> inline constexpr auto normalize(const vector<type,dim>&)                    noexcept -> vector<type,dim>;
+	template<number type, uint32_t dim> inline constexpr auto norm(const vector<type,dim>&)                    noexcept -> type;
 	template<number type, uint32_t dim> constexpr inline auto lerp(const vector<type,dim>&, const vector<type,dim>&, type) noexcept -> vector<type,dim>;
 
 	template<typename type>
@@ -288,3 +289,5 @@ namespace pgl {
 	using float4 = vector<float,4>;
 
 } /* end of namespace pgl */
+
+#include <pgl-math/impl/vector.hpp>

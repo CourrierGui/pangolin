@@ -1,6 +1,3 @@
-#include <pgl-math/impl/vector.hpp>
-/* #include <pgl-math/impl/base-vector.hpp> */
-
 #include <pgl-math/utils.hpp>
 #include <pgl-math/base-vector.hpp>
 #include <pgl-math/vector.hpp>
