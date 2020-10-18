@@ -90,7 +90,6 @@ namespace pgl {
 					}
 			};
 
-
 		template<SequenceContainer Type>
 			class RandomGenerator<Type> {
 				private:

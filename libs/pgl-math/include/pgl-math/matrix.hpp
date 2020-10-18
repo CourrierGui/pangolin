@@ -13,6 +13,7 @@ namespace pgl {
 	template<number type, uint32_t rows, uint32_t cols=rows>
 		struct matrix {
 			type elements[rows*cols];
+			using size_type = uint32_t;
 
 			inline constexpr matrix() noexcept;
 			inline constexpr matrix(const type& e) noexcept;
@@ -65,6 +66,7 @@ namespace pgl {
 	template<number type, uint32_t dim>
 		struct matrix<type, dim, dim> {
 			type elements[dim*dim];
+			using size_type = uint32_t;
 
 			inline constexpr matrix() noexcept;
 			inline constexpr matrix(const type& e) noexcept;

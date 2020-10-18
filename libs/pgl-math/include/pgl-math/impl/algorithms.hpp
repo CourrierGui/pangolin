@@ -396,27 +396,44 @@ namespace pgl {
 		-> matrix<type,4>
 		{
 			auto res{mat};
-			res.col(3) = mat.col(0)*trans.x + mat.col(1)*trans.y + mat.col(2)*trans.z + mat.col(4);
+			res.col(3, mat.col(0)*trans.x + mat.col(1)*trans.y + mat.col(2)*trans.z + mat.col(3));
 			return res;
 		}
 
 	template<number type>
-		inline constexpr auto rotate(const matrix<type,4>& mat, const type& radians, const vector<type,3>& axis)
+		inline constexpr auto rotate(const matrix<type,4>& mat, const type& radians, vector<type,3> axis)
 		-> matrix<type,4>
 		{
-			//TODO implement this function
+			axis = normalize(axis);
+			auto theta = radians;
+			auto c = std::cos(theta);
+			auto s = std::sin(theta);
+			auto temp{(type{1} - c) * axis};
+
+			matrix<type,3> rotation{
+				axis.x * temp.x + c,          axis.x * temp.y - axis.z * s, axis.x * temp.z + axis.y * s,
+				axis.y * temp.x + axis.z * s, axis.y * temp.y + c,          axis.y * temp.z - axis.x * s,
+				axis.z * temp.x - axis.y * s, axis.z * temp.y + axis.x * s, axis.z * temp.z + c
+			};
+
+			return matrix_from_col_vectors(
+				mat.col(0) * rotation.at(0, 0) + mat.col(1) * rotation.at(0, 1) + mat.col(2) * rotation.at(0, 2),
+				mat.col(0) * rotation.at(1, 0) + mat.col(1) * rotation.at(1, 1) + mat.col(2) * rotation.at(1, 2),
+				mat.col(0) * rotation.at(2, 0) + mat.col(1) * rotation.at(2, 1) + mat.col(2) * rotation.at(2, 2),
+				mat.col(3)
+			);
 		}
 
 	template<number type>
 		inline constexpr auto scale(const matrix<type,4>& mat, const vector<type,3>& scale)
 		-> matrix<type,4>
 		{
-			matrix<type,4> res;
-			res.col(0) = mat.col(0) * scale.x;
-			res.col(1) = mat.col(1) * scale.y;
-			res.col(2) = mat.col(2) * scale.z;
-			res.col(3) = mat.col(3);
-			return res;
+			return matrix_from_col_vectors(
+				mat.col(0) * scale.x,
+				mat.col(1) * scale.y,
+				mat.col(2) * scale.z,
+				mat.col(3)
+			);
 		}
 
 } /* end of namespace pgl */

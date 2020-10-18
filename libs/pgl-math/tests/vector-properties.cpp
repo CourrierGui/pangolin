@@ -79,6 +79,61 @@ bool approximatelyEqualAbsRel(double a, double b, double absEpsilon, double relE
 	return (diff <= (std::max(std::abs(a), std::abs(b)) * relEpsilon));
 }
 
+template<pgl::number type, uint32_t dim, int glm_dim, glm::qualifier Q>
+bool operator==(const glm::mat<glm_dim, glm_dim, type, Q>& glm_mat, const pgl::matrix<type,dim>& pgl_mat) {
+	bool is_equal = true;
+	for (uint32_t i=0; i<dim; ++i) {
+		for (uint32_t j=0; j<dim; ++j) {
+			is_equal &= approximatelyEqualAbsRel(pgl_mat.at(i, j), glm_mat[i][j], 1e-4, 1e-4);
+		}
+	}
+	return is_equal;
+}
+
+template<pgl::number type, uint32_t dim, int glm_dim, glm::qualifier Q>
+bool operator==(const pgl::matrix<type,dim>& pgl_mat, const glm::mat<glm_dim, glm_dim, type, Q>& glm_mat) {
+	return (glm_mat == pgl_mat);
+}
+
+template<pgl::number type, uint32_t dim, int glm_dim>
+bool operator==(const glm::vec<glm_dim, type>& glm_vec, const pgl::vector<type,dim>& pgl_vec) {
+	bool is_equal = true;
+	for (uint32_t i=0; i<dim; ++i) {
+		is_equal &= (glm_vec[i] == pgl_vec.at(i));
+			is_equal &= approximatelyEqualAbsRel(pgl_vec.elements(i), glm_vec[i], 1e-4, 1e-4);
+	}
+	return is_equal;
+}
+
+template<pgl::number type, uint32_t dim, int glm_dim>
+bool operator==(const pgl::vector<type,dim>& pgl_vec, const glm::vec<glm_dim, type>& glm_vec) {
+	return (glm_vec == pgl_vec);
+}
+
+template<uint32_t dim>
+auto to_glm(const pgl::matrix<float,dim>& mat)
+	-> glm::mat<glm::length_t{dim}, glm::length_t{dim}, float>
+{
+	glm::mat<glm::length_t{dim}, glm::length_t{dim}, float> glm_mat;
+	for (uint32_t i=0; i<dim; ++i) {
+		for (uint32_t j=0; j<dim; ++j) {
+			glm_mat[i][j] = mat.at(i, j);
+		}
+	}
+	return glm_mat;
+}
+
+template<uint32_t dim>
+auto to_glm(const pgl::vector<float,dim>& vec)
+	-> glm::vec<glm::length_t{dim}, float>
+{
+	glm::vec<glm::length_t{dim}, float> glm_vec;
+	for (uint32_t i=0; i<dim; ++i) {
+		glm_vec[i] = vec.elements[i];
+	}
+	return glm_vec;
+}
+
 int main() {
 	/* check_multiplication<float>  (); */
 	/* check_multiplication<double> (); */
@@ -132,17 +187,8 @@ int main() {
 		{
 			auto up = pgl::float3{0, 0, 1};
 			auto pgl_mat = pgl::look_at(camera, target, up);
-			auto glm_mat = glm::lookAt(
-				glm::vec3{camera.x, camera.y, camera.z},
-				glm::vec3{target.x, target.y, target.z},
-				glm::vec3{up.x, up.y, up.z}
-			);
-			auto glm_it = glm::value_ptr(glm_mat);
-			bool res = true;
-			for (const auto& pgl_elem: pgl_mat) {
-				res &= (approximatelyEqualAbsRel(pgl_elem, *(glm_it++), 1e-5, 1e-5));
-			}
-			return res;
+			auto glm_mat = glm::lookAt(to_glm(camera), to_glm(target), to_glm(up));
+			return (pgl_mat == glm_mat);
 		}
 	);
 	check_look_at.check("look_at function");
@@ -153,12 +199,7 @@ int main() {
 		{
 			auto pgl_mat = pgl::ortho(left, right, bottom, top);
 			auto glm_mat = glm::ortho(left, right, bottom, top);
-			auto glm_it = glm::value_ptr(glm_mat);
-			bool res = true;
-			for (const auto& pgl_elem: pgl_mat) {
-				res &= (approximatelyEqualAbsRel(pgl_elem, *(glm_it++), 1e-5, 1e-5));
-			}
-			return res;
+			return (pgl_mat == glm_mat);
 		}
 	);
 	check_ortho.check("ortho function");
@@ -169,15 +210,37 @@ int main() {
 		{
 			auto pgl_mat = pgl::ortho(left, right, bottom, top, zNear, zFar);
 			auto glm_mat = glm::ortho(left, right, bottom, top, zNear, zFar);
-			auto glm_it = glm::value_ptr(glm_mat);
-			bool res = true;
-			for (const auto& pgl_elem: pgl_mat) {
-				res &= (approximatelyEqualAbsRel(pgl_elem, *(glm_it++), 1e-5, 1e-5));
-			}
-			return res;
+			return (glm_mat == pgl_mat);
 		}
 	);
 	check_ortho2.check("ortho2 function");
+
+	auto translate = pgl::test::make_checker(
+		[](const pgl::float44& mat, const pgl::float3 vec) -> bool {
+			auto pgl_mat = pgl::translate(mat, vec);
+			auto glm_mat = glm::translate(to_glm(pgl_mat), to_glm(vec));
+			return (glm_mat == pgl_mat);
+		}
+	);
+	translate.check("translate function");
+
+	auto rotate = pgl::test::make_checker(
+		[](const pgl::float44& mat, float angle, const pgl::float3 vec) -> bool {
+			auto pgl_mat = pgl::rotate(mat, angle, vec);
+			auto glm_mat = glm::rotate(to_glm(pgl_mat), angle, to_glm(vec));
+			return (glm_mat == pgl_mat);
+		}
+	);
+	rotate.check("rotate function");
+
+	auto scale = pgl::test::make_checker(
+		[](const pgl::float44& mat, const pgl::float3 vec) -> bool {
+			auto pgl_mat = pgl::scale(mat, vec);
+			auto glm_mat = glm::scale(to_glm(pgl_mat), to_glm(vec));
+			return (glm_mat == pgl_mat);
+		}
+	);
+	scale.check("scale function");
 
 	return 0;
 }

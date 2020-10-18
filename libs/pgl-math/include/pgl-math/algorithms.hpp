@@ -69,7 +69,7 @@ namespace pgl {
 	template<number type> inline constexpr auto ortho(type left, type right, type bottom, type top, type zNear, type zFar) -> matrix<type,4>;
 
 	template<number type> inline constexpr auto translate(const vector<type,3>&,const vector<type,3>&) -> vector<type,3>;
-	template<number type> inline constexpr auto rotate(const vector<type,3>&,const type&,const vector<type,3>&) -> vector<type,3>;
+	template<number type> inline constexpr auto rotate(const vector<type,3>&,const type&,const vector<type,3>) -> vector<type,3>;
 	template<number type> inline constexpr auto scale(const vector<type,3>&,const vector<type,3>&) -> vector<type,3>;
 
 } /* end of namespace pgl */
