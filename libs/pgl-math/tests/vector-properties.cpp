@@ -99,8 +99,8 @@ template<pgl::number type, uint32_t dim, int glm_dim>
 bool operator==(const glm::vec<glm_dim, type>& glm_vec, const pgl::vector<type,dim>& pgl_vec) {
 	bool is_equal = true;
 	for (uint32_t i=0; i<dim; ++i) {
-		is_equal &= (glm_vec[i] == pgl_vec.at(i));
-			is_equal &= approximatelyEqualAbsRel(pgl_vec.elements(i), glm_vec[i], 1e-4, 1e-4);
+		is_equal &= (glm_vec[i] == pgl_vec.elements[i]);
+			is_equal &= approximatelyEqualAbsRel(pgl_vec.elements[i], glm_vec[i], 1e-4, 1e-4);
 	}
 	return is_equal;
 }
@@ -215,32 +215,45 @@ int main() {
 	);
 	check_ortho2.check("ortho2 function");
 
+	auto check_to_glm = pgl::test::make_checker(
+		[](const pgl::float44& mat, const pgl::float3& vec) -> bool {
+			return ( mat == to_glm(mat) && vec == to_glm(vec) );
+		}
+	);
+	check_to_glm.check("to_glm");
+
 	auto translate = pgl::test::make_checker(
 		[](const pgl::float44& mat, const pgl::float3 vec) -> bool {
+			std::clog << std::boolalpha;
 			auto pgl_mat = pgl::translate(mat, vec);
-			auto glm_mat = glm::translate(to_glm(pgl_mat), to_glm(vec));
+			auto glm_mat = glm::translate(to_glm(mat), to_glm(vec));
+			for (uint32_t i=0; i<4; ++i) {
+				for (uint32_t j=0; j<4; ++j) {
+					std::clog << pgl_mat.at(i, j) << ' ' << glm_mat[i][j] << ' ' << approximatelyEqualAbsRel(pgl_mat.at(i, j), glm_mat[i][j], 1e-4, 1e-4) << '\n';
+				}
+			}
 			return (glm_mat == pgl_mat);
 		}
 	);
-	translate.check("translate function");
+	translate.check("translate function", 1);
 
-	auto rotate = pgl::test::make_checker(
-		[](const pgl::float44& mat, float angle, const pgl::float3 vec) -> bool {
-			auto pgl_mat = pgl::rotate(mat, angle, vec);
-			auto glm_mat = glm::rotate(to_glm(pgl_mat), angle, to_glm(vec));
-			return (glm_mat == pgl_mat);
-		}
-	);
-	rotate.check("rotate function");
+	/* auto rotate = pgl::test::make_checker( */
+	/* 	[](const pgl::float44& mat, float angle, const pgl::float3 vec) -> bool { */
+	/* 		auto pgl_mat = pgl::rotate(mat, angle, vec); */
+	/* 		auto glm_mat = glm::rotate(to_glm(mat), angle, to_glm(vec)); */
+	/* 		return (glm_mat == pgl_mat); */
+	/* 	} */
+	/* ); */
+	/* rotate.check("rotate function"); */
 
-	auto scale = pgl::test::make_checker(
-		[](const pgl::float44& mat, const pgl::float3 vec) -> bool {
-			auto pgl_mat = pgl::scale(mat, vec);
-			auto glm_mat = glm::scale(to_glm(pgl_mat), to_glm(vec));
-			return (glm_mat == pgl_mat);
-		}
-	);
-	scale.check("scale function");
+	/* auto scale = pgl::test::make_checker( */
+	/* 	[](const pgl::float44& mat, const pgl::float3 vec) -> bool { */
+	/* 		auto pgl_mat = pgl::scale(mat, vec); */
+	/* 		auto glm_mat = glm::scale(to_glm(mat), to_glm(vec)); */
+	/* 		return (glm_mat == pgl_mat); */
+	/* 	} */
+	/* ); */
+	/* scale.check("scale function"); */
 
 	return 0;
 }

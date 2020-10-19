@@ -397,6 +397,7 @@ namespace pgl {
 		{
 			auto res{mat};
 			res.col(3, mat.col(0)*trans.x + mat.col(1)*trans.y + mat.col(2)*trans.z + mat.col(3));
+			// Result[3] = m[0] * v[0] + m[1] * v[1] + m[2] * v[2] + m[3];
 			return res;
 		}
 
