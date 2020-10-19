@@ -144,8 +144,8 @@ int main() {
 	auto check_norm = pgl::test::make_checker(
 		[](float x) -> bool {
 			return pgl::norm(pgl::float3{x, 0, 0}) == std::abs(x)
-					&& pgl::norm(pgl::float3{0, x, 0}) == std::abs(x)
-					&& pgl::norm(pgl::float3{0, 0, x}) == std::abs(x);
+				&& pgl::norm(pgl::float3{0, x, 0}) == std::abs(x)
+				&& pgl::norm(pgl::float3{0, 0, x}) == std::abs(x);
 		});
 	check_norm.check("norm of vector colinear to unit");
 
@@ -190,7 +190,7 @@ int main() {
 			auto glm_mat = glm::lookAt(to_glm(camera), to_glm(target), to_glm(up));
 			return (pgl_mat == glm_mat);
 		}
-	);
+		);
 	check_look_at.check("look_at function");
 
 	auto check_ortho = pgl::test::make_checker(
@@ -224,36 +224,30 @@ int main() {
 
 	auto translate = pgl::test::make_checker(
 		[](const pgl::float44& mat, const pgl::float3 vec) -> bool {
-			std::clog << std::boolalpha;
 			auto pgl_mat = pgl::translate(mat, vec);
 			auto glm_mat = glm::translate(to_glm(mat), to_glm(vec));
-			for (uint32_t i=0; i<4; ++i) {
-				for (uint32_t j=0; j<4; ++j) {
-					std::clog << pgl_mat.at(i, j) << ' ' << glm_mat[i][j] << ' ' << approximatelyEqualAbsRel(pgl_mat.at(i, j), glm_mat[i][j], 1e-4, 1e-4) << '\n';
-				}
-			}
 			return (glm_mat == pgl_mat);
 		}
 	);
-	translate.check("translate function", 1);
+	translate.check("translate function");
 
-	/* auto rotate = pgl::test::make_checker( */
-	/* 	[](const pgl::float44& mat, float angle, const pgl::float3 vec) -> bool { */
-	/* 		auto pgl_mat = pgl::rotate(mat, angle, vec); */
-	/* 		auto glm_mat = glm::rotate(to_glm(mat), angle, to_glm(vec)); */
-	/* 		return (glm_mat == pgl_mat); */
-	/* 	} */
-	/* ); */
-	/* rotate.check("rotate function"); */
+	auto rotate = pgl::test::make_checker(
+		[](const pgl::float44& mat, float angle, const pgl::float3 vec) -> bool {
+			auto pgl_mat = pgl::rotate(mat, angle, vec);
+			auto glm_mat = glm::rotate(to_glm(mat), angle, to_glm(vec));
+			return (glm_mat == pgl_mat);
+		}
+	);
+	rotate.check("rotate function");
 
-	/* auto scale = pgl::test::make_checker( */
-	/* 	[](const pgl::float44& mat, const pgl::float3 vec) -> bool { */
-	/* 		auto pgl_mat = pgl::scale(mat, vec); */
-	/* 		auto glm_mat = glm::scale(to_glm(mat), to_glm(vec)); */
-	/* 		return (glm_mat == pgl_mat); */
-	/* 	} */
-	/* ); */
-	/* scale.check("scale function"); */
+	auto scale = pgl::test::make_checker(
+		[](const pgl::float44& mat, const pgl::float3 vec) -> bool {
+			auto pgl_mat = pgl::scale(mat, vec);
+			auto glm_mat = glm::scale(to_glm(mat), to_glm(vec));
+			return (glm_mat == pgl_mat);
+		}
+	);
+	scale.check("scale function");
 
 	return 0;
 }

@@ -389,7 +389,7 @@ namespace pgl {
 		-> void
 		{
 			type* elem = elements + c;
-			for (const auto& e: vect.elements) {
+			for (const auto& e: vect) {
 				*elem = e;
 				elem += cols;
 			}
@@ -400,7 +400,7 @@ namespace pgl {
 		-> void
 		{
 			type* elem = elements + (r*dim);
-			for (const auto& e: vect.elements) {
+			for (const auto& e: vect) {
 				*(elem++) = e;
 			}
 		}
@@ -410,7 +410,7 @@ namespace pgl {
 		-> void
 		{
 			type* elem = elements + c;
-			for (const auto& e: vect.elements) {
+			for (const auto& e: vect) {
 				*elem = e;
 				elem += dim;
 			}
