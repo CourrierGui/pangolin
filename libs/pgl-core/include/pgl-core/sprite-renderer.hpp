@@ -1,7 +1,7 @@
 #pragma once
 
-#include <pangolin/shader.hpp>
-#include <pangolin/texture.hpp>
+#include <pgl-core/shader.hpp>
+#include <pgl-core/texture.hpp>
 
 #include <glad/glad.h>
 

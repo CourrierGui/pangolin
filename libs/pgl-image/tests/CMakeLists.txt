@@ -1,31 +1,22 @@
-add_library(stb_image STATIC stb_image/stb_image.cpp)
-target_include_directories(stb_image PUBLIC stb_image)
-set_property(TARGET stb_image PROPERTY POSITION_INDEPENDENT_CODE ON)
+file(GLOB
+	test_files
 
-add_executable(Pgl.test-stream test-stream.cpp)
-target_link_libraries(Pgl.test-stream
-  PRIVATE
-    gtest gtest_main
-    pgl-image
-		target-flags
+	test-stream.cpp
+	test-png.cpp
+	test-image.cpp
 )
 
-add_executable(Pgl.test-png test-png.cpp)
-target_link_libraries(Pgl.test-png
-  PRIVATE
-    gtest gtest_main
-    pgl-image
-		target-flags
-)
+foreach(source_file "${test_files}")
 
-add_executable(Pgl.test-image test-image.cpp)
-target_link_libraries(Pgl.test-image
-  PRIVATE
-    gtest gtest_main
-    stb_image pgl-image
-		target-flags stdc++fs
-)
+	get_filename_component(binary_file "${source_file}" NAME_WE)
 
-gtest_add_tests(Pgl.test-stream "" AUTO)
-gtest_add_tests(Pgl.test-image  "" AUTO)
-gtest_add_tests(Pgl.test-png    "" AUTO)
+	add_executable(Pgl.${binary_file} ${source_file})
+	target_link_libraries(Pgl.${binary_file}
+		PRIVATE
+			gtest gtest_main
+			pgl::image compilation_flags
+			stdc++fs stb_image
+	)
+
+	gtest_add_tests(Pgl.${binary_file} "" AUTO)
+endforeach(source_file)

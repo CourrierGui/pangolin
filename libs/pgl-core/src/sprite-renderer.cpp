@@ -1,4 +1,4 @@
-#include <pangolin/sprite-renderer.hpp>
+#include <pgl-core/sprite-renderer.hpp>
 #include <pgl-math/algorithms.hpp>
 
 namespace pgl {

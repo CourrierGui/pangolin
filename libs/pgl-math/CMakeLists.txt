@@ -1,6 +1,6 @@
-add_library(pgl-math SHARED src/vector.cpp)
-add_library(pangolin::pgl-math ALIAS pgl-math)
-target_include_directories(pgl-math
+add_library(math SHARED src/vector.cpp)
+add_library(pgl::math ALIAS math)
+target_include_directories(math
 	PUBLIC
     $<INSTALL_INTERFACE:include/pangolin>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -14,16 +14,16 @@ target_include_directories(pgl-math
 # 		include/pgl-math/matrix.hpp
 # 		include/pgl-math/quaternion.hpp
 # )
-target_link_libraries(pgl-math
+target_link_libraries(math
 	PRIVATE
-		target-flags
+		compilation_flags
 )
 
 add_subdirectory(tests)
 
 install(
-  TARGETS pgl-math
-  EXPORT pangolin-targets
+  TARGETS math
+  EXPORT pgl_targets
   LIBRARY DESTINATION lib/pangolin
   ARCHIVE DESTINATION lib/pangolin
 )

@@ -1,4 +1,4 @@
-#include <pangolin/shader.hpp>
+#include <pgl-core/shader.hpp>
 #include <iostream>
 
 namespace pgl {

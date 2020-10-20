@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include <pangolin/text-renderer.hpp>
-#include <pangolin/resource-manager.hpp>
+#include <pgl-core/text-renderer.hpp>
+#include <pgl-core/resource-manager.hpp>
 #include <pgl-math/algorithms.hpp>
 
 #include <ft2build.h>

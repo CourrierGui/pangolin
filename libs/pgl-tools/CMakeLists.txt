@@ -1,22 +1,22 @@
-add_library(pgl-tools SHARED
+add_library(tools SHARED
 	src/logger.cpp
 )
-add_library(pangolin::pgl-tools ALIAS pgl-tools)
-target_include_directories(pgl-tools
+add_library(pgl::tools ALIAS tools)
+target_include_directories(tools
 	PUBLIC
 		$<INSTALL_INTERFACE:include/pangolin>
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 	PRIVATE
 		src
 )
-target_link_libraries(pgl-tools
+target_link_libraries(tools
 	PRIVATE
-		$<BUILD_INTERFACE:target-flags>
+		compilation_flags
 )
 
 install(
-	TARGETS pgl-tools
-	EXPORT pangolin-targets
+	TARGETS tools
+	EXPORT pgl_targets
 	LIBRARY DESTINATION lib/pangolin
 	ARCHIVE DESTINATION lib/pangolin
 )
@@ -26,4 +26,4 @@ install(
 )
 
 add_executable(logger apps/logger.cpp)
-target_link_libraries(logger pgl-tools)
+target_link_libraries(logger pgl::tools)

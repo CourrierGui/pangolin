@@ -1,5 +1,5 @@
 add_library(pgl-test INTERFACE)
-add_library(pangolin::pgl-test ALIAS pgl-test)
+add_library(pgl::test ALIAS pgl-test)
 target_include_directories(pgl-test
 	INTERFACE
     $<INSTALL_INTERFACE:include/pangolin>
@@ -10,7 +10,7 @@ add_subdirectory(tests)
 
 install(
   TARGETS pgl-test
-  EXPORT pangolin-targets
+  EXPORT pgl_targets
   LIBRARY DESTINATION lib/pangolin
   ARCHIVE DESTINATION lib/pangolin
 )

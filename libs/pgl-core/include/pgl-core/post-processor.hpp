@@ -1,10 +1,10 @@
 #pragma once
 
-#include <pangolin/glfw-support.hpp>
+#include <pgl-core/glfw-support.hpp>
 
-#include <pangolin/texture.hpp>
-#include <pangolin/sprite-renderer.hpp>
-#include <pangolin/shader.hpp>
+#include <pgl-core/texture.hpp>
+#include <pgl-core/sprite-renderer.hpp>
+#include <pgl-core/shader.hpp>
 
 #include <iostream>
 

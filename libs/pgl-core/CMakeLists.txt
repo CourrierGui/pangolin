@@ -1,4 +1,4 @@
-add_library(pangolin SHARED
+add_library(core SHARED
 	src/camera.cpp
   src/game-object.cpp
   src/mesh.cpp
@@ -11,28 +11,29 @@ add_library(pangolin SHARED
   src/resource-manager.cpp
   # src/model.cpp
 )
-add_library(pangolin::pangolin ALIAS pangolin)
+add_library(pgl::core ALIAS core)
 
-target_include_directories(pangolin
+target_include_directories(core
   PUBLIC
-    $<INSTALL_INTERFACE:include/pangolin>
+    $<INSTALL_INTERFACE:include/pgl-core>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
-target_link_libraries(pangolin
+target_link_libraries(core
   PUBLIC
-    pangolin::pgl-image pangolin::pgl-math
+    pgl::image
+		pgl::math
   PRIVATE
-    assimp glfw pangolin::glad Freetype::Freetype
-    $<BUILD_INTERFACE:target-flags>
+    assimp glfw pgl::glad Freetype::Freetype
+		compilation_flags
 )
 
 install(
-  TARGETS pangolin
-  EXPORT pangolin-targets
+  TARGETS core
+  EXPORT pgl_targets
   LIBRARY DESTINATION lib/pangolin
   ARCHIVE DESTINATION lib/pangolin
 )
 install(
-  DIRECTORY include/pangolin
+  DIRECTORY include/pgl-core
   DESTINATION include/pangolin
 )

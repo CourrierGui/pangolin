@@ -39,7 +39,7 @@ namespace pgl {
 			}
 
 			set_key_cb(
-				[](GLFWwindow* window, int key, int scancode, int action, int mode){
+				[](GLFWwindow* window, int key, int, int action, int){
 					if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 						glfwSetWindowShouldClose(window, true);
 				}
@@ -68,7 +68,7 @@ namespace pgl {
 		}
 
 		void GLFWWindow::framebuffer_size_callback(
-			GLFWwindow* window,
+			GLFWwindow*,
 			int width, int height)
 		{
 			glViewport(0, 0, width, height);

@@ -1,4 +1,4 @@
-#include <pangolin/post-processor.hpp>
+#include <pgl-core/post-processor.hpp>
 
 namespace pgl {
 

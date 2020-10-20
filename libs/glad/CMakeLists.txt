@@ -1,5 +1,5 @@
 add_library(glad SHARED src/glad.c)
-add_library(pangolin::glad ALIAS glad)
+add_library(pgl::glad ALIAS glad)
 target_include_directories(glad
   PUBLIC
     $<INSTALL_INTERFACE:include>
@@ -9,7 +9,7 @@ target_link_libraries(glad dl)
 
 install(
   TARGETS glad
-  EXPORT pangolin-targets
+  EXPORT pgl_targets
   LIBRARY DESTINATION lib/pangolin
   ARCHIVE DESTINATION lib/pangolin
 )

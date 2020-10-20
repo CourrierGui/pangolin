@@ -1,4 +1,4 @@
-#include <pangolin/particle-generator.hpp>
+#include <pgl-core/particle-generator.hpp>
 
 namespace pgl {
 

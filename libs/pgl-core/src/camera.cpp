@@ -1,4 +1,4 @@
-#include <pangolin/camera.hpp>
+#include <pgl-core/camera.hpp>
 #include <pgl-math/utils.hpp>
 #include <pgl-math/algorithms.hpp>
 

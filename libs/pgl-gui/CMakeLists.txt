@@ -1,25 +1,23 @@
-add_library(pgl-gui SHARED
+add_library(gui SHARED
 	src/window.cpp
 	src/glfw-window.cpp
 )
-add_library(pangolin::pgl-gui ALIAS pgl-gui)
-target_include_directories(pgl-gui
+add_library(pgl::gui ALIAS gui)
+target_include_directories(gui
 	PUBLIC
 		$<INSTALL_INTERFACE:include/pangolin>
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 	PRIVATE
 		src
 )
-target_link_libraries(pgl-gui
-	PUBLIC
-		pangolin::glad
+target_link_libraries(gui
 	PRIVATE
-		$<BUILD_INTERFACE:target-flags>
+		pgl::glad compilation_flags
 )
 
 install(
-	TARGETS pgl-gui
-	EXPORT pangolin-targets
+	TARGETS gui
+	EXPORT pgl_targets
 	LIBRARY DESTINATION lib/pangolin
 	ARCHIVE DESTINATION lib/pangolin
 )
@@ -28,5 +26,5 @@ install(
 	DESTINATION include/pangolin
 )
 
-add_subdirectory(tests)
-add_subdirectory(apps)
+# add_subdirectory(tests)
+# add_subdirectory(apps)

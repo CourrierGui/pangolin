@@ -1,4 +1,4 @@
-#include <pangolin/mesh.hpp>
+#include <pgl-core/mesh.hpp>
 
 namespace pgl {
 	namespace render3D {

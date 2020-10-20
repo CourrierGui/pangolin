@@ -2,8 +2,8 @@
 
 #include <glad/glad.h>
 
-#include <pangolin/texture.hpp>
-#include <pangolin/sprite-renderer.hpp>
+#include <pgl-core/texture.hpp>
+#include <pgl-core/sprite-renderer.hpp>
 
 #include <pgl-math/vector.hpp>
 

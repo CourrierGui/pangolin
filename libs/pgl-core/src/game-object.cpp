@@ -1,4 +1,4 @@
-#include <pangolin/game-object.hpp>
+#include <pgl-core/game-object.hpp>
 
 namespace pgl {
 

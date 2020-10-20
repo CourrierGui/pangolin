@@ -5,9 +5,9 @@
 
 #include <glad/glad.h>
 
-#include <pangolin/shader.hpp>
-#include <pangolin/texture.hpp>
-#include <pangolin/game-object.hpp>
+#include <pgl-core/shader.hpp>
+#include <pgl-core/texture.hpp>
+#include <pgl-core/game-object.hpp>
 #include <pgl-math/vector.hpp>
 
 namespace pgl {

@@ -31,12 +31,12 @@ find_package(Freetype REQUIRED)
 #### Compilation flags ####
 ###########################
 
-add_library(target-flags INTERFACE)
-target_compile_options(target-flags
+add_library(compilation_flags INTERFACE)
+target_compile_options(compilation_flags
   INTERFACE
 	-Wall -Wextra -Wpedantic -Weffc++
 )
-target_compile_features(target-flags INTERFACE cxx_std_20)
+target_compile_features(compilation_flags INTERFACE cxx_std_20)
 
 #####################
 ####    Tests    ####
@@ -52,6 +52,7 @@ endif()
 ##### BUILD #####
 #################
 
+add_subdirectory(extern)
 add_subdirectory(libs)
 add_subdirectory(apps)
 add_subdirectory(doc)
@@ -88,11 +89,11 @@ install(FILES
   DESTINATION ${INSTALL_CONFIGDIR}
 )
 
-install(EXPORT pangolin-targets
+install(EXPORT pgl_targets
   FILE
     pangolinTargets.cmake
   NAMESPACE
-    pangolin::
+    pgl::
   DESTINATION
     ${CMAKE_INSTALL_LIBDIR}/cmake/pangolin
 )

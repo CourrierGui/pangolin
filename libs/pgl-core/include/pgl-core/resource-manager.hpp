@@ -6,8 +6,8 @@
 
 #include <glad/glad.h>
 
-#include <pangolin/texture.hpp>
-#include <pangolin/shader.hpp>
+#include <pgl-core/texture.hpp>
+#include <pgl-core/shader.hpp>
 
 namespace pgl {
 

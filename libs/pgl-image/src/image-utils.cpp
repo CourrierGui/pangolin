@@ -25,8 +25,8 @@ namespace pgl {
       return signature == JPEG_SIGNATURE;
     }
 
-    bool is_gif (std::ifstream& fstream) {
-
+    bool is_gif (std::ifstream&) {
+			return false;
     }
 
     Image extract_png (std::ifstream& fstream) {
@@ -92,12 +92,12 @@ namespace pgl {
       return image;
     }
 
-    Image extract_jpeg(std::ifstream& fstream) {
+    Image extract_jpeg(std::ifstream&) {
       Image res;
       return res;
     }
 
-    Image extract_gif (std::ifstream& fstream) {
+    Image extract_gif (std::ifstream&) {
       Image res;
       return res;
     }

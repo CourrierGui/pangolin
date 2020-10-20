@@ -1,4 +1,4 @@
-#include <pangolin/resource-manager.hpp>
+#include <pgl-core/resource-manager.hpp>
 #include <pgl-image/image-loader.hpp>
 
 #include <iostream>

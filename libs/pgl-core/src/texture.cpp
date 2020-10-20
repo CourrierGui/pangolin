@@ -1,4 +1,4 @@
-#include <pangolin/texture.hpp>
+#include <pgl-core/texture.hpp>
 
 #include <iostream>
 
