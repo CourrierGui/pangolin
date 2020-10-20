@@ -1,4 +1,4 @@
-#include <pangolin/profile.hpp>
+#include <pgl-profile/profile.hpp>
 
 #include <algorithm>
 #include <thread>
