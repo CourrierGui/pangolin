@@ -1,4 +1,4 @@
-#include <pgl-profile/profile.hpp>
+#include <pgl-tools/profile.hpp>
 
 #include <algorithm>
 #include <thread>

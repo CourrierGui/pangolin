@@ -1,5 +1,6 @@
 add_library(tools SHARED
 	src/logger.cpp
+	src/profile.cpp
 )
 add_library(pgl::tools ALIAS tools)
 target_include_directories(tools

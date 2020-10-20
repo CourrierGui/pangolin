@@ -1,6 +1,6 @@
 add_subdirectory(glad)
 add_subdirectory(pgl-test)
-add_subdirectory(pgl-profile)
+# add_subdirectory(pgl-profile)
 add_subdirectory(pgl-image)
 add_subdirectory(pgl-sound)
 add_subdirectory(pgl-math)
