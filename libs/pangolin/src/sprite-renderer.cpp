@@ -49,12 +49,11 @@ namespace pgl {
 			// prepare transformations
 			shader.use();
 			pgl::float44 model = pgl::float44{1.0f};
-			//TODO implement these functions
 			model = pgl::translate(model, pgl::float3(position, 0.0f));
 
-			model = pgl::translate(model, pgl::float3(0.5f * size.x, 0.5f * size.y, 0.0f));
+			model = pgl::translate(model, pgl::float3(0.5f * size, 0.0f));
 			model = pgl::rotate(model, pgl::radians(rotate), pgl::float3(0.0f, 0.0f, 1.0f));
-			model = pgl::translate(model, pgl::float3(-0.5f * size.x, -0.5f * size.y, 0.0f));
+			model = pgl::translate(model, pgl::float3(-0.5f * size, 0.0f));
 
 			model = pgl::scale(model, pgl::float3(size, 1.0f));
 
