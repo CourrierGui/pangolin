@@ -11,6 +11,8 @@ target_include_directories(gui
 		src
 )
 target_link_libraries(gui
+	PUBLIC
+		glfw
 	PRIVATE
 		pgl::glad compilation_flags
 )

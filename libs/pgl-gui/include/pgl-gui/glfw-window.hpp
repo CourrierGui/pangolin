@@ -3,22 +3,22 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <functional>
 #include <any>
+#include <string>
 
 namespace pgl {
   namespace gui {
 
     class GLFWWindow {
 			public:
-				static GLFWWindow& make_window(
+				static auto make_window(
 					int width, int height,
 					const char* name
-				);
+				) -> GLFWWindow&;
 				bool is_open();
 				void poll_events();
 				void swap_buffer();
-				void clear();
+				void clear(float r, float g, float b, float a);
 
 				static void set_user_pointer(std::any ptr);
 				static void set_cursor_cb(void (*fun)(GLFWwindow*, double, double));
@@ -26,7 +26,6 @@ namespace pgl {
 				static void set_mouse_button_cb(
 					void (*fun)(GLFWwindow* window, int button, int action, int mods)
 				);
-
 				~GLFWWindow();
 
 			private:
@@ -48,9 +47,7 @@ namespace pgl {
 					GLFWwindow* window,
 					double xpos, double ypos
 				);
-
-
-				GLFWWindow(int width, int height, const char* name);
+				GLFWWindow(int width, int height, const std::string& name);
     };
 
   } /* end of namespace gui */

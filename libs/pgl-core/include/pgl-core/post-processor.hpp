@@ -1,7 +1,5 @@
 #pragma once
 
-#include <pgl-core/glfw-support.hpp>
-
 #include <pgl-core/texture.hpp>
 #include <pgl-core/sprite-renderer.hpp>
 #include <pgl-core/shader.hpp>
@@ -11,11 +9,6 @@
 namespace pgl {
 
 	/**
-	 * PostProcessor hosts all PostProcessing effects for the Breakout Game. It
-	 * renders the game on a textured quad after which one can enable specific
-	 * effects by enabling either the Confuse, Chaos or Shake boolean.  It is
-	 * required to call BeginRender() before rendering the game and EndRender()
-	 * after rendering the game for the class to work.
 	 */
 	class PostProcessor {
 		public:

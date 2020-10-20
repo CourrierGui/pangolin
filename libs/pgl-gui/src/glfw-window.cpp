@@ -8,46 +8,37 @@ using namespace std::placeholders;
 namespace pgl {
 	namespace gui {
 
-		GLFWWindow& GLFWWindow::make_window(
+		auto GLFWWindow::make_window(
 			int width, int height,
 			const char* name)
+			-> GLFWWindow&
 		{
 			static GLFWWindow window(width, height, name);
 			return window;
 		}
 
-		GLFWWindow::GLFWWindow(int width, int height, const char* name)
+		GLFWWindow::GLFWWindow(int width, int height, const std::string& name)
 			: width(width), height(height)
 		{
 			glfwInit();
-			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
 			glfwWindowHint(GLFW_RESIZABLE, false);
 
 			window = glfwCreateWindow(
 				width, height,
-				name, nullptr, nullptr
+				name.c_str(), nullptr, nullptr
 			);
 			glfwMakeContextCurrent(window);
 
-			// glad: load all OpenGL function pointers
-			// ---------------------------------------
+			/* glad: load all OpenGL function pointers */
 			if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-				std::cerr << "Failed to initialize GLAD\n";
+				throw std::runtime_error("Failed to initialize GLAD\n");
 			}
-
-			set_key_cb(
-				[](GLFWwindow* window, int key, int, int action, int){
-					if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-						glfwSetWindowShouldClose(window, true);
-				}
-			);
 			glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-			// OpenGL configuration
-			// --------------------
+			/* OpenGL configuration */
 			glViewport(0, 0, width, height);
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -61,9 +52,9 @@ namespace pgl {
 			glfwTerminate();
 		}
 
-		void GLFWWindow::clear() {
+		void GLFWWindow::clear(float r, float g, float b, float a) {
 			//TODO: add background color
-			glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
+			glClearColor(r, g, b, a);
 			glClear(GL_COLOR_BUFFER_BIT);
 		}
 
