@@ -10,17 +10,17 @@
 #include <pgl-math/vector.hpp>
 
 namespace pgl {
-	namespace ui {
+	namespace gui {
 
 		/**
 		 * Holds all state information relevant to a character as loaded using
 		 * FreeType
 		 */
 		struct Character {
-			unsigned int texture_id; // ID handle of the glyph texture
+			uint32_t    texture_id; // ID handle of the glyph texture
 			pgl::int2   size;       // size of glyph
 			pgl::int2   bearing;    // offset from baseline to left/top of glyph
-			signed long  advance;    // horizontal offset to advance to next glyph
+			signed long advance;    // horizontal offset to advance to next glyph
 		};
 
 		/**
@@ -57,5 +57,5 @@ namespace pgl {
 				unsigned int VAO, VBO;
 		};
 
-	} /* end of namespace ui */
+	} /* end of namespace gui */
 } /* end of namespace pgl */

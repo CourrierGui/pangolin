@@ -103,13 +103,10 @@ namespace pgl {
 			inline constexpr auto end()    const noexcept -> const type* { return this->elements + size(); }
 			inline constexpr auto cend()   const noexcept -> const type* { return this->elements + size(); }
 
-			inline constexpr base_vector() noexcept : base<type,dim,vector_type>{} {  }
-
-			inline constexpr explicit base_vector(const type& e) noexcept : base<type,dim,vector_type>{e} { }
-
-			inline constexpr base_vector(const type arr[dim]) noexcept : base<type,dim,vector_type>{arr} { }
-
-			inline constexpr base_vector(std::convertible_to<type> auto ... args) noexcept : base<type,dim,vector_type>{ std::forward<type>(args)... } { }
+			inline constexpr          base_vector()                                        noexcept : base<type,dim,vector_type>{} {  }
+			inline constexpr explicit base_vector(const type& e)                           noexcept : base<type,dim,vector_type>{e} { }
+			inline constexpr          base_vector(const type arr[dim])                     noexcept : base<type,dim,vector_type>{arr} { }
+			inline constexpr          base_vector(std::convertible_to<type> auto ... args) noexcept : base<type,dim,vector_type>{ std::forward<type>(args)... } { }
 		};
 
 } /* end of namespace pgl */

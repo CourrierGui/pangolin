@@ -9,7 +9,7 @@
 
 
 namespace pgl {
-	namespace ui {
+	namespace gui {
 
 		TextRenderer::TextRenderer(
 			unsigned int width,
@@ -163,5 +163,5 @@ namespace pgl {
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
-	} /* end of namespace ui */
+	} /* end of namespace gui */
 } /* end of namespace pgl */
