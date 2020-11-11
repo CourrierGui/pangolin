@@ -17,7 +17,6 @@ void assert_equal(
 	}
 }
 
-
 TEST(Base, Construction) {
 	pgl::base_vector<int32_t,2,pgl::vector> i2{1, 2};
 	pgl::base_vector<int32_t,3,pgl::vector> i3{1, 2, 3};
@@ -140,7 +139,8 @@ TEST(Vector, UtilityFunctions) {
 	ASSERT_EQ(14, pgl::dot(f1));
 	ASSERT_EQ(6,  pgl::sum(f1));
 
-	assert_equal(pgl::float3{1.0/6, 2.0/6, 3.0/6}, pgl::normalize(f1));
+	float norm = std::sqrt(14);
+	assert_equal(pgl::float3{1.0/norm, 2.0/norm, 3.0/norm}, pgl::normalize(f1));
 	ASSERT_EQ(3, pgl::max(f1));
 	ASSERT_EQ(1, pgl::min(f1));
 	assert_equal({1, 2, 3}, pgl::abs(pgl::float3{-1, -2, 3}));
@@ -176,4 +176,29 @@ TEST(Vector, MathFunctions) {
 	a = pgl::acosh(vec);
 	a = pgl::sinh (vec);
 	a = pgl::asinh(vec);
+}
+
+TEST(Vector, Accessors) {
+	pgl::float44 f{
+		 1,  2,  3,  4,
+		 5,  6,  7,  8,
+		 9, 10, 11, 12,
+		13, 14, 15, 16,
+	};
+
+	assert_equal(pgl::float4{ 1,  2,  3,  4}, f.row(0));
+	assert_equal(pgl::float4{ 5,  6,  7,  8}, f.row(1));
+	assert_equal(pgl::float4{ 9, 10, 11, 12}, f.row(2));
+	assert_equal(pgl::float4{13, 14, 15, 16}, f.row(3));
+
+	assert_equal(pgl::float4{1, 5,  9, 13}, f.col(0));
+	assert_equal(pgl::float4{2, 6, 10, 14}, f.col(1));
+	assert_equal(pgl::float4{3, 7, 11, 15}, f.col(2));
+	assert_equal(pgl::float4{4, 8, 12, 16}, f.col(3));
+
+	f.col(0, pgl::float4{0, 0, 0, 0});
+	assert_equal(pgl::float4{0, 0, 0, 0}, f.col(0));
+
+	f.row(0, pgl::float4{0, 0, 0, 0});
+	assert_equal(pgl::float4{0, 0, 0, 0}, f.row(0));
 }

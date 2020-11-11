@@ -3,54 +3,63 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <functional>
 #include <any>
+#include <string>
+#include <functional>
 
 namespace pgl {
   namespace gui {
 
+		class GLFWWindow;
+
+		class GLFWCallbacks {
+			public:
+				std::function<void(GLFWWindow&,int,int,int)>     _mouseButtonCb;
+				std::function<void(GLFWWindow&,double,double)>   _cursorPosCb;
+				std::function<void(GLFWWindow&,int,int,int,int)> _keyCb;
+
+				void (*_framebufferSizeCb)(GLFWwindow*,int,int);
+		};
+
     class GLFWWindow {
 			public:
-				static GLFWWindow& make_window(
-					int width, int height,
-					const char* name
-				);
+				GLFWWindow(int width, int height, const std::string& name);
 				bool is_open();
+				void close();
 				void poll_events();
 				void swap_buffer();
-				void clear();
+				void clear(float r, float g, float b, float a);
 
-				static void set_user_pointer(std::any ptr);
-				static void set_cursor_cb(void (*fun)(GLFWwindow*, double, double));
-				static void set_key_cb(void (*fun)(GLFWwindow*, int, int, int, int));
-				static void set_mouse_button_cb(
-					void (*fun)(GLFWwindow* window, int button, int action, int mods)
-				);
+				void set_cursor_cb(const std::function<void(GLFWWindow&,double, double)>& fun);
+				void set_key_cb(const std::function<void(GLFWWindow&,int, int, int, int)>& fun);
+				void set_mouse_button_cb(const std::function<void(GLFWWindow&,int,int,int)>& fun);
+
+				auto mousePositionCallback() -> std::function<void(GLFWWindow&,double,double)>&;
+				auto keyCallback()           -> std::function<void(GLFWWindow&,int,int,int,int)>&;
+				auto mouseButtonCallback()   -> std::function<void(GLFWWindow&,int,int,int)>&;
 
 				~GLFWWindow();
 
 			private:
 				int width, height;
 				static GLFWwindow* window;
+				GLFWCallbacks      _callbacks;
 
-				static void key_callback(
+				void key_callback(
 					GLFWwindow* window,
 					int key, int scancode,
 					int action, int mode
 				);
 
-				static void framebuffer_size_callback(
+				void framebuffer_size_callback(
 					GLFWwindow* window,
 					int width, int height
 				);
 
-				static void cursor_position_callback(
+				void cursor_position_callback(
 					GLFWwindow* window,
 					double xpos, double ypos
 				);
-
-
-				GLFWWindow(int width, int height, const char* name);
     };
 
   } /* end of namespace gui */

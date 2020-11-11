@@ -1,10 +1,8 @@
 add_executable(demo demo.cpp)
 target_link_libraries(demo
 	PRIVATE
-		pangolin::pangolin
-		pangolin::pgl-gui
-		pangolin::pgl-math
-		target-flags
+		pgl::core pgl::gui pgl::math pgl::glad
+		compilation_flags
 )
 
 install(

@@ -396,8 +396,7 @@ namespace pgl {
 		-> matrix<type,4>
 		{
 			auto res{mat};
-			res.col(3, mat.col(0)*trans.x + mat.col(1)*trans.y + mat.col(2)*trans.z + mat.col(3));
-			// Result[3] = m[0] * v[0] + m[1] * v[1] + m[2] * v[2] + m[3];
+			res.row(3, mat.row(0)*trans.x + mat.row(1)*trans.y + mat.row(2)*trans.z + mat.row(3));
 			return res;
 		}
 
@@ -412,16 +411,16 @@ namespace pgl {
 			auto temp{(type{1} - c) * axis};
 
 			matrix<type,3> rotation{
-				axis.x * temp.x + c,          axis.x * temp.y - axis.z * s, axis.x * temp.z + axis.y * s,
-				axis.y * temp.x + axis.z * s, axis.y * temp.y + c,          axis.y * temp.z - axis.x * s,
-				axis.z * temp.x - axis.y * s, axis.z * temp.y + axis.x * s, axis.z * temp.z + c
+				axis.x * temp.x + c,          axis.y * temp.x + axis.z * s, axis.z * temp.x - axis.y * s,
+				axis.x * temp.y - axis.z * s, axis.y * temp.y + c,          axis.z * temp.y + axis.x * s,
+				axis.x * temp.z + axis.y * s, axis.y * temp.z - axis.x * s, axis.z * temp.z + c
 			};
 
-			return matrix_from_col_vectors(
-				mat.col(0) * rotation.at(0, 0) + mat.col(1) * rotation.at(0, 1) + mat.col(2) * rotation.at(0, 2),
-				mat.col(0) * rotation.at(1, 0) + mat.col(1) * rotation.at(1, 1) + mat.col(2) * rotation.at(1, 2),
-				mat.col(0) * rotation.at(2, 0) + mat.col(1) * rotation.at(2, 1) + mat.col(2) * rotation.at(2, 2),
-				mat.col(3)
+			return matrix_from_row_vectors(
+				mat.row(0) * rotation.at(0, 0) + mat.row(1) * rotation.at(0, 1) + mat.row(2) * rotation.at(0, 2),
+				mat.row(0) * rotation.at(1, 0) + mat.row(1) * rotation.at(1, 1) + mat.row(2) * rotation.at(1, 2),
+				mat.row(0) * rotation.at(2, 0) + mat.row(1) * rotation.at(2, 1) + mat.row(2) * rotation.at(2, 2),
+				mat.row(3)
 			);
 		}
 
@@ -429,11 +428,11 @@ namespace pgl {
 		inline constexpr auto scale(const matrix<type,4>& mat, const vector<type,3>& scale)
 		-> matrix<type,4>
 		{
-			return matrix_from_col_vectors(
-				mat.col(0) * scale.x,
-				mat.col(1) * scale.y,
-				mat.col(2) * scale.z,
-				mat.col(3)
+			return matrix_from_row_vectors(
+				mat.row(0) * scale.x,
+				mat.row(1) * scale.y,
+				mat.row(2) * scale.z,
+				mat.row(3)
 			);
 		}
 

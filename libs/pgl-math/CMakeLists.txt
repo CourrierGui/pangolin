@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 add_library(pgl-math SHARED src/vector.cpp)
 add_library(pangolin::pgl-math ALIAS pgl-math)
 target_include_directories(pgl-math
@@ -22,8 +23,8 @@ target_link_libraries(pgl-math
 add_subdirectory(tests)
 
 install(
-  TARGETS pgl-math
-  EXPORT pangolin-targets
+  TARGETS math
+  EXPORT pgl_targets
   LIBRARY DESTINATION lib/pangolin
   ARCHIVE DESTINATION lib/pangolin
 )

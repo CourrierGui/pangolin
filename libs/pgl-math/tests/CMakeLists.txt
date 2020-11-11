@@ -7,7 +7,7 @@ foreach(test_name test-vector.cpp test-matrix.cpp) # test-quaternion.cpp)
 	target_link_libraries(Pgl.${bin_name}
 		PRIVATE
 			gtest gtest_main glm
-			pangolin::pgl-math target-flags
+			pgl::math compilation_flags
 	)
 
 	gtest_add_tests(Pgl.${bin_name} "" AUTO)
@@ -19,8 +19,7 @@ foreach(test_name vector-properties.cpp)
 	add_executable(Pgl.${bin_name} ${test_name})
 	target_link_libraries(Pgl.${bin_name}
 		PRIVATE
-			pangolin::pgl-test
-			pangolin::pgl-math target-flags
+			pgl::math pgl::test compilation_flags
 	)
 
 	gtest_add_tests(Pgl.${bin_name} "" AUTO)

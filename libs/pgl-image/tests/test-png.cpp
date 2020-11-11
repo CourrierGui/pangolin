@@ -26,7 +26,7 @@ TEST(PglImagePng, ExtractPixels) {
     ss << (char)0b01001100;
     ss << (char)0b01100101;
 
-    for (int j=0; j<expected.size()/8; ++j) {
+    for (size_t j=0; j<expected.size()/8; ++j) {
       pgl::image::png::extract_pixels(ss, ihdr, it);
     }
 
@@ -49,7 +49,7 @@ TEST(PglImagePng, ExtractPixels) {
   ss << (char)0b01001100;
   ss << (char)0b01100101;
 
-  for (int j=0; j<expected.size()/8; ++j) {
+  for (size_t j=0; j<expected.size()/8; ++j) {
     pgl::image::png::extract_pixels(ss, ihdr, it);
   }
 

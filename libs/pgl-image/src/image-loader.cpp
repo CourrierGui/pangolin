@@ -6,19 +6,27 @@
 #include <tuple>
 
 #include "image-utils.hpp"
-#include "../tests/stb_image/stb_image.h"
+#include <stb_image.h>
 
 namespace pgl {
+
+	Image::Image() : width{}, height{}, depth{}, data{} {  }
+
   namespace image {
 
-    Image extract_image(std::ifstream& fstream) {
-      if      (is_png(fstream) ) return extract_png (fstream);
-      else if (is_jpeg(fstream)) return extract_jpeg(fstream);
-      else if (is_gif(fstream) ) return extract_gif (fstream);
-      else throw std::runtime_error("Unsupported file type.");
+    auto extract_image(std::ifstream& fstream) -> Image {
+			if (is_png(fstream)) {
+				return extract_png (fstream);
+			} else if (is_jpeg(fstream)) {
+				return extract_jpeg(fstream);
+			} else if (is_gif(fstream)) {
+				return extract_gif (fstream);
+			} else {
+				throw std::runtime_error("Unsupported file type.");
+			}
     }
 
-    Image load_image(const std::string& filename) {
+    auto load_image(const std::string& filename) -> Image {
       std::ifstream fstream(filename, std::ios::binary);
 
       if (!fstream.is_open())

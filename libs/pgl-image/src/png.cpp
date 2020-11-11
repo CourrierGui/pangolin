@@ -101,8 +101,8 @@ namespace pgl {
         fstream.ignore(size+4); //ignore size of chunk + size of control
       }
 
-      bool check_control(std::istream& fstream) {
-        uint32_t control = utils::get_uint32(fstream);
+      bool check_control(std::istream&) {
+        /* uint32_t control = utils::get_uint32(fstream); */
         //TODO
         return true;
       }
