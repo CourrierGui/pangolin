@@ -1,6 +1,7 @@
+#include <pgl-math/impl/base-vector.hpp>
+#include <pgl-math/impl/vector.hpp>
+
 #include <pgl-math/utils.hpp>
-#include <pgl-math/base-vector.hpp>
-#include <pgl-math/vector.hpp>
 
 //TODO add function template
 
@@ -63,5 +64,5 @@ template float pgl::dot<float, 3>(pgl::float3 const&);
 template float pgl::sum<float, 3>(pgl::float3 const&);
 
 template pgl::float3 pgl::normalize<float, 3>(pgl::float3 const&);
-template pgl::float3 pgl::abs<float, 3>      (pgl::float3 const&);
-template pgl::float3 pgl::cross<float>       (pgl::float3 const&, pgl::float3 const&);
+template pgl::float3 pgl::abs<float, 3>(pgl::float3 const&);
+template pgl::float3 pgl::cross<float>(pgl::float3 const&, pgl::float3 const&);

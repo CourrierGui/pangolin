@@ -18,6 +18,8 @@ project(pangolin
   LANGUAGES CXX C
 )
 
+# SET(CMAKE_C_COMPILER /usr/bin/clang)
+# SET(CMAKE_CXX_COMPILER /usr/bin/clang++)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # set(CMAKE_CXX_CPPCHECK "cppcheck")
 # set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=*")
