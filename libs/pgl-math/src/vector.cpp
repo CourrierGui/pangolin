@@ -1,47 +1,10 @@
-#include <pgl-math/impl/base-vector.hpp>
-#include <pgl-math/impl/vector.hpp>
-
 #include <pgl-math/utils.hpp>
 
-//TODO add function template
-
-/* template<template<typename T,uint32_t d> class vector_type, typename... Args> */
-/* struct Declare { */
-
-/* }; */
-
-/* template<template<typename T,uint32_t d> class vector_type, typename type, typename... Args> */
-/* struct Declare<vector_type, type, Args...> { */
-/* 	using t2 = vector_type<type,2>; */
-/* 	using t3 = vector_type<type,3>; */
-/* 	using t4 = vector_type<type,4>; */
-/* }; */
-
-/* template struct Declare<pgl::vector, bool>; */
-
-template struct pgl::base_vector<bool,2,pgl::vector>;
-template struct pgl::base_vector<bool,3,pgl::vector>;
-template struct pgl::base_vector<bool,4,pgl::vector>;
-
-template struct pgl::base_vector<uint32_t,2,pgl::vector>;
-template struct pgl::base_vector<uint32_t,3,pgl::vector>;
-template struct pgl::base_vector<uint32_t,4,pgl::vector>;
-
-template struct pgl::base_vector<int32_t,2,pgl::vector>;
-template struct pgl::base_vector<int32_t,3,pgl::vector>;
-template struct pgl::base_vector<int32_t,4,pgl::vector>;
-
-template struct pgl::algebric_vector<int32_t,2,pgl::vector>;
-template struct pgl::algebric_vector<int32_t,3,pgl::vector>;
-template struct pgl::algebric_vector<int32_t,4,pgl::vector>;
-
-/* template struct pgl::algebric_vector<uint32_t,2,pgl::vector>; */
-/* template struct pgl::algebric_vector<uint32_t,3,pgl::vector>; */
-/* template struct pgl::algebric_vector<uint32_t,4,pgl::vector>; */
-
-template struct pgl::algebric_vector<float,2,pgl::vector>;
-template struct pgl::algebric_vector<float,3,pgl::vector>;
-template struct pgl::algebric_vector<float,4,pgl::vector>;
+#include <pgl-math/impl/base-vector.hpp>
+#include <pgl-math/impl/algebric-vector.hpp>
+#include <pgl-math/impl/vector.hpp>
+#include <pgl-math/impl/matrix.hpp>
+#include <pgl-math/impl/algorithms.hpp>
 
 /* template struct pgl::vector<uint32_t,2>; */
 /* template struct pgl::vector<uint32_t,3>; */
@@ -59,10 +22,58 @@ template struct pgl::vector<float,2>;
 template struct pgl::vector<float,3>;
 template struct pgl::vector<float,4>;
 
-template float pgl::dot<float, 3>(pgl::float3 const&, pgl::float3 const&);
-template float pgl::dot<float, 3>(pgl::float3 const&);
-template float pgl::sum<float, 3>(pgl::float3 const&);
+template float pgl::dot<float,3>(pgl::float3 const&, pgl::float3 const&);
+template float pgl::dot<float,3>(pgl::float3 const&);
+template float pgl::sum<float,3>(pgl::float3 const&);
 
 template pgl::float3 pgl::normalize<float, 3>(pgl::float3 const&);
 template pgl::float3 pgl::abs<float, 3>(pgl::float3 const&);
 template pgl::float3 pgl::cross<float>(pgl::float3 const&, pgl::float3 const&);
+
+template pgl::float3 pgl::operator+(const pgl::float3&, const pgl::float3&);
+template pgl::float3 pgl::operator+(const float&, const pgl::float3&);
+
+template pgl::float3 pgl::operator-(const pgl::float3&, const pgl::float3&);
+template pgl::float3 pgl::operator-(const float&, const pgl::float3&);
+
+template pgl::float3 pgl::operator*(const pgl::float3&, const pgl::float3&);
+template pgl::float3 pgl::operator*(const float&, const pgl::float3&);
+
+template pgl::float3 pgl::operator/(const pgl::float3&, const pgl::float3&);
+template pgl::float3 pgl::operator/(const float&, const pgl::float3&);
+
+template pgl::float4 pgl::operator+(const pgl::float4&, const pgl::float4&);
+template pgl::float4 pgl::operator+(const float&, const pgl::float4&);
+
+template pgl::float4 pgl::operator-(const pgl::float4&, const pgl::float4&);
+template pgl::float4 pgl::operator-(const float&, const pgl::float4&);
+
+template pgl::float4 pgl::operator*(const pgl::float4&, const pgl::float4&);
+template pgl::float4 pgl::operator*(const float&, const pgl::float4&);
+
+template pgl::float4 pgl::operator/(const pgl::float4&, const pgl::float4&);
+template pgl::float4 pgl::operator/(const float&, const pgl::float4&);
+
+template class pgl::matrix<int, 1, 1>;
+template class pgl::matrix<int, 1, 2>;
+template class pgl::matrix<int, 1, 3>;
+template class pgl::matrix<int, 1, 4>;
+
+template class pgl::matrix<int, 2, 1>;
+template class pgl::matrix<int, 2, 2>;
+template class pgl::matrix<int, 2, 3>;
+template class pgl::matrix<int, 2, 4>;
+
+template class pgl::matrix<int, 3, 1>;
+template class pgl::matrix<int, 3, 2>;
+template class pgl::matrix<int, 3, 3>;
+template class pgl::matrix<int, 3, 4>;
+
+template class pgl::matrix<int, 4, 1>;
+template class pgl::matrix<int, 4, 2>;
+template class pgl::matrix<int, 4, 3>;
+template class pgl::matrix<int, 4, 4>;
+
+template pgl::matrix<float,4,4> pgl::translate<float>(
+  pgl::matrix<float,4,4> const&,
+  pgl::vector<float,3> const&);

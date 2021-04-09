@@ -20,9 +20,9 @@ project(pangolin
 
 # SET(CMAKE_C_COMPILER /usr/bin/clang)
 # SET(CMAKE_CXX_COMPILER /usr/bin/clang++)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # set(CMAKE_CXX_CPPCHECK "cppcheck")
 # set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=*")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 find_package(glfw3    REQUIRED)
@@ -36,7 +36,7 @@ find_package(Freetype REQUIRED)
 add_library(compilation_flags INTERFACE)
 target_compile_options(compilation_flags
   INTERFACE
-	-Wall -Wextra -Wpedantic -Weffc++
+    -Wall -Wextra -Wpedantic -Weffc++
 )
 target_compile_features(compilation_flags INTERFACE cxx_std_20)
 

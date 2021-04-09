@@ -18,15 +18,15 @@ namespace pgl {
   template<typename T>
     concept container =
     requires(T a) {
-      typename T::value_type;
-      typename T::size_type;
-      typename T::iterator;
-      typename T::const_iterator;
+      /* typename T::value_type; */
+      /* typename T::size_type; */
+      /* typename T::iterator; */
+      /* typename T::const_iterator; */
       {a.size()  };
       {a.begin() };
       {a.end()   };
-      {a.cbegin()};
-      {a.cend()  };
+      /* {a.cbegin()}; */
+      /* {a.cend()  }; */
     };
 
   constexpr float  pi  {std::numbers::pi_v<float>};

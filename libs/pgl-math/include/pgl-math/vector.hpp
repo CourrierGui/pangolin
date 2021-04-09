@@ -1,33 +1,15 @@
 #pragma once
 
 #include <pgl-math/utils.hpp>
+#include <pgl-math/algebric-vector.hpp>
 
 namespace pgl {
-  template<integral type, length dim, template<integral t, length d> class v>
-    struct base_vector;
-
-  template<number type, length dim, template<typename T, length d> class vector_type>
-    struct algebric_vector : public base_vector<type, dim,vector_type> {
-
-      inline constexpr algebric_vector(const type& e) noexcept;
-      inline constexpr algebric_vector() noexcept;
-      inline constexpr algebric_vector(const type arr[dim]) noexcept;
-      inline constexpr algebric_vector(std::convertible_to<type> auto ... args) noexcept; // C++ 20 <3
-
-      inline constexpr auto operator*=(const algebric_vector<type,dim,vector_type>& vect) noexcept -> algebric_vector<type,dim,vector_type>&;
-      inline constexpr auto operator/=(const algebric_vector<type,dim,vector_type>& vect) noexcept -> algebric_vector<type,dim,vector_type>&;
-      inline constexpr auto operator+=(const algebric_vector<type,dim,vector_type>& vect) noexcept -> algebric_vector<type,dim,vector_type>&;
-      inline constexpr auto operator-=(const algebric_vector<type,dim,vector_type>& vect) noexcept -> algebric_vector<type,dim,vector_type>&;
-      inline constexpr auto operator*=(std::convertible_to<type> auto scalar) noexcept -> algebric_vector<type,dim,vector_type>&;
-      inline constexpr auto operator/=(std::convertible_to<type> auto scalar) noexcept -> algebric_vector<type,dim,vector_type>&;
-      inline constexpr auto operator+=(std::convertible_to<type> auto scalar) noexcept -> algebric_vector<type,dim,vector_type>&;
-      inline constexpr auto operator-=(std::convertible_to<type> auto scalar) noexcept -> algebric_vector<type,dim,vector_type>&;
-    };
 
   template<typename type, length dim> struct vector {  };
 
   template<number type, length dim>
     struct vector<type,dim> : public algebric_vector<type,dim,vector> {
+      template<typename t> using container_of = vector<t, dim>;
       inline constexpr          vector()                               noexcept;
       inline constexpr explicit vector(const type& e)                  noexcept;
       inline constexpr          vector(const type arr[dim])            noexcept;
@@ -36,19 +18,25 @@ namespace pgl {
 
   template<length dim>
     struct vector<bool,dim> : public base_vector<bool, dim,vector> {
+      template<typename t> using container_of = vector<t, dim>;
       inline constexpr          vector()                    noexcept;
       inline constexpr explicit vector(bool b)              noexcept;
       inline constexpr          vector(const bool arr[dim]) noexcept;
       inline constexpr vector(std::convertible_to<bool> auto ... args) noexcept;
 
-      /* inline constexpr auto operator&=(const vector<bool,dim>&) noexcept -> vector<bool,dim>&; */
-      /* inline constexpr auto operator|=(const vector<bool,dim>&) noexcept -> vector<bool,dim>&; */
-      /* inline constexpr auto operator^=(const vector<bool,dim>&) noexcept -> vector<bool,dim>&; */
-      /* inline constexpr auto operator!=(const vector<bool,dim>&) noexcept -> vector<bool,dim>&; */
+      /* inline constexpr auto operator&=(const vector<bool,dim>&) noexcept */
+      /*  -> vector<bool,dim>&; */
+      /* inline constexpr auto operator|=(const vector<bool,dim>&) noexcept */
+      /*   -> vector<bool,dim>&; */
+      /* inline constexpr auto operator^=(const vector<bool,dim>&) noexcept */
+      /*   -> vector<bool,dim>&; */
+      /* inline constexpr auto operator~=(const vector<bool,dim>&) noexcept */
+      /*   -> vector<bool,dim>&; */
     };
 
   template<number type>
     struct vector<type,2> : public algebric_vector<type,2,vector> {
+      template<typename t> using container_of = vector<t, 2>;
       inline constexpr          vector()                      noexcept;
       inline constexpr explicit vector(const type& e)         noexcept;
       inline constexpr          vector(const type arr[2])     noexcept;
@@ -62,6 +50,7 @@ namespace pgl {
 
   template<number type>
     struct vector<type,3> : public algebric_vector<type,3,vector> {
+      template<typename t> using container_of = vector<t, 3>;
       inline constexpr vector()                                               noexcept;
       inline constexpr explicit vector(const type& e)                         noexcept;
       inline constexpr vector(const type arr[3])                              noexcept;
@@ -78,14 +67,16 @@ namespace pgl {
 
   template<number type>
     struct vector<type,4> : public algebric_vector<type,4,vector> {
-      inline constexpr vector()                                                               noexcept;
-      inline constexpr explicit vector(const type& e)                                         noexcept;
-      inline constexpr vector(const type arr[4])                                              noexcept;
-      inline constexpr vector(const type& e1, const type& e2, const type& e3, const type& e4) noexcept;
+      template<typename t> using container_of = vector<t, 4>;
+      inline constexpr vector() noexcept;
+      inline constexpr explicit vector(const type& e) noexcept;
+      inline constexpr vector(const type arr[4]) noexcept;
+      inline constexpr vector(const type& e1, const type& e2,
+                              const type& e3, const type& e4) noexcept;
 
       // Can these constructors be one template ?
-      inline constexpr vector(const vector<type,3>& v, const type& e)                         noexcept;
-      inline constexpr vector(const vector<type,2>& v, const vector<type,2>& w)               noexcept;
+      inline constexpr vector(const vector<type,3>& v, const type& e) noexcept;
+      inline constexpr vector(const vector<type,2>& v, const vector<type,2>& w) noexcept;
 
       static inline constexpr vector<type,4> right() noexcept;
       static inline constexpr vector<type,4> left()  noexcept;
@@ -96,51 +87,109 @@ namespace pgl {
     };
 
   template<number type, length dim>
-    inline constexpr auto operator*(const vector<type,dim>& lhs, const vector<type,dim>& rhs) noexcept -> vector<type,dim>;
+    inline constexpr auto operator*(const vector<type,dim>& lhs,
+                                    const vector<type,dim>& rhs) noexcept
+    -> vector<type,dim>;
+
   template<number type, number scalar_type, length dim>
-    inline constexpr auto operator*(const vector<type,dim>& lhs, const scalar_type& rhs) noexcept -> vector<type,dim>;
+    inline constexpr auto operator*(const vector<type,dim>& lhs,
+                                    const scalar_type& rhs) noexcept
+    -> vector<type,dim>;
+
   template<number type, number scalar_type, length dim>
-    inline constexpr auto operator*(const scalar_type& lhs, const vector<type,dim>& rhs) noexcept -> vector<type,dim>;
+    inline constexpr auto operator*(const scalar_type& lhs,
+                                    const vector<type,dim>& rhs) noexcept
+    -> vector<type,dim>;
+
 
   template<number type, length dim>
-    inline constexpr auto operator/(const vector<type,dim>& lhs, const vector<type,dim>& rhs) noexcept -> vector<type,dim>;
+    inline constexpr auto operator/(const vector<type,dim>& lhs,
+                                    const vector<type,dim>& rhs) noexcept
+    -> vector<type,dim>;
+
   template<number type, number scalar_type, length dim>
-    inline constexpr auto operator/(const vector<type,dim>& lhs, const scalar_type& rhs) noexcept -> vector<type,dim>;
+    inline constexpr auto operator/(const vector<type,dim>& lhs,
+                                    const scalar_type& rhs) noexcept
+    -> vector<type,dim>;
+
   template<number type, number scalar_type, length dim>
-    inline constexpr auto operator/(const scalar_type& lhs, const vector<type,dim>& rhs) noexcept -> vector<type,dim>;
+    inline constexpr auto operator/(const scalar_type& lhs,
+                                    const vector<type, dim>& rhs) noexcept
+    -> vector<type,dim>;
 
   template<number type, length dim>
-    inline constexpr auto operator-(const vector<type,dim>& lhs, const vector<type,dim>& rhs) noexcept -> vector<type,dim>;
+    inline constexpr auto operator-(const vector<type,dim>& lhs,
+                                    const vector<type,dim>& rhs) noexcept
+    -> vector<type,dim>;
+
   template<number type, number scalar_type, length dim>
-    inline constexpr auto operator-(const vector<type,dim>& lhs, const scalar_type& rhs) noexcept -> vector<type,dim>;
+    inline constexpr auto operator-(const vector<type,dim>& lhs,
+                                    const scalar_type& rhs) noexcept
+    -> vector<type,dim>;
+
   template<number type, length dim>
-    inline constexpr auto operator-(const vector<type,dim>& vec) noexcept -> vector<type,dim>;
+    inline constexpr auto operator-(const vector<type,dim>& vec) noexcept
+    -> vector<type, dim>;
 
   template<number type, number scalar_type, length dim>
-    inline constexpr auto operator-(const scalar_type& lhs, const vector<type,dim>& rhs) noexcept -> vector<type,dim>;
+    inline constexpr auto operator-(const scalar_type& lhs,
+                                    const vector<type,
+      dim>& rhs) noexcept
+    -> vector<type,dim>;
+
 
   template<number type, length dim>
-    inline constexpr auto operator+(const vector<type,dim>& lhs, const vector<type,dim>& rhs) noexcept -> vector<type,dim>;
-  template<number type, number scalar_type, length dim>
-    inline constexpr auto operator+(const vector<type,dim>& lhs, const scalar_type& rhs) noexcept -> vector<type,dim>;
-  template<number type, number scalar_type, length dim>
-    inline constexpr auto operator+(const scalar_type& lhs, const vector<type,dim>& rhs) noexcept -> vector<type,dim>;
+    inline constexpr auto operator+(const vector<type,dim>& lhs,
+                                    const vector<type,dim>& rhs) noexcept
+    -> vector<type,dim>;
 
-  template<number type, length dim> inline constexpr auto dot(const vector<type,dim>&, const vector<type,dim>&) noexcept -> type;
-  template<number type, length dim> inline constexpr auto dot(const vector<type,dim>&)                          noexcept -> type;
-  template<number type, length dim> inline constexpr auto sum(const vector<type,dim>&)                          noexcept -> type;
-  template<number type, length dim> inline constexpr auto abs(const vector<type,dim>&)                          noexcept -> vector<type,dim>;
-  template<number type, length dim> inline constexpr auto normalize(const vector<type,dim>&)                    noexcept -> vector<type,dim>;
-  template<number type, length dim> inline constexpr auto norm(const vector<type,dim>&)                         noexcept -> type;
+  template<number type, number scalar_type, length dim>
+    inline constexpr auto operator+(const vector<type,dim>& lhs,
+                                    const scalar_type& rhs) noexcept
+    -> vector<type,dim>;
 
-  template<number type, length dim> inline constexpr auto lerp(const vector<type,dim>&, const vector<type,dim>&, type) noexcept -> vector<type,dim>;
-  template<typename type>           inline constexpr auto cross(const vector<type,3>& lhs, const vector<type,3>& rhs)  noexcept -> vector<type,3>;
+  template<number type, number scalar_type, length dim>
+    inline constexpr auto operator+(const scalar_type& lhs,
+                                    const vector<type,dim>& rhs) noexcept
+    -> vector<type,dim>;
+
+
+  template<number type, length dim>
+    inline constexpr auto dot(const vector<type,dim>&,
+                              const vector<type,dim>&) noexcept
+    -> type;
+
+  template<number type, length dim>
+    inline constexpr auto dot(const vector<type,dim>&) noexcept -> type;
+
+  template<number type, length dim>
+    inline constexpr auto sum(const vector<type,dim>&) noexcept -> type;
+
+  template<number type, length dim>
+    inline constexpr auto abs(const vector<type,dim>&) noexcept -> vector<type,dim>;
+
+  template<number type, length dim>
+    inline constexpr auto normalize(const vector<type,dim>&) noexcept
+    -> vector<type,dim>;
+
+  template<number type, length dim>
+    inline constexpr auto norm(const vector<type,dim>&) noexcept -> type;
+
+  template<number type, length dim>
+    inline constexpr auto lerp(const vector<type,dim>&,
+                               const vector<type,dim>&,
+                               type) noexcept
+    -> vector<type,dim>;
+
+  template<typename type>
+    inline constexpr auto cross(const vector<type,3>& lhs,
+                                const vector<type,3>& rhs) noexcept
+    -> vector<type,3>;
 
   /*
-   *
-   * ========================
-   * ======= TODO !!! =======
-   * ========================
+   * ====================
+   * ======= TODO =======
+   * ====================
    *
    * copy, move constructor
    * operator=
@@ -148,7 +197,6 @@ namespace pgl {
    * decltype
    * benchmark
    * SIMD
-   *
    */
 
   using bool2 = vector<bool,2>;

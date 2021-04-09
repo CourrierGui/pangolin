@@ -74,8 +74,16 @@ namespace pgl {
       struct raw_data {
         type data[dim];
         int size;
-        inline constexpr raw_data(const type arr[dim]) noexcept : data{}, size{dim} { auto it=data, val=arr; while (it!=data+dim) { *(it++) = *(val++); } }
+        inline constexpr raw_data(const type arr[dim]) noexcept :
+          data{}, size{dim}
+        {
+          auto it=data, val=arr;
+          while (it!=data+dim) {
+            *(it++) = *(val++);
+          }
+        }
       };
+
       inline constexpr auto data() noexcept -> raw_data;
       inline constexpr auto size() const noexcept -> int;
 

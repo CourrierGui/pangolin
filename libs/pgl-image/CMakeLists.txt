@@ -15,7 +15,7 @@ target_include_directories(image
 target_link_libraries(image
   PRIVATE
     $<BUILD_INTERFACE:compilation_flags>
-		stb_image
+    stb_image
 )
 
 add_subdirectory(tests)

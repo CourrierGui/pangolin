@@ -6,7 +6,7 @@
 namespace pgl {
 
   struct Image {
-		Image();
+    Image();
     uint32_t width, height;
     uint8_t depth;
     std::vector<unsigned char> data;
@@ -14,7 +14,7 @@ namespace pgl {
 
   namespace image {
 
-		//TODO static method of struct Image?
+    //TODO static method of struct Image?
     auto load_image(const std::string& filename) -> Image;
 
   } /* end of namespace image */
