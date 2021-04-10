@@ -54,25 +54,25 @@ template pgl::float4 pgl::operator*(const float&, const pgl::float4&);
 template pgl::float4 pgl::operator/(const pgl::float4&, const pgl::float4&);
 template pgl::float4 pgl::operator/(const float&, const pgl::float4&);
 
-template class pgl::matrix<int, 1, 1>;
-template class pgl::matrix<int, 1, 2>;
-template class pgl::matrix<int, 1, 3>;
-template class pgl::matrix<int, 1, 4>;
+template struct pgl::matrix<int, 1, 1>;
+template struct pgl::matrix<int, 1, 2>;
+template struct pgl::matrix<int, 1, 3>;
+template struct pgl::matrix<int, 1, 4>;
 
-template class pgl::matrix<int, 2, 1>;
-template class pgl::matrix<int, 2, 2>;
-template class pgl::matrix<int, 2, 3>;
-template class pgl::matrix<int, 2, 4>;
+template struct pgl::matrix<int, 2, 1>;
+template struct pgl::matrix<int, 2, 2>;
+template struct pgl::matrix<int, 2, 3>;
+template struct pgl::matrix<int, 2, 4>;
 
-template class pgl::matrix<int, 3, 1>;
-template class pgl::matrix<int, 3, 2>;
-template class pgl::matrix<int, 3, 3>;
-template class pgl::matrix<int, 3, 4>;
+template struct pgl::matrix<int, 3, 1>;
+template struct pgl::matrix<int, 3, 2>;
+template struct pgl::matrix<int, 3, 3>;
+template struct pgl::matrix<int, 3, 4>;
 
-template class pgl::matrix<int, 4, 1>;
-template class pgl::matrix<int, 4, 2>;
-template class pgl::matrix<int, 4, 3>;
-template class pgl::matrix<int, 4, 4>;
+template struct pgl::matrix<int, 4, 1>;
+template struct pgl::matrix<int, 4, 2>;
+template struct pgl::matrix<int, 4, 3>;
+template struct pgl::matrix<int, 4, 4>;
 
 template pgl::matrix<float,4,4> pgl::translate<float>(
   pgl::matrix<float,4,4> const&,

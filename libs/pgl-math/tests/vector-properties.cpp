@@ -213,11 +213,11 @@ int main() {
     });
   check_ortho2.check("ortho2 function");
 
-  auto check_to_glm = pgl::test::make_checker(
-    [](const pgl::float44& mat, const pgl::float3& vec) -> bool {
-      return ( mat == to_glm(mat) && vec == to_glm(vec) );
-    });
-  check_to_glm.check("to_glm");
+  /* auto check_to_glm = pgl::test::make_checker( */
+  /*   [](const pgl::float44& mat, const pgl::float3& vec) -> bool { */
+  /*     return ( mat == to_glm(mat) && vec == to_glm(vec) ); */
+  /*   }); */
+  /* check_to_glm.check("to_glm"); */
 
   /* auto translate = pgl::test::make_checker( */
   /*   [](const pgl::float44& mat, const pgl::float3 vec) -> bool { */

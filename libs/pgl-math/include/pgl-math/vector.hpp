@@ -5,10 +5,10 @@
 
 namespace pgl {
 
-  template<typename type, length dim> struct vector {  };
+  /* template<typename type, length dim> struct vector {  }; */
 
-  template<number type, length dim>
-    struct vector<type,dim> : public algebric_vector<type,dim,vector> {
+  template<typename type, length dim>
+    struct vector : public algebric_vector<type,dim,vector> {
       template<typename t> using container_of = vector<t, dim>;
       inline constexpr          vector()                               noexcept;
       inline constexpr explicit vector(const type& e)                  noexcept;
@@ -76,7 +76,9 @@ namespace pgl {
 
       // Can these constructors be one template ?
       inline constexpr vector(const vector<type,3>& v, const type& e) noexcept;
-      inline constexpr vector(const vector<type,2>& v, const vector<type,2>& w) noexcept;
+      inline constexpr vector(
+        const vector<type,2>& v,
+        const vector<type,2>& w) noexcept;
 
       static inline constexpr vector<type,4> right() noexcept;
       static inline constexpr vector<type,4> left()  noexcept;

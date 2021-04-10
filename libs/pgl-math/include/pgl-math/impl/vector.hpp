@@ -3,23 +3,27 @@
 #include <cmath>
 #include <iostream>
 
+#include <pgl-math/utils.hpp>
+#include <pgl-math/vector.hpp>
+
 #include <pgl-math/impl/base-vector.hpp>
 #include <pgl-math/impl/algebric-vector.hpp>
 
 namespace pgl {
 
-  template<number type, length dim> inline constexpr vector<type,dim>::vector() noexcept :
+  template<typename type, length dim>
+    inline constexpr vector<type,dim>::vector() noexcept :
     algebric_vector<type,dim,vector>{} {  }
 
-  template<number type, length dim>
+  template<typename type, length dim>
     inline constexpr vector<type,dim>::vector(const type& e) noexcept :
     algebric_vector<type,dim,vector>{e} {  }
 
-  template<number type, length dim>
+  template<typename type, length dim>
     inline constexpr vector<type,dim>::vector(const type arr[dim]) noexcept :
     algebric_vector<type,dim,vector>{arr} {  }
 
-  template<number type, length dim>
+  template<typename type, length dim>
     inline constexpr vector<type,dim>::vector(
       std::convertible_to<type> auto ... args) noexcept :
     algebric_vector<type,dim,vector>{ std::forward<type>(args)... } {  }

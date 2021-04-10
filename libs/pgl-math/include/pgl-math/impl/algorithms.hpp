@@ -383,7 +383,7 @@ namespace pgl {
   template<number type>
     inline constexpr auto ortho(
       type left, type right,
-      type bottom, type top)
+      type bottom, type top) noexcept
     -> matrix<type, 4>
     {
       return pgl::matrix<type,4>{
@@ -399,7 +399,7 @@ namespace pgl {
     inline constexpr auto ortho(
       type left, type right,
       type bottom, type top,
-      type zNear, type zFar)
+      type zNear, type zFar) noexcept
     -> matrix<type,4>
     {
       return {

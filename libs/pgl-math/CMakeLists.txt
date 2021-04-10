@@ -5,15 +5,19 @@ target_include_directories(math
     $<INSTALL_INTERFACE:include/pangolin>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
-# target_precompile_headers(math
-# 	INTERFACE
-# 		include/math/vector.hpp
-# 		include/math/impl/matrix.hpp
-# 		include/math/impl/vector.hpp
-# 		include/math/impl/algorithms.hpp
-# 		include/math/matrix.hpp
-# 		include/math/quaternion.hpp
-# )
+target_precompile_headers(math
+  INTERFACE
+    include/pgl-math/vector.hpp
+    include/pgl-math/impl/vector.hpp
+
+    include/pgl-math/algorithms.hpp
+    include/pgl-math/impl/algorithms.hpp
+
+    include/pgl-math/matrix.hpp
+    include/pgl-math/impl/matrix.hpp
+
+    include/pgl-math/quaternion.hpp
+)
 target_link_libraries(math
   PRIVATE
     compilation_flags

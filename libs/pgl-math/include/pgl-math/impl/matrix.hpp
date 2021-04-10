@@ -200,7 +200,7 @@ namespace pgl {
     }
 
   template<number type, uint32_t dim>
-    inline constexpr auto determinant(const matrix<type,dim>& m)
+    inline constexpr auto determinant(const matrix<type,dim>&)
     -> type
     {
       type det{0};

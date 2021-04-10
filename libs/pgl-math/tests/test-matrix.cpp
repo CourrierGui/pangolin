@@ -1,6 +1,6 @@
-#include <pgl-math/matrix.hpp>
-#include <pgl-math/vector.hpp>
-#include <pgl-math/algorithms.hpp>
+#include <pgl-math/impl/matrix.hpp>
+#include <pgl-math/impl/vector.hpp>
+#include <pgl-math/impl/algorithms.hpp>
 
 #include <glm/glm.hpp>
 #include <glm/ext/matrix_transform.hpp>

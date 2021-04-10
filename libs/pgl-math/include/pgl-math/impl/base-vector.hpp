@@ -9,7 +9,8 @@
 namespace pgl {
 
   template<integral type, length dim, template<typename T, length d> class vector_type>
-    inline constexpr base<type,dim,vector_type>::base() noexcept = default;
+    inline constexpr base<type,dim,vector_type>::base() noexcept :
+    elements{} {  }
 
   template<integral type, length dim, template<typename T, length d> class vector_type>
     inline constexpr base<type,dim,vector_type>::base(const type arr[dim]) noexcept :
@@ -35,7 +36,8 @@ namespace pgl {
   }
 
   template<integral type, template<typename T, length d> class vector_type>
-    inline constexpr base<type,4,vector_type>::base() noexcept = default;
+    inline constexpr base<type,4,vector_type>::base() noexcept :
+    elements{} {  }
 
   template<integral type, template<typename T, length d> class vector_type>
     inline constexpr base<type,4,vector_type>::base(
@@ -55,7 +57,8 @@ namespace pgl {
   }
 
   template<integral type, template<typename T, length d> class vector_type>
-    inline constexpr base<type,3,vector_type>::base() noexcept = default;
+    inline constexpr base<type,3,vector_type>::base() noexcept :
+    elements{} {  }
 
   template<integral type, template<typename T, length d> class vector_type>
     inline constexpr base<type,3,vector_type>::base(const type arr[3]) noexcept :
@@ -74,7 +77,8 @@ namespace pgl {
   }
 
   template<integral type,template<typename T, length d> class vector_type>
-    inline constexpr base<type,2,vector_type>::base() noexcept = default;
+    inline constexpr base<type,2,vector_type>::base() noexcept :
+    elements{} {  }
 
   template<integral type,template<typename T, length d> class vector_type>
     inline constexpr base<type,2,vector_type>::base(const type arr[2]) noexcept

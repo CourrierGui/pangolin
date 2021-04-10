@@ -283,5 +283,3 @@ namespace pgl {
    */
 
 } /* end of namespace pgl */
-
-#include <pgl-math/impl/matrix.hpp>

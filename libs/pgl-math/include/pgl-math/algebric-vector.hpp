@@ -5,7 +5,7 @@
 
 namespace pgl {
 
-  template<integral type, length dim, template<integral t, length d> class v>
+  template<integral type, length dim, template<typename t, length d> class v>
     struct base_vector;
 
   template<number type, length dim, template<typename T, length d> class vector_type>
