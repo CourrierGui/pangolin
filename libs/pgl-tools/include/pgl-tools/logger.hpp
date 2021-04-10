@@ -10,150 +10,45 @@
 #include <pgl-tools/ansi.hpp>
 
 namespace pgl {
-	namespace tools {
+  namespace tools {
 
-		struct LogContext {
-			std::string file;
-			int line;
-			std::string function;
-		};
+    constexpr std::array<ansi::color_code, 3> colors = {
+      ansi::color_code::bright_white,
+      ansi::color_code::bright_yellow,
+      ansi::color_code::bright_red
+    };
 
-		class BaseLogger {
-			public:
-				virtual ~BaseLogger();
-				void context(
-					const LogContext& context
-				);
-				virtual void write(
-					const std::string& msg,
-					const LogContext& context
-				) = 0;
-		};
+    constexpr std::array<const char*, 3> levels = {
+      "<INFO> ", "<WARN> ", "<ERROR>"
+    };
 
-		constexpr std::array<ansi::color_code, 3> colors = {
-			ansi::color_code::bright_white,
-			ansi::color_code::bright_yellow,
-			ansi::color_code::bright_red
-		};
-		constexpr std::array<const char*, 3> levels = {
-			"[INFO]", "[WARN]", "[ERROR]"
-		};
-		enum class Level {
-			INFO=0, WARN=1, ERROR=2
-		};
+    enum class Level {
+      INFO=0, WARN, ERROR, NONE
+    };
 
-		template<Level level>
-			class Logger : public BaseLogger {
-				public:
-					inline virtual void write(
-						const std::string& msg,
-						const LogContext& context
-						) override
-					{
-						BaseLogger::context(context);
-						std::clog
-							<< ansi::color(colors[static_cast<int>(level)])
-							<< levels[static_cast<int>(level)] << ": "
-							<< msg << ansi::clear << '\n';
-					}
-			};
+    struct LogContext {
+      std::string file;
+      int line;
+      std::string function;
+      Level level;
+      bool log_once;
+    };
 
-		template<Level level>
-			class LoggerOnce : public Logger<level> {
-				private:
-					bool logged = false;
-				public:
-					inline virtual void write(
-						const std::string& msg,
-						const LogContext& context)
-					{
-						if (!logged) {
-							Logger<level>::write(msg, context);
-							logged = true;
-						}
-					}
-			};
+    auto log(const LogContext& context) -> std::ostream&;
 
-		class LoggerList {
-			private:
-				using BaseLoggerRef = std::unique_ptr<BaseLogger>;
-				std::map<int, BaseLoggerRef> loggers;
-				LoggerList();
-
-			public:
-				template<Level level>
-					inline void log(
-						const std::stringstream& ss,
-						const LogContext& context,
-						bool log_once=false)
-					{
-						// do not use line in map -> what if 2 loggers are in the same line in 2 different files, stupid!
-						if (!loggers.count(context.line)) {
-							if (!log_once)
-								loggers[context.line] = std::make_unique<Logger<level>>();
-							else
-								loggers[context.line] = std::make_unique<LoggerOnce<level>>();
-							loggers[context.line]->write(ss.str(), context);
-						} else {
-							loggers[context.line]->write(ss.str(), context);
-						}
-					}
-
-				static LoggerList& get();
-		};
-
-	} /* end of namespace tools */
+  } /* end of namespace tools */
 } /* end of namespace pgl */
 
-#define CONCATENATE(x, y) x##y
-#define EXPAND(x, y) CONCATENATE(x, y)
+#define GENERIC_LOG(level) \
+  pgl::tools::log({__FILE__, __LINE__, __FUNCTION__, (pgl::tools::Level::level), false})
 
-#define PGL_INFO_IMP(msg, line, file, func) \
-	std::stringstream EXPAND(ss, line);       \
-	EXPAND(ss, line) << msg;                  \
-	pgl::tools::LoggerList::get().log<pgl::tools::Level::INFO>( \
-		EXPAND(ss, line), {file, line, func} \
-	)
+#define GENERIC_LOG_ONCE(level) \
+  pgl::tools::log({__FILE__, __LINE__, __FUNCTION__, (pgl::tools::Level::level), true})
 
-#define PGL_WARN_IMP(msg, line, file, func) \
-	std::stringstream EXPAND(ss, line);       \
-	EXPAND(ss, line) << msg;                  \
-	pgl::tools::LoggerList::get().log<pgl::tools::Level::WARN>( \
-		EXPAND(ss, line), {file, line, func} \
-	)
+#define PglInfo  GENERIC_LOG(INFO)
+#define PglWarn  GENERIC_LOG(WARN)
+#define PglError GENERIC_LOG(ERROR)
 
-#define PGL_ERROR_IMP(msg, line, file, func) \
-	std::stringstream EXPAND(ss, line);        \
-	EXPAND(ss, line) << msg;                   \
-	pgl::tools::LoggerList::get().log<pgl::tools::Level::ERROR>( \
-		EXPAND(ss, line), {file, line, func} \
-	)
-
-#define PGL_INFO_ONCE_IMP(msg, line, file, func) \
-	std::stringstream EXPAND(ss, line);       \
-	EXPAND(ss, line) << msg;                  \
-	pgl::tools::LoggerList::get().log<pgl::tools::Level::INFO>( \
-		EXPAND(ss, line), {file, line, func}, true \
-	)
-
-#define PGL_WARN_ONCE_IMP(msg, line, file, func) \
-	std::stringstream EXPAND(ss, line);       \
-	EXPAND(ss, line) << msg;                  \
-	pgl::tools::LoggerList::get().log<pgl::tools::Level::WARN>( \
-		EXPAND(ss, line), {file, line, func}, true \
-	)
-
-#define PGL_ERROR_ONCE_IMP(msg, line, file, func) \
-	std::stringstream EXPAND(ss, line);       \
-	EXPAND(ss, line) << msg;                  \
-	pgl::tools::LoggerList::get().log<pgl::tools::Level::ERROR>( \
-		EXPAND(ss, line), {file, line, func}, true \
-	)
-
-#define PGL_INFO(msg) PGL_INFO_IMP(msg, __LINE__, __FILE__, __FUNCTION__)
-#define PGL_WARN(msg) PGL_WARN_IMP(msg, __LINE__, __FILE__, __FUNCTION__)
-#define PGL_ERROR(msg) PGL_ERROR_IMP(msg, __LINE__, __FILE__, __FUNCTION__)
-
-#define PGL_INFO_ONCE(msg) PGL_INFO_ONCE_IMP(msg, __LINE__, __FILE__, __FUNCTION__)
-#define PGL_WARN_ONCE(msg) PGL_WARN_ONCE_IMP(msg, __LINE__, __FILE__, __FUNCTION__)
-#define PGL_ERROR_ONCE(msg) PGL_ERROR_ONCE_IMP(msg, __LINE__, __FILE__, __FUNCTION__)
+#define PglInfoOnce  GENERIC_LOG_ONCE(INFO)
+#define PglWarnOnce  GENERIC_LOG_ONCE(WARN)
+#define PglErrorOnce GENERIC_LOG_ONCE(ERROR)

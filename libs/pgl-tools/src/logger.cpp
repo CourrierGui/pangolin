@@ -1,34 +1,49 @@
 #include <pgl-tools/logger.hpp>
 
-#include <iostream>
+#include <filesystem>
+#include <chrono>
+#include <ctime>
+#include <unordered_set>
+#include <fstream>
+
+const auto start_time = std::chrono::system_clock::now();
+using namespace std::chrono_literals;
+std::unordered_set<std::string> loggers;
+std::ofstream dev_null{"/dev/null"};
 
 namespace pgl {
-	namespace tools {
+  namespace tools {
 
-		BaseLogger::~BaseLogger() {}
+    auto log(const LogContext& context) -> std::ostream& {
+      if (context.log_once
+          && loggers.contains(context.file+std::to_string(context.line))) {
+        loggers.insert(context.file+std::to_string(context.line));
+        return dev_null;
+      }
 
-		void BaseLogger::context(
-			const LogContext& context)
-		{
-			std::clog
-				<< "In file "
-				<< ansi::color(ansi::color_code::bright_blue)
-				<< context.file << ": "
-				<< ansi::color(ansi::color_code::bright_green)
-				<< "line "
-				<< context.line << ' '
-				<< ansi::clear
-				<< "in function "
-				<< ansi::color(ansi::color_code::bright_yellow)
-				<< context.function << ":\n";
-		}
+      std::filesystem::path p{context.file};
+      auto now = std::chrono::system_clock::now();
 
-		LoggerList::LoggerList() = default;
+      if (context.level != Level::NONE)
+        std::cerr << ansi::color(colors[static_cast<int>(context.level)]);
 
-		LoggerList& LoggerList::get() {
-			static LoggerList logger_list;
-			return logger_list;
-		}
+      std::cerr
+        << '[' << std::fixed << std::setw(9)
+        << ((now-start_time) / 1us) / 1'000'000.0 << "] "
+        << p.filename() << ':'
+        << context.line << ':'
+        << context.function << ':';
 
-	} /* end of namespace tools */
+      if (context.level != Level::NONE) {
+        std::cerr
+          << ' ' << levels[static_cast<int>(context.level)]
+          << ansi::clear;
+      }
+
+      std::cerr << ' ';
+      loggers.insert(context.file+std::to_string(context.line));
+      return std::cerr;
+    }
+
+  } /* end of namespace tools */
 } /* end of namespace pgl */
