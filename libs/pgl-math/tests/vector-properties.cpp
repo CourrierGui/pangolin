@@ -145,8 +145,8 @@ int main() {
   auto check_norm = pgl::test::make_checker(
     [](float x) -> bool {
       return pgl::norm(pgl::float3{x, 0, 0}) == std::abs(x)
-        && pgl::norm(pgl::float3{0, x, 0}) == std::abs(x)
-        && pgl::norm(pgl::float3{0, 0, x}) == std::abs(x);
+          && pgl::norm(pgl::float3{0, x, 0}) == std::abs(x)
+          && pgl::norm(pgl::float3{0, 0, x}) == std::abs(x);
     });
   check_norm.check("norm of vector colinear to unit");
 

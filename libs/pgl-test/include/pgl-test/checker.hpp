@@ -14,25 +14,10 @@
 
 /*
  * TODO
- * - [X] look at QuickCheck;
- * - [X] support arrays;
- * - [X] display stuff on success/faillure;
- * - [X] display elapsed time;
- * - [X] improve the interface;
- * - [ ] improve the look of the output;
- * - [ ] progress bar;
- * - [X] inspect the input data (put tags on them) to see the distribution;
- * - [X] check for trivial answers (to make sure that enough of them were tested);
- * - [ ] support class methods (It works with lambdas);
- * - [X] support lambda functions/functors;
- * - [ ] add unit test support;
- * - [ ] compile time tests;
- * - [ ] generate random characters and strings ?;
- * - [ ] learn more about property based testing;
  * - [ ] add reduce step if there is an error;
- * - [ ] implement tests for databases ?;
- * - [ ] macro to make it easier to use (filename, function, line, ...);
- * - [ ] try to figure out a way to handle overloads.
+ * - [ ] generate random characters and strings ?;
+ * - [ ] output: macro to make it easier to use (filename, function, line, ...);
+ * - [ ] progress bar;
  */
 
 #define MAX_CONTAINER_SIZE 5
@@ -40,7 +25,30 @@
 namespace pgl {
   namespace test {
 
-    //TODO complete the concept!
+    template<typename return_type, typename... FArgs>
+      auto elapsed_ms(std::function<return_type(FArgs...)> fun, FArgs... args)
+      -> std::pair<float, return_type>
+      {
+        std::chrono::high_resolution_clock clock;
+        auto start = clock.now();
+        auto res = fun(args...);
+        auto stop = clock.now();
+        std::chrono::duration<double> duration = stop - start;
+        return {duration.count()*1000, res};
+      }
+
+    template<typename... FArgs>
+      auto elapsed_ms(std::function<void(FArgs...)> fun, FArgs... args)
+      -> float
+      {
+        std::chrono::high_resolution_clock clock;
+        auto start = clock.now();
+        fun(args...);
+        auto stop = clock.now();
+        std::chrono::duration<double> duration = stop - start;
+        return duration.count()*1000;
+      }
+
     template<typename T>
       concept SequenceContainer = requires(T x) {
         { x.size() } -> std::convertible_to<size_t>;
@@ -56,8 +64,10 @@ namespace pgl {
           std::uniform_int_distribution<Type> distrib;
 
         public:
-          RandomGenerator() : gen{std::random_device{}()},
-            distrib{std::numeric_limits<Type>::min(), std::numeric_limits<Type>::max()} { }
+          RandomGenerator() :
+            gen{std::random_device{}()},
+            distrib{std::numeric_limits<Type>::min(),
+              std::numeric_limits<Type>::max()} { }
 
           Type get() { return distrib(gen); }
       };
@@ -69,14 +79,39 @@ namespace pgl {
           std::uniform_real_distribution<Type> distrib;
 
         public:
-          RandomGenerator() : gen{std::random_device{}()},
-            /* distrib{std::numeric_limits<Type>::min(), std::numeric_limits<Type>::max()} { } */
+          RandomGenerator() :
+            gen{std::random_device{}()},
+            /* distrib{std::numeric_limits<Type>::min(), */
+            /* std::numeric_limits<Type>::max()} { } */
             distrib{-100'000'000, 100'000'000} { }
 
           Type get() { return distrib(gen); }
       };
 
-    template<template<typename T, uint32_t d> class range, typename Type, uint32_t dim>
+    template<>
+      class RandomGenerator<std::string> {
+        private:
+          std::mt19937 gen;
+          std::uniform_int_distribution<char> distrib;
+
+        public:
+          RandomGenerator() :
+            gen{std::random_device{}()},
+            distrib{1, 127} {  }
+
+          std::string get() {
+            char size = distrib(gen);
+            std::string res;
+            res.reserve(size);
+            while (res.size() != (std::size_t)size) {
+              res.push_back(distrib(gen));
+            }
+            return res;
+          }
+      };
+
+    template<template<typename T, uint32_t d> typename range,
+             typename Type, uint32_t dim>
       class RandomGenerator<range<Type,dim>> {
         public:
           RandomGenerator() { }
@@ -124,7 +159,11 @@ namespace pgl {
       }
 
     template<typename Type>
-      const Type& print(const Type& t) { return t; }
+      auto print(const Type& t)
+      -> const Type&
+      {
+        return t;
+      }
 
     template<SequenceContainer Type>
       std::string print(const Type& t) {
@@ -142,8 +181,6 @@ namespace pgl {
       void print_parameters(std::ostream& os, const std::tuple<Args...>& tpl) {
         std::apply(
           [&os](auto&&... i) {
-            /* size_t size; */
-            /* int status; */
             std::size_t n{0}, arg{0};
             ((os
               << "Argument "
@@ -151,37 +188,105 @@ namespace pgl {
               << ":\n  "
               << print(std::forward<decltype(i)>(i))
               << (++n != sizeof...(Args) ? "\n" : "" ) ), ...);
-          }, tpl
-          );
+          },
+          tpl);
       }
 
     template<typename... Args>
       class Checker {
         private:
-          template<class Type>
+          template<typename Type>
             using Func = std::function<Type(Args...)>;
+          using ResultType = std::tuple<bool,uint32_t,int32_t>;
+
+          Func<bool>                       _func;
+          std::optional<Func<bool>>        _is_trivial;
+          std::optional<Func<std::string>> _classifier;
+          std::map<std::string,uint32_t>   _label_distribution;
+
+          std::tuple<std::remove_cvref_t<Args>...> _false_arg;
 
         public:
-          Checker(const Func<bool>& func)
-            : _func(func), _is_trivial{}, _classifier{},
-            _label_distribution{}, _false_arg{}
-          {  };
+          Checker(const Func<bool>& func) :
+            _func(func), _is_trivial{}, _classifier{},
+            _label_distribution{}, _false_arg{} {  };
 
           bool check(const std::string& message="", uint32_t size=100) {
-            std::clog << "Checking " << message << ":\n";
-            std::chrono::high_resolution_clock clock;
-            auto start = clock.now();
-            auto [res, count, nb_trivial] = make_checks(size);
-            auto stop = clock.now();
-            std::chrono::duration<double> duration = stop - start;
+            using namespace std::placeholders;
+            auto f = std::function<ResultType(uint32_t)>{
+              std::bind(&Checker::make_checks, this, _1)
+            };
 
-            if (res) {
+            std::clog << "Checking that " << message << ":\n";
+            auto res = elapsed_ms(f, size);
+            display_result(res, size);
+            return std::get<0>(res.second);
+          }
+
+          void is_trival(const Func<bool>& func) {
+            _is_trivial = func;
+          }
+
+          void classify(const Func<std::string>& func) {
+            _classifier = func;
+          }
+
+        private:
+          auto make_checks(uint32_t size)
+            -> ResultType
+            {
+              auto args{generate_arguments<Args...>(size)};
+              bool res{true};
+              uint32_t count{1};
+              uint32_t nb_trivial{0};
+              for (auto& val: args) {
+                if (_is_trivial.has_value()) {
+                  std::apply([this, &nb_trivial](auto&&... i) {
+                    if (_is_trivial.value()(i...)) {
+                      ++nb_trivial;
+                    }
+                  },
+                  val);
+                }
+                if (_classifier.has_value()) {
+                  std::apply([this](auto&&... i) {
+                    auto label = _classifier.value()(i...);
+                    if (_label_distribution.count(label)) {
+                      ++_label_distribution[label];
+                    } else {
+                      _label_distribution[label] = 1;
+                    }
+                  },
+                  val);
+                }
+                std::apply([this, &res](auto... i) {
+                    res &= _func(i...);
+                  },
+                  val);
+
+                if (not res) {
+                  _false_arg = val;
+                  return {res, count, nb_trivial};
+                }
+                ++count;
+              }
+              return {res, count-1, nb_trivial};
+            }
+
+          void display_result(
+            std::pair<float, ResultType>& values,
+            unsigned int size)
+          {
+            auto [duration, res] = values;
+            auto [success, count, nb_trivial] = res;
+
+            if (success) {
               std::clog << count << " tests passed";
               if (_is_trivial.has_value()) {
                 std::clog << " with "
-                  << std::floor(float(nb_trivial)/size*100) << "% of trival cases" ;
+                  << std::floor(float(nb_trivial)/size*100) << "% of trivial cases" ;
               }
-              std::clog << " (elapsed " << duration.count()*1000 << " ms).\n";
+              std::clog << " (elapsed " << duration << " ms).\n";
               if (_classifier.has_value()) {
                 for (const auto& [label, count]: _label_distribution) {
                   std::clog << "* " << label
@@ -192,84 +297,33 @@ namespace pgl {
             } else {
               std::clog << "Test failed after " << count
                 << " attempt" << (count == 1 ? "" : "s" );
-              std::clog << " (" << duration.count()*1000 << " ms).\n";
+              std::clog << " (" << duration << " ms).\n";
               print_parameters(std::clog, _false_arg);
               std::clog << "\n\n";
             }
-            return res;
           }
-
-          void is_trival(const Func<bool>& func)        { _is_trivial = func; }
-          void classify (const Func<std::string>& func) { _classifier = func; }
-
-          Func<bool>                       _func;
-          std::optional<Func<bool>>        _is_trivial;
-          std::optional<Func<std::string>> _classifier;
-          std::map<std::string,uint32_t>   _label_distribution;
-
-          std::tuple<std::remove_cvref_t<Args>...> _false_arg;
-
-          auto make_checks(uint32_t size)
-            -> std::tuple<bool,uint32_t,int32_t>
-            {
-              auto args = generate_arguments<Args...>(size);
-              bool res = true;
-              uint32_t count = 1;
-              uint32_t nb_trivial = 0;
-              for (auto& val: args) {
-                if (_is_trivial.has_value()) {
-                  std::apply([this, &nb_trivial](auto&&... i) {
-                    if (_is_trivial.value()(i...)) {
-                      ++nb_trivial;
-                    }
-                  }, val);
-                }
-                if (_classifier.has_value()) {
-                  std::apply([this](auto&&... i) {
-                    auto label = _classifier.value()(i...);
-                    if (_label_distribution.count(label)) {
-                      ++_label_distribution[label];
-                    } else {
-                      _label_distribution[label] = 1;
-                    }
-                  }, val);
-                }
-                std::apply(
-                  [this, &res](auto... i) {
-                    res &= _func(i...);
-                  }, val);
-
-                if (not res) {
-                  _false_arg = val;
-                  return {res, count, nb_trivial};
-                }
-                ++count;
-              }
-              return {res, count-1, nb_trivial};
-            }
       };
 
     template<typename... Args>
-      auto make_checker_helper(const std::function<bool(Args...)>& f)
-      -> Checker<Args...>
-      {
+      auto make_checker_helper(const std::function<bool(Args...)>& f) {
         return Checker<Args...>{std::function{f}};
       }
 
     template<typename Function>
-      auto make_checker(Function&& f)
-      -> decltype(make_checker_helper(std::function{f}))
-      {
+      auto make_checker(Function&& f) {
         return make_checker_helper(std::function{f});
       }
 
-    template<class Ret, class Args>
-      auto is_commutative(Ret (*func)(Args,Args) ) {
-        return [func](Args lhs, Args rhs)
-          -> bool
-          {
+    template<typename Function>
+      void check(const std::string& msg, Function&& f) {
+        make_checker(f).check(msg);
+      }
+
+    template<typename Ret, typename Args>
+      auto is_commutative(Ret (*func)(Args,Args)) {
+        return make_checker([func](Args lhs, Args rhs) {
             return func(lhs,rhs) == func(rhs,lhs);
-          };
+          });
       }
 
   } /* end of namespace test */
