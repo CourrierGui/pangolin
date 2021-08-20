@@ -5,6 +5,9 @@ target_include_directories(math
     $<INSTALL_INTERFACE:include/pangolin>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
+# precompiled header makes everything magically available even without correct
+# linking
+# Not sure if that's a good thing...
 target_precompile_headers(math
   INTERFACE
     include/pgl-math/vector.hpp
@@ -32,6 +35,6 @@ install(
   ARCHIVE DESTINATION lib/pangolin
 )
 install(
-  DIRECTORY include/math
+  DIRECTORY include/pgl-math
   DESTINATION include/pangolin
 )
