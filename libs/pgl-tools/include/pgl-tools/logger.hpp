@@ -6,49 +6,79 @@
 #include <iostream>
 #include <map>
 #include <array>
+#include <experimental/source_location>
 
 #include <pgl-tools/ansi.hpp>
 
+using source_location = std::experimental::source_location;
+
+/* TODO: this part can be in the cpp file I think. The tricky part is the friend operator<<
+ * TODO: I think we can have something like:
+ *       `pgl::info("This is a {} text with {} arguments.") % { "formated", 2 };`
+ *       Using tuples and template black magic this can work I think.
+ * TODO: be able to display the logs on anything: window on xlib, OpenGL, stdout, file, socket, ...
+ */
+namespace pgl::tools {
+
+      class logger {
+          public:
+              enum class level { info, warn, error, debug };
+
+          public:
+              logger(const level l, const source_location sl=source_location{});
+              static void stream(std::ostream& os);
+
+              logger& format(const char *fmt)
+              {
+                  *_stream << fmt;
+                  return *this;
+              }
+
+              logger& format(const char *fmt, auto first, auto... args)
+              {
+                  auto fmt_view = std::string_view{fmt};
+                  auto pos = fmt_view.find_first_of('{');
+
+                  if (fmt[pos+1] == '}') {
+                      _stream->write(fmt, pos);
+                      *_stream << first;
+                      format(fmt + pos + 2, args...);
+                  }
+
+                  return *this;
+              }
+
+          private:
+              const level _level;
+              const source_location _source;
+
+              static std::ostream* _stream;
+
+              friend std::ostream& operator<<(logger& logger, auto data);
+              friend std::ostream& operator<<(logger&& logger, auto data);
+      };
+
+      std::ostream& operator<<(logger& logger, auto data)
+      {
+          *logger._stream << data;
+          return *logger._stream;
+      }
+
+      std::ostream& operator<<(logger&& logger, auto data)
+      {
+          *logger._stream << data;
+          return *logger._stream;
+      }
+
+} /* end of namespace pgl::tools */
+
 namespace pgl {
-  namespace tools {
 
-    constexpr std::array<ansi::color_code, 3> colors = {
-      ansi::color_code::bright_white,
-      ansi::color_code::bright_yellow,
-      ansi::color_code::bright_red
-    };
+    tools::logger debug(source_location sl=source_location{});
+    tools::logger info(source_location sl=source_location{});
+    tools::logger warn(source_location sl=source_location{});
+    tools::logger error(source_location sl=source_location{});
 
-    constexpr std::array<const char*, 3> levels = {
-      "<INFO> ", "<WARN> ", "<ERROR>"
-    };
+    void logstream(std::ostream& os);
 
-    enum class Level {
-      INFO=0, WARN, ERROR, NONE
-    };
-
-    struct LogContext {
-      std::string file;
-      int line;
-      std::string function;
-      Level level;
-      bool log_once;
-    };
-
-    auto log(const LogContext& context) -> std::ostream&;
-
-  } /* end of namespace tools */
 } /* end of namespace pgl */
-
-#define GENERIC_LOG(level) \
-  pgl::tools::log({__FILE__, __LINE__, __FUNCTION__, (pgl::tools::Level::level), false})
-
-#define GENERIC_LOG_ONCE(level) \
-  pgl::tools::log({__FILE__, __LINE__, __FUNCTION__, (pgl::tools::Level::level), true})
-
-#define PglInfo  GENERIC_LOG(INFO)
-#define PglWarn  GENERIC_LOG(WARN)
-#define PglError GENERIC_LOG(ERROR)
-
-#define PglInfoOnce  GENERIC_LOG_ONCE(INFO)
-#define PglWarnOnce  GENERIC_LOG_ONCE(WARN)
-#define PglErrorOnce GENERIC_LOG_ONCE(ERROR)

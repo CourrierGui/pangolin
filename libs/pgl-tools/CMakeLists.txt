@@ -26,5 +26,4 @@ install(
 	DESTINATION include/pangolin
 )
 
-add_executable(logger apps/logger.cpp)
-target_link_libraries(logger pgl::tools)
+add_subdirectory(tests)

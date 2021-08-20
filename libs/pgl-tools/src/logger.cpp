@@ -6,44 +6,57 @@
 #include <unordered_set>
 #include <fstream>
 
-const auto start_time = std::chrono::system_clock::now();
-using namespace std::chrono_literals;
-std::unordered_set<std::string> loggers;
-std::ofstream dev_null{"/dev/null"};
+namespace pgl::tools {
 
-namespace pgl {
-  namespace tools {
+    constexpr std::array<ansi::color_code, 3> colors[[maybe_unused]] = {
+      ansi::color_code::bright_white,
+      ansi::color_code::bright_yellow,
+      ansi::color_code::bright_red
+    };
 
-    auto log(const LogContext& context) -> std::ostream& {
-      if (context.log_once
-          && loggers.contains(context.file+std::to_string(context.line))) {
-        loggers.insert(context.file+std::to_string(context.line));
-        return dev_null;
-      }
+    constexpr std::array<const char*, 3> levels[[maybe_unused]] = {
+      "<INFO> ", "<WARN> ", "<ERROR>"
+    };
 
-      std::filesystem::path p{context.file};
-      auto now = std::chrono::system_clock::now();
-
-      if (context.level != Level::NONE)
-        std::cerr << ansi::color(colors[static_cast<int>(context.level)]);
-
-      std::cerr
-        << '[' << std::fixed << std::setw(9)
-        << ((now-start_time) / 1us) / 1'000'000.0 << "] "
-        << p.filename() << ':'
-        << context.line << ':'
-        << context.function << ':';
-
-      if (context.level != Level::NONE) {
-        std::cerr
-          << ' ' << levels[static_cast<int>(context.level)]
-          << ansi::clear;
-      }
-
-      std::cerr << ' ';
-      loggers.insert(context.file+std::to_string(context.line));
-      return std::cerr;
+    logger::logger(const level l, const source_location sl) :
+        _level{l}, _source{sl}
+    {
     }
 
-  } /* end of namespace tools */
+    std::ostream* logger::_stream = &std::clog;
+
+    void logger::stream(std::ostream& os)
+    {
+        _stream = &os;
+    }
+
+} /* end of namespace pgl::tools */
+
+namespace pgl {
+
+    tools::logger debug(source_location sl)
+    {
+        return tools::logger{tools::logger::level::debug, sl};
+    }
+
+    tools::logger info(source_location sl)
+    {
+        return tools::logger{tools::logger::level::info, sl};
+    }
+
+    tools::logger warn(source_location sl)
+    {
+        return tools::logger{tools::logger::level::warn, sl};
+    }
+
+    tools::logger error(source_location sl)
+    {
+        return tools::logger{tools::logger::level::error, sl};
+    }
+
+    void logstream(std::ostream& os)
+    {
+        tools::logger::stream(os);
+    }
+
 } /* end of namespace pgl */
