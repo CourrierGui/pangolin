@@ -57,7 +57,9 @@ endif()
 add_subdirectory(extern)
 add_subdirectory(libs)
 add_subdirectory(apps)
-add_subdirectory(doc)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+    add_subdirectory(doc)
+endif()
 
 #############################
 #### Configuration files ####
