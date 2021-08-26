@@ -6,7 +6,9 @@ target_include_directories(pgl-test
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-add_subdirectory(tests)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+    add_subdirectory(tests)
+endif()
 
 install(
   TARGETS pgl-test
