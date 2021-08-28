@@ -14,8 +14,8 @@ namespace pgl::tools {
       ansi::color_code::bright_red
     };
 
-    constexpr std::array<const char*, 3> levels[[maybe_unused]] = {
-      "<INFO> ", "<WARN> ", "<ERROR>"
+    constexpr std::array<const char*, 4> levels[[maybe_unused]] = {
+      "<INFO> ", "<WARN> ", "<ERROR>", "<ENTRY>",
     };
 
     logger::logger(const level l, const source_location sl) :
@@ -57,6 +57,12 @@ namespace pgl {
     void logstream(std::ostream& os)
     {
         tools::logger::stream(os);
+    }
+
+    void entry(source_location sl)
+    {
+        info(sl).format("entering {} at {} in {}\n",
+                        sl.function_name(), sl.line(), sl.file_name());
     }
 
 } /* end of namespace pgl */

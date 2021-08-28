@@ -74,10 +74,11 @@ namespace pgl::tools {
 
 namespace pgl {
 
-    tools::logger debug(source_location sl=source_location{});
-    tools::logger info(source_location sl=source_location{});
-    tools::logger warn(source_location sl=source_location{});
-    tools::logger error(source_location sl=source_location{});
+    tools::logger debug(source_location sl=source_location::current());
+    tools::logger info(source_location sl=source_location::current());
+    tools::logger warn(source_location sl=source_location::current());
+    tools::logger error(source_location sl=source_location::current());
+    void entry(source_location sl=source_location::current());
 
     void logstream(std::ostream& os);
 

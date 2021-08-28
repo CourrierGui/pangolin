@@ -2,6 +2,7 @@
 #include <pgl-core/resource-manager.hpp>
 #include <pgl-core/text-renderer.hpp>
 #include <pgl-math/vector.hpp>
+#include <pgl-tools/logger.hpp>
 
 #include <array>
 #include <iostream>
@@ -32,6 +33,8 @@ void key_callback(
 int main() {
   constexpr uint32_t width = 600;
   constexpr uint32_t height = 600;
+
+  pgl::entry();
 
   auto window = pgl::gui::GLFWWindow(width, height, "Pangolin demo");
   pgl::ResourceManager::load_shader(
