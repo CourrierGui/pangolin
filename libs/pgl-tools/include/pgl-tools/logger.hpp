@@ -25,7 +25,8 @@ namespace pgl::tools {
               enum class level { info, warn, error, debug };
 
           public:
-              logger(const level l, const source_location sl=source_location{});
+              logger(const level l, const source_location sl);
+              logger();
               static void stream(std::ostream& os);
 
               logger& format(const char *fmt)
@@ -49,9 +50,6 @@ namespace pgl::tools {
               }
 
           private:
-              const level _level;
-              const source_location _source;
-
               static std::ostream* _stream;
 
               friend std::ostream& operator<<(logger& logger, auto data);

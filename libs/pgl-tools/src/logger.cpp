@@ -5,6 +5,7 @@
 #include <ctime>
 #include <unordered_set>
 #include <fstream>
+#include <filesystem>
 
 namespace pgl::tools {
 
@@ -14,16 +15,26 @@ namespace pgl::tools {
       ansi::color_code::bright_red
     };
 
-    constexpr std::array<const char*, 4> levels[[maybe_unused]] = {
-      "<INFO> ", "<WARN> ", "<ERROR>", "<ENTRY>",
+    constexpr std::array<const char*, 4> levels = {
+      "<INFO> ", "<WARN> ", "<ERROR>", "<DEBUG>"
     };
 
-    logger::logger(const level l, const source_location sl) :
-        _level{l}, _source{sl}
+    std::ostream* logger::_stream = &std::clog;
+
+    logger::logger(const level l, const source_location sl)
     {
+        std::filesystem::path p{sl.file_name()};
+        *_stream
+            << levels[static_cast<int>(l)] << ' '
+            << p.filename().c_str() << ':'
+            << sl.line() << ": "
+            << sl.function_name() << "(): ";
+
     }
 
-    std::ostream* logger::_stream = &std::clog;
+    logger::logger()
+    {
+    }
 
     void logger::stream(std::ostream& os)
     {
@@ -61,8 +72,9 @@ namespace pgl {
 
     void entry(source_location sl)
     {
-        info(sl).format("entering {} at {} in {}\n",
-                        sl.function_name(), sl.line(), sl.file_name());
+        tools::logger().format(
+            "entering {} at {} in {}\n",
+            sl.function_name(), sl.line(), sl.file_name());
     }
 
 } /* end of namespace pgl */

@@ -95,9 +95,6 @@ namespace pgl {
 			vertex_code = v_shader_stream.str();
 			fragment_code = f_shader_stream.str();
 
-            pgl::debug() << "vertex code:\n" << vertex_code << '\n';
-            pgl::debug() << "fragment code:\n" << fragment_code << '\n';
-
 			// if geometry shader path is present, also load a geometry shader
 			if (g_shader_file.empty()) {
 				std::ifstream geometry_shader_file(g_shader_file);
