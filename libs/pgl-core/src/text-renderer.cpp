@@ -3,6 +3,7 @@
 #include <pgl-core/text-renderer.hpp>
 #include <pgl-core/resource-manager.hpp>
 #include <pgl-math/impl/algorithms.hpp>
+#include <pgl-tools/logger.hpp>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -53,15 +54,13 @@ namespace pgl {
       FT_Library ft;
 
       // all functions return a value different than 0 whenever an error occurred
-      if (FT_Init_FreeType(&ft)) {
-        std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
-      }
+      if (FT_Init_FreeType(&ft))
+          pgl::error() << "Could not init FreeType library\n";
 
       // load font as face
       FT_Face face;
-      if (FT_New_Face(ft, font.c_str(), 0, &face)) {
-        std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
-      }
+      if (FT_New_Face(ft, font.c_str(), 0, &face))
+          pgl::error() << "Failed to load font\n";
 
       // set size to load glyphs as
       FT_Set_Pixel_Sizes(face, 0, fontSize);
@@ -74,8 +73,8 @@ namespace pgl {
       for (GLubyte c = 0; c < 128; c++) {
         // load character glyph
         if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-          std::cerr << "ERROR::FREETYTPE: Failed to load Glyph\n";
-          continue;
+            pgl::error() << "Failed to load Glyph\n";
+            continue;
         }
 
         // generate texture
