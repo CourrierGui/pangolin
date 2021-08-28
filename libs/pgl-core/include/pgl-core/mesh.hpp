@@ -9,39 +9,37 @@
 #include <iostream>
 
 namespace pgl {
-	namespace render3D {
+    namespace _3D {
 
-		struct Vertex {
-			pgl::float3 position;
-			pgl::float3 normal;
-			pgl::float2 tex_coords;
-		};
+        struct vertex {
+            pgl::float3 position{};
+            pgl::float3 normal{};
+            pgl::float2 tex_coords{};
+        };
 
-		struct Texture {
-			unsigned int id;
-			std::string type; //TODO: use enum type instead
-			std::string name;
-		};
+        struct texture {
+            unsigned int id = 0;
+            std::string type{}; //TODO: use enum type instead
+            std::string name{};
+        };
 
-		bool operator==(const Texture& a, const Texture& b);
+        bool operator==(const texture& a, const texture& b);
 
-		class Mesh {
-			public:
-				std::vector<Vertex>       vertices;
-				std::vector<unsigned int> indices;
-				std::vector<Texture>      textures;
+        class mesh {
+            public:
+                std::vector<vertex>       _vertices;
+                std::vector<unsigned int> _indices;
+                std::vector<texture>      _textures;
 
-				Mesh(
-					const std::vector<Vertex>&       vertices,
-					const std::vector<unsigned int>& indices,
-					const std::vector<Texture>&      textures
-					);
-				void draw(Shader& shader);
+                mesh(const std::vector<vertex>&      vertices,
+                    const std::vector<unsigned int>& indices,
+                    const std::vector<texture>&      textures);
+                void draw(Shader& shader);
 
-			private:
-				unsigned int VBO, VAO, EBO;
-				void setup_mesh();
-		};
+            private:
+                unsigned int VBO, VAO, EBO;
+                void setup_mesh();
+        };
 
-	} /* end of namespace render3D */
+    } /* end of namespace render3D */
 } /* end of namespace pgl */
