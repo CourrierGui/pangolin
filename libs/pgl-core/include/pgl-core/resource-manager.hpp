@@ -34,11 +34,11 @@ namespace pgl {
        * nullptr, it also loads a geometry shader
        */
       static Shader& load_shader(
-        const std::string& v_shader_file,
-        const std::string& f_shader_file,
-        const std::string& g_shader_file,
-        const std::string& name
-        );
+          const std::string& name,
+          const std::string& v_shader_file,
+          const std::string& f_shader_file,
+          const std::string& g_shader_file=std::string{}
+      );
 
       /**
        * retrieves a stored sader
@@ -47,10 +47,10 @@ namespace pgl {
 
       // loads (and generates) a texture from file
       static Texture2D& load_texture(
-        const std::string& file,
-        bool alpha,
-        const std::string& name
-        );
+          const std::string& name,
+          const std::string& file,
+          bool alpha
+      );
 
       // retrieves a stored texture
       static Texture2D& get_texture(const std::string& name);
@@ -68,13 +68,28 @@ namespace pgl {
 
       // loads and generates a shader from file
       static Shader load_shader_from_file(
-        const std::string& vShaderFile,
-        const std::string& fShaderFile,
-        const std::string& gShaderFile = nullptr
-        );
+          const std::string& vShaderFile,
+          const std::string& fShaderFile,
+          const std::string& gShaderFile = nullptr
+      );
 
       // loads a single texture from file
       static Texture2D load_texture_from_file(const std::string& file, bool alpha);
   };
+
+  inline Shader& load_shader(const std::string& name,
+                             const std::string& v_shader_file,
+                             const std::string& f_shader_file,
+                             const std::string& g_shader_file=std::string{})
+  {
+      return ResourceManager::load_shader(name, v_shader_file, f_shader_file, g_shader_file);
+  }
+
+  inline Shader& get_shader(const std::string& name)
+  {
+      return ResourceManager::get_shader(name);
+  }
+
+
 
 } /* end of namespace pgl */

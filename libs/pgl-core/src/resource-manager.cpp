@@ -27,10 +27,10 @@ namespace pgl {
 	ResourceManager::ResourceManager() {}
 
 	Shader& ResourceManager::load_shader(
+		const std::string& name,
 		const std::string& v_shader_file,
 		const std::string& f_shader_file,
-		const std::string& g_shader_file,
-		const std::string& name)
+		const std::string& g_shader_file)
 	{
 		shaders[name] = load_shader_from_file(v_shader_file, f_shader_file, g_shader_file);
 		return shaders[name];
@@ -41,9 +41,9 @@ namespace pgl {
 	}
 
 	Texture2D& ResourceManager::load_texture(
+		const std::string& name,
 		const std::string& file,
-		bool alpha,
-		const std::string& name)
+		bool alpha)
 	{
 		textures[name] = load_texture_from_file(file, alpha);
 		return textures[name];

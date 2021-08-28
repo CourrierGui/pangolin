@@ -37,14 +37,13 @@ int main() {
   pgl::entry();
 
   auto window = pgl::gui::GLFWWindow(width, height, "Pangolin demo");
-  pgl::ResourceManager::load_shader(
+  pgl::load_shader("text",
     "../resources/shader/text.vs",
-    "../resources/shader/text.fs",
-    "", "text");
+    "../resources/shader/text.fs");
 
   pgl::gui::TextRenderer renderer{
     width, height,
-    pgl::ResourceManager::get_shader("text")};
+    pgl::get_shader("text")};
   renderer.load("../resources/fonts/ocraext.TTF", 14);
 
   std::string text = "Hello World!";
