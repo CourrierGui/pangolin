@@ -1,5 +1,6 @@
 #include <pgl-core/resource-manager.hpp>
 #include <pgl-image/image-loader.hpp>
+#include <pgl-tools/logger.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -77,6 +78,11 @@ namespace pgl {
 			std::ifstream fragment_shader_file(f_shader_file);
 			std::stringstream v_shader_stream, f_shader_stream;
 
+            if (!vertex_shader_file.is_open())
+                pgl::debug() << "Cannot open " << v_shader_file << '\n';
+            if (!fragment_shader_file.is_open())
+                pgl::debug() << "Cannot open " << f_shader_file << '\n';
+
 			// read file's buffer contents into streams
 			v_shader_stream << vertex_shader_file.rdbuf();
 			f_shader_stream << fragment_shader_file.rdbuf();
@@ -88,6 +94,9 @@ namespace pgl {
 			// convert stream into string
 			vertex_code = v_shader_stream.str();
 			fragment_code = f_shader_stream.str();
+
+            pgl::debug() << "vertex code:\n" << vertex_code << '\n';
+            pgl::debug() << "fragment code:\n" << fragment_code << '\n';
 
 			// if geometry shader path is present, also load a geometry shader
 			if (g_shader_file.empty()) {

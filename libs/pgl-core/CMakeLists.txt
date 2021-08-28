@@ -20,11 +20,10 @@ target_include_directories(core
 )
 target_link_libraries(core
   PUBLIC
-    pgl::image
-		pgl::math
+        pgl::image pgl::math
   PRIVATE
-    assimp glfw pgl::glad Freetype::Freetype
-		compilation_flags
+    assimp glfw pgl::glad Freetype::Freetype pgl::tools
+    compilation_flags
 )
 
 install(
