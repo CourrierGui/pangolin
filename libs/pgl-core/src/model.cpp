@@ -75,11 +75,11 @@ mesh model::process_mesh(aiMesh* mesh, const aiScene* scene) {
         aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
         auto diffuseMaps =
-            load_material_textures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+            load_material_textures(material, aiTextureType_DIFFUSE, texture::_type::diffuse);
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
         auto specularMaps =
-            load_material_textures(material, aiTextureType_SPECULAR, "texture_specular");
+            load_material_textures(material, aiTextureType_SPECULAR, texture::_type::specular);
 
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     }
@@ -88,7 +88,7 @@ mesh model::process_mesh(aiMesh* mesh, const aiScene* scene) {
 
 auto model::load_material_textures(aiMaterial* material,
                                    aiTextureType type,
-                                   const std::string& name)
+                                   texture::_type _type)
     -> std::vector<texture>
 {
     std::vector<texture> textures;
@@ -110,7 +110,7 @@ auto model::load_material_textures(aiMaterial* material,
             texture t;
 
             t.id = texture_from_file(str.C_Str(), _directory);
-            t.type = name;
+            t.type = _type;
             t.name = str.C_Str();
 
             textures.push_back(t);

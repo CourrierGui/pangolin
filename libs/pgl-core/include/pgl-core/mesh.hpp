@@ -19,7 +19,7 @@ namespace pgl {
 
         struct texture {
             unsigned int id = 0;
-            std::string type{}; //TODO: use enum type instead
+            enum class _type { diffuse, specular } type;
             std::string name{};
         };
 
@@ -32,8 +32,8 @@ namespace pgl {
                 std::vector<texture>      _textures;
 
                 mesh(const std::vector<vertex>&      vertices,
-                    const std::vector<unsigned int>& indices,
-                    const std::vector<texture>&      textures);
+                     const std::vector<unsigned int>& indices,
+                     const std::vector<texture>&      textures);
                 void draw(Shader& shader);
 
             private:
@@ -41,5 +41,5 @@ namespace pgl {
                 void setup_mesh();
         };
 
-    } /* end of namespace render3D */
+    } /* end of namespace _3D */
 } /* end of namespace pgl */

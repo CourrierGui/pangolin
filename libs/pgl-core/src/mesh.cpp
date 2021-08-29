@@ -47,17 +47,17 @@ namespace pgl {
 
         void mesh::draw(Shader& shader)
         {
-            unsigned int diffuse_index = 1;
-            unsigned int specular_index = 1;
+            std::size_t diffuse_index = 1;
+            std::size_t specular_index = 1;
 
-            for (unsigned int i=0; i < _textures.size(); ++i) {
+            for (std::size_t i = 0; i < _textures.size(); ++i) {
                 glActiveTexture(GL_TEXTURE0 + i);
-                std::string name = _textures[i].type;
+                std::string name;
 
-                if (name == "texture_diffuse")
-                    name += std::to_string(diffuse_index++);
-                if (name == "texture_specular")
-                    name += std::to_string(specular_index++);
+                if (_textures[i].type == texture::_type::diffuse)
+                    name = "texture_diffuse" + std::to_string(diffuse_index++);
+                if (_textures[i].type == texture::_type::diffuse)
+                    name = "texture_specular" + std::to_string(specular_index++);
 
                 shader.setFloat(("material." + name).c_str(), (float)i);
                 glBindTexture(GL_TEXTURE_2D, _textures[i].id);

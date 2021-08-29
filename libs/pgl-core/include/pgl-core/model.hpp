@@ -36,7 +36,7 @@ namespace pgl {
 
                 auto load_material_textures(aiMaterial* material,
                                             aiTextureType type,
-                                            const std::string& name)
+                                            texture::_type _type)
                     -> std::vector<texture>;
         };
 
