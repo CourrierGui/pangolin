@@ -7,10 +7,10 @@ namespace pgl {
   namespace gui {
 
     class Window {
-			private:
-				int height, width;
+      private:
+        int height, width;
 
-				Window(int height, int width);
+        Window(int height, int width);
     };
 
   } /* end of namespace ui */

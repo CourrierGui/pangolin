@@ -34,7 +34,7 @@ namespace pgl {
                 mesh(const std::vector<vertex>&      vertices,
                      const std::vector<unsigned int>& indices,
                      const std::vector<texture>&      textures);
-                void draw(Shader& shader);
+                void draw(shader& shader);
 
             private:
                 unsigned int VBO, VAO, EBO;

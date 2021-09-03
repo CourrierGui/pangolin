@@ -45,7 +45,7 @@ namespace pgl {
             glBindVertexArray(0);
         }
 
-        void mesh::draw(Shader& shader)
+        void mesh::draw(shader& shader)
         {
             std::size_t diffuse_index = 1;
             std::size_t specular_index = 1;
@@ -59,7 +59,7 @@ namespace pgl {
                 if (_textures[i].type == texture::_type::diffuse)
                     name = "texture_specular" + std::to_string(specular_index++);
 
-                shader.setFloat(("material." + name).c_str(), (float)i);
+                shader.setvalue(("material." + name).c_str(), (float)i);
                 glBindTexture(GL_TEXTURE_2D, _textures[i].id);
             }
 

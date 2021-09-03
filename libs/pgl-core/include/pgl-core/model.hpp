@@ -23,7 +23,7 @@ namespace pgl {
         class model {
             public:
                 model(const std::string& path);
-                void draw(Shader& shader);
+                void draw(shader& shader);
 
             private:
                 std::vector<texture> _loaded_textures;
