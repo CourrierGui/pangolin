@@ -10,13 +10,13 @@
 namespace pgl::tools {
 
     constexpr std::array<ansi::color_code, 3> colors[[maybe_unused]] = {
-      ansi::color_code::bright_white,
-      ansi::color_code::bright_yellow,
-      ansi::color_code::bright_red
+        ansi::color_code::bright_white,
+        ansi::color_code::bright_yellow,
+        ansi::color_code::bright_red
     };
 
     constexpr std::array<const char*, 4> levels = {
-      "<INFO> ", "<WARN> ", "<ERROR>", "<DEBUG>"
+        "<INFO> ", "<WARN> ", "<ERROR>", "<DEBUG>"
     };
 
     std::ostream* logger::_stream = &std::clog;
@@ -29,7 +29,6 @@ namespace pgl::tools {
             << p.filename().c_str() << ':'
             << sl.line() << ": "
             << sl.function_name() << "(): ";
-
     }
 
     logger::logger()

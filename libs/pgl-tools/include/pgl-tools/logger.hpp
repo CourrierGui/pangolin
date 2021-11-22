@@ -12,11 +12,14 @@
 
 using source_location = std::experimental::source_location;
 
-/* TODO: this part can be in the cpp file I think. The tricky part is the friend operator<<
+/* TODO: this part can be in the cpp file I think. The tricky part is the
+ * friend operator<<
+ *
  * TODO: I think we can have something like:
  *       `pgl::info("This is a {} text with {} arguments.") % { "formated", 2 };`
  *       Using tuples and template black magic this can work I think.
- * TODO: be able to display the logs on anything: window on xlib, OpenGL, stdout, file, socket, ...
+ * TODO: be able to display the logs on anything: window on xlib, OpenGL,
+ * stdout, file, socket, ...
  */
 namespace pgl::tools {
 

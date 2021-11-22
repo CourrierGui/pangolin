@@ -4,7 +4,6 @@
 
 #include <pgl-tools/logger.hpp>
 
-/* TODO test fixture */
 class Logger : public testing::Test {
     public:
         virtual void SetUp() override {
@@ -19,26 +18,33 @@ class Logger : public testing::Test {
         std::stringstream ss;
 };
 
+// TODO ends_with
+
+void ends_with(const std::string& lhs, const std::string& rhs)
+{
+    ASSERT_EQ(lhs.substr(lhs.size()-rhs.size(), rhs.size()), rhs);
+}
+
 TEST_F(Logger, Info)
 {
     pgl::info() << "toto";
-    ASSERT_EQ(ss.str(), "toto");
+    ends_with(ss.str(), "toto");
 }
 
 TEST_F(Logger, Format)
 {
     pgl::info().format("toto");
-    ASSERT_EQ(ss.str(), "toto");
+    ends_with(ss.str(), "toto");
 }
 
 TEST_F(Logger, FormatWithArguments)
 {
     pgl::info().format("toto {} {}", 10, 11);
-    ASSERT_EQ(ss.str(), "toto 10 11");
+    ends_with(ss.str(), "toto 10 11");
 }
 
 TEST_F(Logger, FormatWithArgumentsAndStream)
 {
     pgl::info().format("toto {} ", 10) << 11;
-    ASSERT_EQ(ss.str(), "toto 10 11");
+    ends_with(ss.str(), "toto 10 11");
 }
