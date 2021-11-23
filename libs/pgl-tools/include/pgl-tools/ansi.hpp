@@ -3,9 +3,7 @@
 #include <chrono>
 #include <sstream>
 
-namespace pgl {
-  namespace tools {
-    namespace ansi {
+namespace pgl::tools::ansi {
 
       enum class color_code: int {
         black   = 30, bg_black   = 40,
@@ -107,6 +105,4 @@ namespace pgl {
           return sstr.str();
         }
 
-    } /* end of namespace ansi */
-  } /* end of namespace tools */
-} /* end of namespace pgl */
+} /* end of namespace pgl::tools::ansi */

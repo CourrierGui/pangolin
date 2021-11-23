@@ -12,68 +12,87 @@
 
 using source_location = std::experimental::source_location;
 
-/* TODO: this part can be in the cpp file I think. The tricky part is the
- * friend operator<<
+/* The goal is to be able to display these logs on anything: XWindow, wayland,
+ * OpenGL context, ...
+ * These will have to implement some kind of stream to display messages.
+ * For example:
  *
- * TODO: I think we can have something like:
- *       `pgl::info("This is a {} text with {} arguments.") % { "formated", 2 };`
- *       Using tuples and template black magic this can work I think.
- * TODO: be able to display the logs on anything: window on xlib, OpenGL,
- * stdout, file, socket, ...
+ * pgl::gui::debug logger;
+ *
+ * logger << "This is a debug message\n";
+ *
+ *
+ * TODO The logs could look like something like this:
+ *
+ * pgl::info("This is a {} text with {} arguments.") % { "formated", 2 };
  */
-namespace pgl::tools {
-
-      class logger {
-          public:
-              enum class level { info, warn, error, debug };
-
-          public:
-              logger(const level l, const source_location sl);
-              logger();
-              static void stream(std::ostream& os);
-
-              logger& format(const char *fmt)
-              {
-                  *_stream << fmt;
-                  return *this;
-              }
-
-              logger& format(const char *fmt, auto first, auto... args)
-              {
-                  auto fmt_view = std::string_view{fmt};
-                  auto pos = fmt_view.find_first_of('{');
-
-                  if (fmt[pos+1] == '}') {
-                      _stream->write(fmt, pos);
-                      *_stream << first;
-                      format(fmt + pos + 2, args...);
-                  }
-
-                  return *this;
-              }
-
-          private:
-              static std::ostream* _stream;
-
-              friend std::ostream& operator<<(logger& logger, auto data);
-              friend std::ostream& operator<<(logger&& logger, auto data);
-      };
-
-      std::ostream& operator<<(logger& logger, auto data)
-      {
-          *logger._stream << data;
-          return *logger._stream;
-      }
-
-      std::ostream& operator<<(logger&& logger, auto data)
-      {
-          *logger._stream << data;
-          return *logger._stream;
-      }
-
-} /* end of namespace pgl::tools */
-
 namespace pgl {
+    enum class level { debug, info, warn, error };
+
+    namespace tools {
+
+        class logger {
+            public:
+
+                logger(const level l, const source_location sl);
+                logger() = default;
+
+                static void stream(std::ostream& os);
+                static void loglevel(level l);
+
+                logger& format(const char *fmt)
+                {
+                    *_stream << fmt;
+                    return *this;
+                }
+
+                logger& format(const char *fmt, auto first, auto... args)
+                {
+                    auto fmt_view = std::string_view{fmt};
+                    auto pos = fmt_view.find_first_of('{');
+
+                    if (fmt[pos+1] == '}') {
+                        _stream->write(fmt, pos);
+                        *_stream << first;
+                        format(fmt + pos + 2, args...);
+                    }
+
+                    return *this;
+                }
+
+                inline bool should_display()
+                {
+                    return _level >= _global_level;
+                }
+
+            private:
+                static std::ostream* _stream;
+                static level _global_level;
+                level _level = level::info;
+
+                friend std::ostream& operator<<(logger& logger, auto data);
+                friend std::ostream& operator<<(logger&& logger, auto data);
+        };
+
+        std::ostream& operator<<(logger& logger, auto data)
+        {
+            if (!logger.should_display())
+                return *logger._stream;
+
+            *logger._stream << data;
+            return *logger._stream;
+        }
+
+        std::ostream& operator<<(logger&& logger, auto data)
+        {
+            if (!logger.should_display())
+                return *logger._stream;
+
+            *logger._stream << data;
+            return *logger._stream;
+        }
+
+    } /* end of namespace tools */
 
     tools::logger debug(source_location sl=source_location::current());
     tools::logger info(source_location sl=source_location::current());
@@ -82,5 +101,6 @@ namespace pgl {
     void entry(source_location sl=source_location::current());
 
     void logstream(std::ostream& os);
+    void loglevel(level level);
 
 } /* end of namespace pgl */
