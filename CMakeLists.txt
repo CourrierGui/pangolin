@@ -36,7 +36,7 @@ find_package(Freetype REQUIRED)
 add_library(compilation_flags INTERFACE)
 target_compile_options(compilation_flags
   INTERFACE
-      -Wall -Wextra -Wpedantic -Weffc++ -Wno-undefined-inline -fconcepts-ts
+      -Wall -Wextra -Wpedantic -Weffc++ -fconcepts-ts
 )
 target_compile_features(compilation_flags INTERFACE cxx_std_20)
 

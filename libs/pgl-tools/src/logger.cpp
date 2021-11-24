@@ -48,6 +48,7 @@ namespace pgl {
         }
 
     } /* end of namespace tools */
+
     tools::logger debug(source_location sl)
     {
         return tools::logger{level::debug, sl};

@@ -1,11 +1,24 @@
-add_executable(Pgl.test-checker test-checker.cpp)
-target_link_libraries(Pgl.test-checker
-	PRIVATE
-	pgl::test compilation_flags
+file(GLOB
+    files
+    basic.cpp # TODO rename
+    # checker.cpp
+    # main.cpp
 )
 
-# add_executable(Pgl.test main.cpp)
-# target_link_libraries(Pgl.test
-# 	PRIVATE
-# 		pangolin::pgl-test
-# )
+foreach(file ${files})
+    get_filename_component(bin ${file} NAME_WE)
+
+    add_executable(PglTest.test-${bin} ${file})
+    target_link_libraries(PglTest.test-${bin}
+        PRIVATE
+            pgl::test compilation_flags
+    )
+    target_compile_options(PglTest.test-${bin}
+        PRIVATE
+            -Wno-tautological-compare
+    )
+    add_test(
+        NAME    PglTest.test-${bin}
+        COMMAND PglTest.test-${bin}
+    )
+endforeach(file)
