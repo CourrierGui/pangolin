@@ -17,7 +17,7 @@ namespace pgl {
     };
 
   template<length dim>
-    struct vector<bool,dim> : public base_vector<bool, dim,vector> {
+    struct vector<bool,dim> : public base_vector<bool,dim,vector> {
       template<typename t> using container_of = vector<t, dim>;
       inline constexpr          vector()                    noexcept;
       inline constexpr explicit vector(bool b)              noexcept;
@@ -136,7 +136,7 @@ namespace pgl {
   template<number type, number scalar_type, length dim>
     inline constexpr auto operator-(const scalar_type& lhs,
                                     const vector<type,
-      dim>& rhs) noexcept
+                                    dim>& rhs) noexcept
     -> vector<type,dim>;
 
 
