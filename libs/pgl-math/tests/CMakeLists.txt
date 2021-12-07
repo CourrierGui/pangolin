@@ -3,7 +3,7 @@ find_package(glm REQUIRED)
 file(GLOB
     files
     base-vector.cpp
-    # algebric-vector.cpp
+    algebric-vector.cpp
     # vector.cpp
     # matrix.cpp
     # quaternion.cpp
