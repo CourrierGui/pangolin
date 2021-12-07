@@ -5,3 +5,6 @@ tags*
 compile_commands.json
 .clangd
 extern
+TODO.md
+.vim
+.cache
