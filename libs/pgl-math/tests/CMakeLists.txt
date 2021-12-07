@@ -1,35 +1,24 @@
 find_package(glm REQUIRED)
 
 file(GLOB
-  test_files
-  test-base-vector.cpp
-  test-algebric-vector.cpp
-  test-vector.cpp
-  # test-matrix.cpp
-  # test-quaternion.cpp
+    files
+    base-vector.cpp
+    # algebric-vector.cpp
+    # vector.cpp
+    # matrix.cpp
+    # quaternion.cpp
 )
 
-foreach(test_name ${test_files})
-  get_filename_component(bin_name ${test_name} NAME_WE)
+foreach(file ${files})
+    get_filename_component(bin ${file} NAME_WE)
 
-  add_executable(Pgl.${bin_name} ${test_name})
-  target_link_libraries(Pgl.${bin_name}
-    PRIVATE
-    gtest gtest_main glm
-    pgl::math compilation_flags
-  )
-
-  gtest_add_tests(Pgl.${bin_name} "" AUTO)
-endforeach(test_name)
-
-foreach(test_name vector-properties.cpp)
-  get_filename_component(bin_name ${test_name} NAME_WE)
-
-  add_executable(Pgl.${bin_name} ${test_name})
-  target_link_libraries(Pgl.${bin_name}
-    PRIVATE
-    pgl::math pgl::test compilation_flags
-  )
-
-  gtest_add_tests(Pgl.${bin_name} "" AUTO)
-endforeach(test_name)
+    add_executable(PglMath.test-${bin} ${file})
+    target_link_libraries(PglMath.test-${bin}
+        PRIVATE
+            pgl::math pgl::test compilation_flags
+    )
+    add_test(
+        NAME    PglMath.test-${bin}
+        COMMAND PglMath.test-${bin}
+    )
+endforeach(file)
