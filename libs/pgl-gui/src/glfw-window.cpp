@@ -3,135 +3,132 @@
 #include <functional>
 #include <iostream>
 
+#include <GLFW/glfw3.h>
+
 using namespace std::placeholders;
 
-namespace pgl {
-  namespace gui {
+namespace pgl::gui {
 
-    GLFWWindow::GLFWWindow(int width, int height, const std::string& name)
-      : width(width), height(height), _callbacks{}
+    void c_on_new_framebuffer(GLFWwindow *, int width, int height)
     {
-      glfwInit();
-      glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-      glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-      glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-      glfwWindowHint(GLFW_RESIZABLE, false);
-
-      window = glfwCreateWindow(
-        width, height,
-        name.c_str(), nullptr, nullptr
-        );
-      glfwMakeContextCurrent(window);
-      glfwSetWindowUserPointer(window, reinterpret_cast<void*>(this));
-
-      /* glad: load all OpenGL function pointers */
-      if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        throw std::runtime_error("Failed to initialize GLAD\n");
-      }
-
-      _callbacks._framebufferSizeCb = [](GLFWwindow*, int width, int height)
-        -> void
-        {
-          glViewport(0, 0, width, height);
-        };
-      glfwSetFramebufferSizeCallback(window, _callbacks._framebufferSizeCb);
-
-      /* OpenGL configuration */
-      glViewport(0, 0, width, height);
-      glEnable(GL_BLEND);
-      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glViewport(0, 0, width, height);
     }
 
-    bool GLFWWindow::is_open() {
-      return !glfwWindowShouldClose(window);
-    }
-
-    void GLFWWindow::close() {
-      glfwSetWindowShouldClose(window, true);
-    }
-
-    GLFWWindow::~GLFWWindow() {
-      glfwTerminate();
-    }
-
-    void GLFWWindow::clear(float r, float g, float b, float a) {
-      glClearColor(r, g, b, a);
-      glClear(GL_COLOR_BUFFER_BIT);
-    }
-
-    void GLFWWindow::poll_events() {
-      glfwPollEvents();
-    }
-
-    void GLFWWindow::swap_buffer() {
-      glfwSwapBuffers(window);
-    }
-
-    void GLFWWindow::set_key_cb(
-      const std::function<void(GLFWWindow&,int,int,int,int)>& fun)
+    void c_on_press(GLFWwindow* gwindow, int key, int, int action, int)
     {
-      _callbacks._keyCb = fun;
-      auto cb = [](GLFWwindow* window,int key, int scancode, int action, int mods)
-        -> void
-        {
-          GLFWWindow* _window = reinterpret_cast<GLFWWindow*>(
-            glfwGetWindowUserPointer(window));
-          if (_window) {
-            _window->keyCallback()(*_window, key, scancode, action, mods);
-          }
-        };
-      glfwSetKeyCallback(window, cb);
+        if (action != GLFW_PRESS)
+            return;
+
+        auto *userdata = glfwGetWindowUserPointer(gwindow);
+        auto *window = reinterpret_cast<GLFWWindow*>(userdata);
+        pgl::key k;
+
+        switch (key) {
+            case GLFW_KEY_ESCAPE:
+                k = key::escape;
+                break;
+            case GLFW_KEY_BACKSPACE:
+                k = key::backspace;
+                break;
+            default:
+                return;
+        }
+
+        if (window)
+            window->on_press(*window, k);
     }
 
-    void GLFWWindow::set_cursor_cb(
-      const std::function<void(GLFWWindow&,double,double)>& fun)
+    void c_on_cursor_move(GLFWwindow* gwindow, double xpos, double ypos)
     {
-      _callbacks._cursorPosCb = fun;
-      auto cb = [](GLFWwindow* window, double xpos, double ypos)
-        -> void
-        {
-          GLFWWindow* _window = reinterpret_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
-          if (_window) {
-            _window->mousePositionCallback()(*_window, xpos, ypos);
-          }
-        };
-      glfwSetCursorPosCallback(window, cb);
+        auto* userdata = glfwGetWindowUserPointer(gwindow);
+        auto* window = reinterpret_cast<GLFWWindow*>(userdata);
+
+        if (window)
+            window->on_cursor_move(*window, xpos, ypos);
     }
 
-    void GLFWWindow::set_mouse_button_cb(
-      const std::function<void(GLFWWindow&,int,int,int)>& fun)
+    void c_on_click(GLFWwindow *gwindow, int button, int action, int)
     {
-      _callbacks._mouseButtonCb = fun;
-      auto cb = [](GLFWwindow* window, int button, int action, int mods)
-        -> void
-        {
-          GLFWWindow* _window = reinterpret_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
-          if (_window) {
-            _window->mouseButtonCallback()(*_window, button, action, mods);
-          }
-        };
-      glfwSetMouseButtonCallback(window, cb);
+        auto *userdata = glfwGetWindowUserPointer(gwindow);
+        auto *window = reinterpret_cast<GLFWWindow*>(userdata);
+
+        if (action != GLFW_PRESS)
+            return;
+
+        if (window && button == GLFW_MOUSE_BUTTON_LEFT)
+            window->on_click(*window, mouse::button_left);
     }
 
-    GLFWwindow* GLFWWindow::window = nullptr;
+    void c_on_character(GLFWwindow *gwindow, unsigned int codepoint)
+    {
+        auto *userdata = glfwGetWindowUserPointer(gwindow);
+        auto *window = reinterpret_cast<GLFWWindow *>(userdata);
 
-    auto GLFWWindow::mousePositionCallback()
-      -> std::function<void(GLFWWindow&,double,double)>&
-      {
-        return _callbacks._cursorPosCb;
-      }
+        if (window)
+            window->on_character(*window, static_cast<uint32_t>(codepoint));
+    }
 
-    auto GLFWWindow::keyCallback()
-      -> std::function<void(GLFWWindow&,int,int,int,int)>&
-      {
-        return _callbacks._keyCb;
-      }
+    GLFWWindow::GLFWWindow(int width, int height, const std::string& name) :
+        on_click{}, on_press{}, on_cursor_move{}, on_character{},
+        _width{width}, _height{height}, _window{nullptr}
+    {
+        glfwInit();
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_RESIZABLE, false);
 
-    auto GLFWWindow::mouseButtonCallback()
-      -> std::function<void(GLFWWindow&,int,int,int)>&
-      {
-        return _callbacks._mouseButtonCb;
-      }
+        _window = glfwCreateWindow(_width, _height,
+                                  name.c_str(), nullptr, nullptr);
+        glfwMakeContextCurrent(_window);
+        glfwSetWindowUserPointer(_window, reinterpret_cast<void*>(this));
 
-  } /* end of namespace gui */
-} /* end of namespace pgl */
+        /* glad: load all OpenGL function pointers */
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+            throw std::runtime_error("Failed to initialize GLAD");
+
+        /* setup glfw callbacks */
+        glfwSetFramebufferSizeCallback(_window, c_on_new_framebuffer);
+        glfwSetMouseButtonCallback(_window, c_on_click);
+        glfwSetKeyCallback(_window, c_on_press);
+        glfwSetCursorPosCallback(_window, c_on_cursor_move);
+        glfwSetCharCallback(_window, c_on_character);
+
+        /* OpenGL configuration */
+        glViewport(0, 0, _width, _height);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    bool GLFWWindow::is_open()
+    {
+        return !glfwWindowShouldClose(_window);
+    }
+
+    void GLFWWindow::close()
+    {
+        glfwSetWindowShouldClose(_window, true);
+    }
+
+    GLFWWindow::~GLFWWindow()
+    {
+        glfwTerminate();
+    }
+
+    void GLFWWindow::clear(float r, float g, float b, float a)
+    {
+        glClearColor(r, g, b, a);
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+    void GLFWWindow::poll_events()
+    {
+        glfwPollEvents();
+    }
+
+    void GLFWWindow::swap_buffer()
+    {
+        glfwSwapBuffers(_window);
+    }
+
+} /* end of namespace pgl::gui */
