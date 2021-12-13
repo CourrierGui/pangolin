@@ -1,4 +1,4 @@
-#include <pgl-math/algebric-vector.hpp>
+#include <pgl-math/algebraic-vector.hpp>
 #include <pgl-math/base-vector.hpp>
 #include <pgl-math/algorithms.hpp>
 
@@ -9,9 +9,9 @@
 using namespace pgl::test;
 
 template<pgl::integral type, pgl::length dim>
-struct vector : public pgl::algebric_vector<type,dim,vector> {
+struct vector : public pgl::algebraic_vector<type,dim,vector> {
     inline constexpr vector(std::convertible_to<type> auto ... args) noexcept :
-        pgl::algebric_vector<type,dim,vector>{ args... }
+        pgl::algebraic_vector<type,dim,vector>{ args... }
     {
     }
 };

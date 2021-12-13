@@ -2,8 +2,7 @@
 #include <pgl-tools/logger.hpp>
 #include <stb_image.h>
 
-namespace pgl {
-    namespace _3D {
+namespace pgl::_3D {
 
         model::model(const std::string& path)
         {
@@ -167,5 +166,4 @@ namespace pgl {
             return texture_id;
         }
 
-    } /* end of namespace _3D */
-} /* end of namespace pgl */
+} /* end of namespace pgl::_3D */

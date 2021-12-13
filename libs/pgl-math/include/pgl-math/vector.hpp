@@ -1,14 +1,14 @@
 #pragma once
 
 #include <pgl-math/utils.hpp>
-#include <pgl-math/algebric-vector.hpp>
+#include <pgl-math/algebraic-vector.hpp>
 
 namespace pgl {
 
   /* template<typename type, length dim> struct vector {  }; */
 
   template<typename type, length dim>
-    struct vector : public algebric_vector<type,dim,vector> {
+    struct vector : public algebraic_vector<type,dim,vector> {
       template<typename t> using container_of = vector<t, dim>;
       inline constexpr          vector()                               noexcept;
       inline constexpr explicit vector(const type& e)                  noexcept;
@@ -35,7 +35,7 @@ namespace pgl {
     };
 
   template<number type>
-    struct vector<type,2> : public algebric_vector<type,2,vector> {
+    struct vector<type,2> : public algebraic_vector<type,2,vector> {
       template<typename t> using container_of = vector<t, 2>;
       inline constexpr          vector()                      noexcept;
       inline constexpr explicit vector(const type& e)         noexcept;
@@ -49,7 +49,7 @@ namespace pgl {
     };
 
   template<number type>
-    struct vector<type,3> : public algebric_vector<type,3,vector> {
+    struct vector<type,3> : public algebraic_vector<type,3,vector> {
       template<typename t> using container_of = vector<t, 3>;
       inline constexpr vector()                                               noexcept;
       inline constexpr explicit vector(const type& e)                         noexcept;
@@ -66,7 +66,7 @@ namespace pgl {
     };
 
   template<number type>
-    struct vector<type,4> : public algebric_vector<type,4,vector> {
+    struct vector<type,4> : public algebraic_vector<type,4,vector> {
       template<typename t> using container_of = vector<t, 4>;
       inline constexpr vector() noexcept;
       inline constexpr explicit vector(const type& e) noexcept;

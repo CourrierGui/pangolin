@@ -7,26 +7,26 @@
 #include <pgl-math/vector.hpp>
 
 #include <pgl-math/impl/base-vector.hpp>
-#include <pgl-math/impl/algebric-vector.hpp>
+#include <pgl-math/impl/algebraic-vector.hpp>
 
 namespace pgl {
 
   template<typename type, length dim>
     inline constexpr vector<type,dim>::vector() noexcept :
-    algebric_vector<type,dim,vector>{} {  }
+    algebraic_vector<type,dim,vector>{} {  }
 
   template<typename type, length dim>
     inline constexpr vector<type,dim>::vector(const type& e) noexcept :
-    algebric_vector<type,dim,vector>{e} {  }
+    algebraic_vector<type,dim,vector>{e} {  }
 
   template<typename type, length dim>
     inline constexpr vector<type,dim>::vector(const type arr[dim]) noexcept :
-    algebric_vector<type,dim,vector>{arr} {  }
+    algebraic_vector<type,dim,vector>{arr} {  }
 
   template<typename type, length dim>
     inline constexpr vector<type,dim>::vector(
       std::convertible_to<type> auto ... args) noexcept :
-    algebric_vector<type,dim,vector>{ std::forward<type>(args)... } {  }
+    algebraic_vector<type,dim,vector>{ std::forward<type>(args)... } {  }
 
   template<length dim>
     inline constexpr vector<bool,dim>::vector() noexcept :
@@ -47,19 +47,19 @@ namespace pgl {
 
   template<number type>
     inline constexpr vector<type,2>::vector() noexcept :
-    algebric_vector<type,2,vector>{} {  }
+    algebraic_vector<type,2,vector>{} {  }
 
   template<number type>
     inline constexpr vector<type,2>::vector(const type& e) noexcept :
-    algebric_vector<type,2,vector>{e} {  }
+    algebraic_vector<type,2,vector>{e} {  }
 
   template<number type>
     inline constexpr vector<type,2>::vector(const type arr[2]) noexcept :
-    algebric_vector<type,2,vector>{arr} {  }
+    algebraic_vector<type,2,vector>{arr} {  }
 
   template<number type>
     inline constexpr vector<type,2>::vector(const type& e1, const type& e2) noexcept :
-    algebric_vector<type,2,vector>( e1, e2 ) {  }
+    algebraic_vector<type,2,vector>( e1, e2 ) {  }
 
   template<number type>
     inline constexpr vector<type,2> vector<type,2>::right() noexcept {
@@ -83,26 +83,26 @@ namespace pgl {
 
   template<number type>
     inline constexpr vector<type,3>::vector() noexcept :
-    algebric_vector<type,3,vector>{} {  }
+    algebraic_vector<type,3,vector>{} {  }
 
   template<number type>
     inline constexpr vector<type,3>::vector(const type& e) noexcept :
-    algebric_vector<type,3,vector>{e} {  }
+    algebraic_vector<type,3,vector>{e} {  }
 
   template<number type>
     inline constexpr vector<type,3>::vector(const type arr[3]) noexcept :
-    algebric_vector<type,3,vector>{arr} {  }
+    algebraic_vector<type,3,vector>{arr} {  }
 
   template<number type>
     inline constexpr vector<type,3>::vector(const type& e1,
                                             const type& e2,
                                             const type& e3) noexcept :
-    algebric_vector<type,3,vector>( e1, e2, e3 )  {  }
+    algebraic_vector<type,3,vector>( e1, e2, e3 )  {  }
 
   template<number type>
     inline constexpr vector<type,3>::vector(const vector<type,2>& v,
                                             const type& e) noexcept :
-    algebric_vector<type,3,vector>( v.x, v.y, e ) {  }
+    algebraic_vector<type,3,vector>( v.x, v.y, e ) {  }
 
   template<number type>
     inline constexpr vector<type,3> vector<type,3>::right() noexcept {
@@ -136,30 +136,30 @@ namespace pgl {
 
   template<number type>
     inline constexpr vector<type,4>::vector() noexcept :
-    algebric_vector<type,4,vector>{} {  }
+    algebraic_vector<type,4,vector>{} {  }
 
   template<number type>
     inline constexpr vector<type,4>::vector(const type& e) noexcept :
-    algebric_vector<type,4,vector>{e} {  }
+    algebraic_vector<type,4,vector>{e} {  }
 
   template<number type>
     inline constexpr vector<type,4>::vector(const type arr[4]) noexcept :
-    algebric_vector<type,4,vector>{arr} {  }
+    algebraic_vector<type,4,vector>{arr} {  }
 
   template<number type>
     inline constexpr vector<type,4>::vector(const type& a, const type& b,
                                             const type& c, const type& d) noexcept :
-    algebric_vector<type,4,vector>{a,b,c,d} {  }
+    algebraic_vector<type,4,vector>{a,b,c,d} {  }
 
   template<number type>
     inline constexpr vector<type,4>::vector(const vector<type,3>& v,
                                             const type& e) noexcept :
-    algebric_vector<type,4,vector>(v.x, v.y, v.z, e) {  }
+    algebraic_vector<type,4,vector>(v.x, v.y, v.z, e) {  }
 
   template<number type>
     inline constexpr vector<type,4>::vector(const vector<type,2>& v,
                                             const vector<type,2>& w) noexcept :
-    algebric_vector<type,4,vector>( v.x, v.y, w.x, w.y ) {  }
+    algebraic_vector<type,4,vector>( v.x, v.y, w.x, w.y ) {  }
 
 
   template<number type>

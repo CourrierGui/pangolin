@@ -38,7 +38,7 @@ This template is specialized for small values of `dim` (e.g `2`, `3` and `4`):
    }
 
 
-pgl::algebric_vector
+pgl::algebraic_vector
 ********************
 
 pgl::vector

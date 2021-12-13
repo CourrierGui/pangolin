@@ -1,14 +1,10 @@
 #include <pgl-math/utils.hpp>
 
 #include <pgl-math/impl/base-vector.hpp>
-#include <pgl-math/impl/algebric-vector.hpp>
+#include <pgl-math/impl/algebraic-vector.hpp>
 #include <pgl-math/impl/vector.hpp>
 #include <pgl-math/impl/matrix.hpp>
 #include <pgl-math/impl/algorithms.hpp>
-
-/* template struct pgl::vector<uint32_t,2>; */
-/* template struct pgl::vector<uint32_t,3>; */
-/* template struct pgl::vector<uint32_t,4>; */
 
 template struct pgl::vector<bool,2>;
 template struct pgl::vector<bool,3>;
@@ -74,6 +70,4 @@ template struct pgl::matrix<int, 4, 2>;
 template struct pgl::matrix<int, 4, 3>;
 template struct pgl::matrix<int, 4, 4>;
 
-template pgl::matrix<float,4,4> pgl::translate<float>(
-  pgl::matrix<float,4,4> const&,
-  pgl::vector<float,3> const&);
+template pgl::matrix<float,4,4> pgl::translate<float>(pgl::matrix<float,4,4> const&, pgl::vector<float,3> const&);

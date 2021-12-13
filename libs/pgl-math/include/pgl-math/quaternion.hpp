@@ -4,21 +4,25 @@
 
 namespace pgl {
 
-  template<typename type>
+    template<typename type>
     struct quaternion : public vector<type, 4> {
-      static quaternion<type> identity() noexcept { return {0, 0, 0, 1}; }
+        static inline constexpr auto identity() noexcept
+            -> quaternion<type>
+        {
+            return {0, 0, 0, 1};
+        }
     };
 
-  /*
-   * ========================
-   * ======= TODO !!! =======
-   * ========================
-   *
-   * multiplication
-   * inversion
-   * conversion between euler, matrix and quaternions
-   * radian and degree struct + operator""_r, operator""_d
-   *
-   */
+    /*
+     * ========================
+     * ======= TODO !!! =======
+     * ========================
+     *
+     * multiplication
+     * inversion
+     * conversion between euler, matrix and quaternions
+     * radian and degree struct + operator""_r, operator""_d
+     *
+     */
 
 } /* end of namespace pgl */
