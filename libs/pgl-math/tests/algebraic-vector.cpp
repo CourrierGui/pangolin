@@ -1,10 +1,6 @@
-#include <pgl-math/algebraic-vector.hpp>
-#include <pgl-math/base-vector.hpp>
-#include <pgl-math/algorithms.hpp>
+#include <pgl-math/impl/algebraic-vector.hpp>
 
 #include <pgl-test/test_suite.hpp>
-
-#include <cmath>
 
 using namespace pgl::test;
 

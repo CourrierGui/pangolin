@@ -1,4 +1,4 @@
-#include <pgl-math/base-vector.hpp>
+#include <pgl-math/impl/base-vector.hpp>
 #include <pgl-test/test_suite.hpp>
 #include <cmath>
 
@@ -53,7 +53,7 @@ int main()
         test_case{"init vector<uint, 2>",     test_accessor<uint>    },
         test_case{"init vector<int32_t, 2>",  test_accessor<int32_t> },
         test_case{"init vector<uint32_t, 2>", test_accessor<uint32_t>},
-        /* test_case{"init vector<bool, 2>",     test_accessor<bool>    }, */
+        test_case{"init vector<bool, 2>",     test_accessor<bool>    },
     };
 
     test_suite iterators{
@@ -61,6 +61,7 @@ int main()
         test_case{"iterators uint",     test_iterators<uint>},
         test_case{"iterators int32_t",  test_iterators<int32_t>},
         test_case{"iterators uint32_t", test_iterators<uint32_t>},
+        test_case{"iterators bool",     test_iterators<bool>},
     };
 
     test_suite ts{
