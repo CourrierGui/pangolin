@@ -54,6 +54,22 @@ namespace pgl {
                 tpl);
         }
 
+    template<>
+        class random_generator<bool> {
+            private:
+                std::mt19937 gen;
+                std::uniform_int_distribution<int> distrib;
+
+            public:
+                random_generator() :
+                    gen{std::random_device{}()},
+                    distrib{0, 1}
+                {
+                }
+
+                bool get() { return distrib(gen) == 1; }
+        };
+
     template<std::integral Type>
         class random_generator<Type>
         {
@@ -117,20 +133,20 @@ namespace pgl {
         };
 
     template<template<typename T, uint32_t d> typename range,
-        typename Type, uint32_t dim>
-            class random_generator<range<Type,dim>> {
-                public:
-                    random_generator() { }
+             typename Type, uint32_t dim>
+        class random_generator<range<Type,dim>> {
+            public:
+                random_generator() { }
 
-                    auto get() -> range<Type,dim>
-                    {
-                        range<Type,dim> t{};
-                        for (auto& val: t)
-                            val = random_generator<Type>().get();
+                auto get() -> range<Type,dim>
+                {
+                    range<Type,dim> t{};
+                    for (auto& val: t)
+                        val = random_generator<Type>().get();
 
-                        return t;
-                    }
-            };
+                    return t;
+                }
+        };
 
     template<SequenceContainer Type>
         class random_generator<Type> {
