@@ -36,14 +36,18 @@ namespace pgl::test {
             {
             }
 
-            int run(std::vector<std::tuple<Args...>>& args) const
+            int run(std::vector<std::tuple<std::remove_cvref_t<Args>...>>& args) const
             {
-                bool res = true;
+                std::size_t count = 0;
 
-                for (auto arg: args)
-                    res &= std::apply(_function, arg);
+                for (auto arg: args) {
+                    bool res = std::apply(_function, arg);
+                    count++;
+                    if (!res)
+                        return count;
+                }
 
-                return res ? 0 : 1;
+                return 0;
             }
 
             auto message() const -> const std::string&
@@ -77,15 +81,19 @@ namespace pgl::test {
     template<typename... Args>
     int check(const test_case<Args...>& tc, uint32_t size = 100)
     {
-        auto args = generate_arguments<Args...>(size);
+        auto args = generate_arguments<std::remove_cvref_t<Args>...>(size);
         auto res = tc.run(args);
 
-        if (!res)
-            std::clog << "Success: ";
-        else
-            std::clog << "Error:   ";
-
-        std::clog << tc.message() << '\n';
+        if (!res) {
+            std::clog << "Success: " << tc.message() << '\n';
+        } else {
+            std::clog << "Error:   " << tc.message() << '\n';
+            std::clog
+                << "Test failed after " << res
+                << " attempt" << (res > 1 ? "s\n" : "\n");
+            print_parameters(std::clog, args[res]);
+            std::clog << '\n';
+        }
 
         return res;
     }

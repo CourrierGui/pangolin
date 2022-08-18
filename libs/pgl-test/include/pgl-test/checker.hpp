@@ -133,9 +133,8 @@ namespace pgl::test {
                         return {res, count-1, nb_trivial};
                     }
 
-                void display_result(
-                    std::pair<float, ResultType>& values,
-                    unsigned int size)
+                void display_result(std::pair<float, ResultType>& values,
+                                    unsigned int size)
                 {
                     auto [duration, res] = values;
                     auto [success, count, nb_trivial] = res;
@@ -143,22 +142,27 @@ namespace pgl::test {
                     if (success) {
                         std::clog << count << " tests passed";
                         if (_is_trivial.has_value()) {
-                            std::clog << " with "
-                                << std::floor(float(nb_trivial)/size*100) << "% of trivial cases" ;
+                            std::clog
+                                << " with "
+                                << std::floor(float(nb_trivial)/size*100)
+                                << "% of trivial cases";
                         }
                         std::clog << " (elapsed " << duration << " ms).\n";
                         if (_classifier.has_value()) {
                             for (const auto& [label, count]: _label_distribution) {
-                                std::clog << "* " << label
-                                    << ": " << std::floor(float(count)/size*100) << "%\n";
+                                std::clog
+                                    << "* " << label << ": "
+                                    << std::floor(float(count)/size*100)
+                                    << "%\n";
                             }
                         }
                         std::clog << '\n';
                     } else {
-                        std::clog << "Test failed after " << count
+                        std::clog
+                            << "Test failed after " << count
                             << " attempt" << (count == 1 ? "" : "s" );
                         std::clog << " (" << duration << " ms).\n";
-                        print_parameters(std::clog, _false_arg);
+                        /* print_parameters(std::clog, _false_arg); */
                         std::clog << "\n\n";
                     }
                 }
