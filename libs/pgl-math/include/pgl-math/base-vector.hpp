@@ -85,13 +85,13 @@ namespace pgl {
             {
                 auto it = data, val = arr;
 
-                while (it!=data+dim)
+                while (it != data + dim)
                     *(it++) = *(val++);
             }
         };
 
         inline constexpr auto data() noexcept -> raw_data;
-        inline constexpr auto size() const noexcept -> int;
+        inline constexpr auto size() const noexcept -> length;
 
         inline constexpr auto begin()        noexcept -> type*;
         inline constexpr auto begin()  const noexcept -> const type*;
